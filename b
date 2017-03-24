@@ -1,1 +1,0 @@
-Karti to git
