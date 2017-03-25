@@ -4,11 +4,11 @@ $username = "root";
 $password = "";
 
 
-$conn = new mysqli(servername, $username, $password);
+$conn = new mysqli_connect($servername, $username, $password);
 
-if ($conn->connect_error)
+if ($conn->mysqli_connect_error())
 {
-	die("connection failed: " . $con->$conn->connect_error);
+	die("connection failed: " . $con->$conn->mysqli_connect_error());
 }
 
 $db_selected = mysqli_select_db($conn, 'trip_rest');

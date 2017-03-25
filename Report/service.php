@@ -11,12 +11,12 @@ if($_server['REQUEST_METHOD') =="POST")
     $amount = isset ($_POST ['amount']) ? mysqli_real_escape_string($conn,$_POST['amount']) : "";
 	$date = isset ($_POST ['date']) ? mysqli_real_escape_string($conn,$_POST['date']) : "";
 	
-	$sql = "SELECT * FROM EXPENSE WHERE occassion ='".$occassion."'";
+	$sql = "SELECT * FROM EXPENSE WHERE occassion ='".$occassion."';";
 	
 	$query = mysqli_query($conn,$sql);
 	if($query)
 	{
-		$json = array("status" => 1, "msg" => "$result");
+		$json = array("status" => 1, "msg" => $result);
 	}
 	else
 	{

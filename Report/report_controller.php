@@ -10,16 +10,16 @@
 	while($r = mysqli_fetch_array($query))
 	{
 		extract($r);
-		$result[] = array("name" => $name, "occassion" => $occassion, "particular" => $particular, "amount" => $amount, "date" => "date");
+		$result[] = array("name" => $name, "occassion" => $occassion, "particular" => $particular, "amount" => $amount, "date" => $date);
 	}
 	
-	$jsons =  array("status" => 1, "info" => $result);
+	$json =  array("status" => 1, "info" => $result);
 	}
 	else
 	{
 		$json = array("status" => 0, "msg" => "occassion not created");
 	}
-	@mysqli_close($con);
+	@mysqli_close($conn);
 	
 	header('content-type: application/json');
 	return json_encode($json);
