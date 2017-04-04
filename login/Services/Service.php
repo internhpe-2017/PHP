@@ -1,6 +1,6 @@
 <?php
 require_once('Mappers/usermodel.php');
-require_once('Mappers/try1.php');
+require_once('Mappers/Connect.php');
 class Service
 {
 	function Service()
@@ -22,8 +22,8 @@ class Service
 	static function authenticate($u,$p)
 	{
 		
-		$db=new try1();
-		$db->db($u,$p);
+		$db=new Connect();
+		//$db->db($u,$p);
    if($db->db($u,$p)) {
 	  $authentic=true;
       return $authentic;
