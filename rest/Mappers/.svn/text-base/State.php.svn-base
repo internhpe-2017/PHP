@@ -1,0 +1,35 @@
+<?php
+
+
+class Mappers_State {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_State();
+	}
+
+
+	public function findState($orgid) {
+		return $this->db->findState($orgid);
+	}
+
+
+	public function createState($jdata) {
+		return $this->db->createState($jdata);
+	}
+
+   	 public function listState($countid) {
+		return $this->db->listState($countid);
+
+	}
+   	 public function listDefaultState($countid) {
+		return $this->db->listDefaultState($countid);
+
+	}
+
+	 public function listAllStates() {
+	 return $this->db->listAllStates();
+
+	}
+}
+?>

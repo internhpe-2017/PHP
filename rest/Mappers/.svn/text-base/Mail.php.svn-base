@@ -1,0 +1,70 @@
+<?php
+
+
+class Mappers_Mail {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_Mail();
+	}
+ 
+	public function feedbackmail($comments,$emailid,$femails ) {
+	
+	 return $this->db->feedbackmail($comments,$emailid,$femails );
+
+
+	}
+	
+	public function sentInviteMail( ) {
+	
+	 return $this->db->sentInviteMail(  );
+
+
+	}
+	public function sentICS( ) {
+	
+	 return $this->db->sentICS(  );
+
+
+	}
+	
+	
+	public function invitefriend($username,$message,$email ) {
+	
+	 return $this->db->invitefriend($username,$message,$email );
+
+
+	}
+
+	public function sentfeedbackmail( ) {
+	
+	 return $this->db->sentfeedbackmail(  );
+
+
+	}
+
+  
+	public function sentforgotpassword( ) {
+	 
+	
+	 return $this->db->sentforgotpassword(   );
+
+
+	}
+	 
+
+
+	 
+	
+
+	public function resentactivationmail($email  ) {
+	
+	 return $this->db->resentactivationmail($email  );
+
+
+	}	
+	 
+}
+
+
+?>

@@ -1,0 +1,31 @@
+<?php
+
+
+class Mappers_DateInfo {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_DateInfo();
+	}
+
+
+	public function findYear($orgid) {
+		return $this->db->findYear($orgid);
+	}
+
+
+	public function createYear($jdata) {
+		return $this->db->createYear($jdata);
+	}
+
+    public function listYear($countid) {
+		return $this->db->listYear($countid);
+
+	}
+
+	 public function listYears() {
+	 return $this->db->listYears();
+
+	}
+}
+?>

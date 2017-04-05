@@ -1,0 +1,19 @@
+<?php
+
+
+class Services_Landing {
+
+ 	public function __construct() {
+  	}
+ 	
+ 	public function changeLanding($request) {
+ 	 		 
+  		$_SESSION['show']='landing';  		
+ 		return 'landing' ;
+ 	}
+ 	 
+ 	
+  
+
+}
+?>

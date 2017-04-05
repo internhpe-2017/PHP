@@ -1,0 +1,20 @@
+<?php
+
+include('C:/wamp/www/commondays/trunk/OpenInviter/openinviter.php');
+
+class Mappers_Share {
+	private $inviter;
+
+	public function __construct() { 
+	}
+ 
+
+	public function getMyContacts ($email,$passwd,$providerbox) {
+		$inviter= new OpenInviter();
+  		$inviter->startPlugin($providerbox);
+		$inviter->login($email,$passwd);
+		return  $inviter->getMyContacts();
+	} 
+	 
+}
+?>

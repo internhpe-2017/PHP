@@ -1,0 +1,22 @@
+<?php
+
+
+class Services_News {
+	private $news_mapper;
+  
+	public function __construct() {
+		$this->news_mapper = new Mappers_News();
+ 		 
+	}
+
+ 
+	public function findNews ($request) { 
+	 
+	 if( (isset($request['news']) && !empty($request['news']) )  &&   (isset($request['year']) && !empty($request['year']) ))
+ 	    return $this->news_mapper->findNews ($request['news'],$request['year']); 
+	  
+	} 
+
+	 
+}
+?>

@@ -1,0 +1,67 @@
+<?php
+
+
+class Mappers_Organisation {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_Organisation();
+	}
+
+	public function findOrganisation($orgid) {
+		return $this->db->findOrganisation($orgid);
+	}
+
+
+	public function createOrganisation($jdata,$userid) {
+		return $this->db->createOrganisation($jdata,$userid);
+	}
+
+ 
+
+
+	public function findLocationOrganisationEventDates($orgid,$year,$locid,$uid) {
+		return $this->db-> findLocationOrganisationEventDates($orgid,$year,$locid,$uid);
+	}
+
+	public function findOrganisationProfile($orgid,$year) {
+		return $this->db->findOrganisationProfile($orgid,$year);
+	}
+
+	public function findOrganisationProfileByName($orgname,$year,$uid) {
+		return $this->db->findOrganisationProfileByName($orgname,$year,$uid);
+	}
+
+	public function addOrganisationProfile($jdata) {
+		return $this->db->addOrganisationProfile($jdata);
+	}
+
+	public function searchOrganisationByLoc($locid,$term,$year) {
+		return $this->db->searchOrganisationByLoc($locid,$term,$year);
+
+	}
+
+	public function searchOrganisation($term,$year) {
+		return $this->db->searchOrganisation($term,$year);
+	}
+
+	public function findOrganisationType() {
+
+		return $this->db->findOrganisationType();
+	}
+
+	public function listAllOrganisations($country,$state,$loc,$year,$org) {
+
+		return  $this->db->listAllOrganisations($country,$state,$loc,$year,$org);
+
+
+	}
+
+
+	public function listOrganisationsByLocation($country,$state,$loc,$year,$org) {
+		return $this->db->listOrganisationsByLocation($country,$state,$loc,$year,$org);
+	}
+
+
+}
+?>

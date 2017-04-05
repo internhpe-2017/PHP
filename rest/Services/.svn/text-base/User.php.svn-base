@@ -1,0 +1,220 @@
+<?php
+
+
+class Services_User {
+	private $user;
+	private $client;
+ 
+	public function __construct() {
+		$this->user = new Mappers_User();
+ 
+	}
+
+
+
+	public function createUser($jdata) {
+
+
+	}
+
+
+	public function findUserProfile($request) {
+
+
+
+ 	        if((isset($request['uname']) && !empty($request['uname'])))
+	        {
+			  $uname = mysql_real_escape_string($request['uname']);
+			//$passwd = mysql_real_escape_string($request['l_pass']);
+			// $uname = $_SESSION['userid'];			
+			 $passwd ='';
+
+
+			$response=$this->user->findUserProfile($uname ,$passwd);
+			$_SESSION['userinfo'] =$response;
+			// echo (isset($_SESSION['isLoggedIn']) .'index.tpl' . $_SESSION['isLoggedIn']) ;
+			//exit;
+			//if(!isset($_SESSION['isLoggedIn']) || !($_SESSION['isLoggedIn'])) 
+				  
+		        /*$_SESSION['userinfo'] =$response;  
+			$_SESSION['geodata']['location']=$response['location_name'];
+			$_SESSION['geodata']['location']=$response['location_name'];
+			$_SESSION['geodata']['country']=$response['country_code'];
+			$_SESSION['geodata']['country3']=$response['country_code'];
+			$_SESSION['geodata']['country_name']=$record->country_name; 
+			$_SESSION['year']=$curr_year; 
+			*/
+
+		  	return $response;
+	    	}
+	}
+
+
+
+	public function findUser($request) {
+		return $this->user->findUser($request);
+	}
+
+	public function updateUserProf($request) {
+	
+
+		if(isset($_SESSION['userinfo']['user_id']))
+			$request['user_id']=$_SESSION['userinfo']['user_id'];
+
+		return $this->user->updateUserProf($request);
+
+	}
+
+	public function updateUserAccount($request) {
+
+		$request['user_id']=$_SESSION['userinfo']['user_id'];
+
+		return $this->user->updateUserAccount($request);
+
+	}
+	public function updateUpdateLocation($request) {
+
+		$request['user_id']=$_SESSION['userinfo']['user_id'];
+
+		return $this->user->updateUpdateLocation($request);
+
+	}
+
+
+
+	public function deleteUser($request) {
+
+
+	}
+
+	public function listUser() {
+
+	}
+
+
+	public function login($request){
+	}
+
+	public function forgotpass($request){
+
+	    $uname=mysql_real_escape_string($request['f_email']);
+
+	    if (empty($_SESSION['captcha']) || trim(strtolower($request['captcha'])) != $_SESSION['captcha'])
+	    {
+	    	unset($_SESSION['captcha']);
+		    return array("status"=>"Invalid Captcha");
+	    }
+	    unset($_SESSION['captcha']);
+	    if((isset($request['f_email']) && !empty($request['f_email'])) ){
+		 $uname = mysql_real_escape_string($_POST['f_email']);   ;
+		 if(($response=$this->user->forgotpass($uname))){
+ 			$reg = array("status"=>"success");
+
+		 }
+		 else{
+		       $reg = array("status"=>"error");
+		 }
+		 return $reg;
+
+	    }
+	}
+	public function changepass($request){
+		if(($response=$this->user->changepass($request))){
+ 			$reg =  array("status"=>"success");
+		 }
+		 else{
+		     $reg =  array("status"=>"error");
+		 }
+		 return $reg;
+	}
+
+	public function idcheck($request){
+		if((!$response=$this->user->idcheck($request))){
+ 			$reg =  array("status"=>"failure");
+		 }
+		 else{
+		     $reg =  array("status"=>"success");
+		 }
+		 return $reg;
+	}
+
+	public function fblogin($request){
+
+
+
+		$uname=mysql_real_escape_string($request['uname']);
+		$email=mysql_real_escape_string($request['email']);
+		$name=mysql_real_escape_string($request['name']);
+		$userloc=mysql_real_escape_string($request['loc']);
+		//$location=mysql_real_escape_string($request['name']);
+		//return $data=$this->user->fblogin($uname,$email) ;
+		//need to validate this session values
+
+
+
+		if(($data=$this->user->fblogin($uname,$email,$userloc))){
+			$_SESSION['userinfo'] =  $data ;
+
+			if(isset($_SESSION['userinfo']) || $_SESSION['userinfo']!='')
+			{
+
+				// session_cache_expire( 20 );
+				$_SESSION['isLoggedIn'] = 'isLoggedIn';
+				$_SESSION['timeOut'] = 120;				 
+				$_SESSION['loggedAt']=time();
+				$_SESSION['jdata'] = $data ;
+				//$smarty->assign('userinsession','userinsession');
+
+
+
+			}
+
+			return  array("status"=>"success","val"=>$data);
+
+		}
+		else
+		{
+   		   return  array("status"=>"error");
+   		}
+	}
+
+	public function register($request) {
+
+
+		$uname=$request['uname'];
+		$pass=$request['pass'];
+		$captcha=$request['captcha'];
+		$name=$request['name'];
+		$cntry=$request['rcountry'];
+
+
+		 if(  (isset($request['name']) && !empty($request['name'])) &&
+		      (isset($request['uname']) && !empty($request['uname'])) &&
+		      (isset($request['pass']) &&  !empty($request['pass']) ) && !empty($request['captcha']))
+		 {
+
+			if (empty($_SESSION['captcha']) || trim(strtolower($request['captcha'])) != $_SESSION['captcha'])
+			{
+				unset($_SESSION['captcha']);
+				return json_decode('["Invalid Captcha"]');
+			}
+			unset($_SESSION['captcha']);
+
+
+			$uname = mysql_real_escape_string($request['uname']);
+			$pass = mysql_real_escape_string($request['pass']);
+			$name = mysql_real_escape_string($request['name']);
+			$cntry = mysql_real_escape_string($request['rcountry']);
+			// $email = mysql_real_escape_string($_POST['email']);
+
+
+
+			$year=$_SESSION['year'];
+ 			$reg = $this->user->register($uname,$pass, $name ,$name,$year,$cntry);
+
+			return $reg   ;
+		 }
+ 	}
+}
+
+?>

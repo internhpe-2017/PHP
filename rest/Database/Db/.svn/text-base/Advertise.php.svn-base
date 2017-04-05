@@ -1,0 +1,103 @@
+<?php
+
+class Database_Db_Advertise extends Database_Db_Abstract {
+	protected $table = Database_DatabaseTables::LOCA_DATE_ADV;
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+	public function createAdvertise($jdata) {
+
+
+ 	}
+
+        public function findAdvertise($orgid) {
+
+
+ 	}
+
+	public function updateAdvertise($orgid) {
+
+
+ 	}
+
+	public function deleteAdvertise($orgid) {
+
+
+ 	}
+
+   	 public function listAdvertise($countid) {
+
+
+		$rs=$this->db->query('SELECT * FROM `Advertise` WHERE country_code=:countryid order by Advertise_name');
+		$rs->bindValue(':countryid', $countid);
+		$handlerres=$rs->execute();
+
+		if($this->db->isError()) {
+		return false;
+		}
+
+		$slist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+		$slist = array_merge($slist,array("".$rst['Advertise_id'].""=>$rst['Advertise_name']));
+		}
+		$rs->freeResult();
+		return $slist;
+
+
+
+ 	}
+ 	public function listAllAdvertiseByYear($year)
+ 	{
+ 	}
+
+ 	public function listAllAdvertiseByLocationandYear($year,$location)
+ 	{
+ 	}
+
+        public function listAllAdvertise() {
+
+		$rs=$this->db->query('SELECT * FROM loca_date_adv where is_deleted=0');
+ 		$handlerres=$rs->execute();
+
+		if($this->db->isError()) {
+			return false;
+		}
+ 		$advarry=array();
+ 		while($rst = mysql_fetch_assoc($handlerres))
+		{
+			$advarry[$rst['location_id']]['advert']=$rst['advert'];
+			$advarry[$rst['location_id']]['year']=$rst['year'];
+		}
+		$rs->freeResult();
+  		return  $advarry;
+ 	}
+
+  	public function showBanner($location,$year) {
+
+		$rs1=$this->db->query('SELECT  `loca_main_banner_adv`.`adv_url` as `adv_url_main`,   `loca_main_banner_adv`.`adv_head_title` as `adv_head_title`,    `loca_sub_banner_adv`.`adv_design` as `adv_design`  ,    `loca_sub_banner_adv`.`adv_head` as `adv_sub_head`  ,`loca_main_banner_adv`.`main_adv_id` as `main_adv_id`, `loca_main_banner_adv`.`adv_head` as `adv_main_head`, `loca_sub_banner_adv`.`sub_adv_id` as `sub_adv_id`  ,`loca_ads`.`adv_id` as `adv_id` ,`loca_ads`.`adv_desc` as `adv_desc`,`loca_ads`.`adv_url` as `adv_url` ,`loca_ads`.`adv_img` as `adv_img`   FROM  `loca_ads`  INNER JOIN  `loca_sub_banner_adv` ON `loca_ads`.`sub_adv_id` = `loca_sub_banner_adv`.`sub_adv_id` INNER JOIN   `loca_main_banner_adv` ON `loca_sub_banner_adv`.`main_adv_id` = `loca_main_banner_adv`.`main_adv_id` where loca_ads.location_id=loca_sub_banner_adv.location_id and loca_main_banner_adv.location_id=loca_ads.location_id and loca_main_banner_adv.location_id=loca_sub_banner_adv.location_id and   loca_ads.year=loca_sub_banner_adv.year and loca_main_banner_adv.year=loca_ads.year and loca_main_banner_adv.year=loca_sub_banner_adv.year and loca_main_banner_adv.location_id=:locationid and loca_main_banner_adv.year=:yearid and loca_main_banner_adv.is_deleted=0 and loca_ads.is_deleted=0 and loca_sub_banner_adv.is_deleted=0  ');
+
+		$rs1->bindValue(':yearid', $year);
+		$rs1->bindValue(':locationid', $location);
+		$handlerres=$rs1->execute();
+
+		if($this->db->isError()) {
+			return false;
+		}
+		$ads = array();
+		while($row = mysql_fetch_assoc($handlerres))
+		{
+			 $ads['adv_head_title'] = $row['adv_head_title'];
+			 $ads['adv_url_main'] = $row['adv_url_main'];
+			 $ads[$row['main_adv_id'][0]][$row['sub_adv_id'][0]][] =
+			  array(  array( $row['adv_id'],$row['adv_design'] ,$row['adv_sub_head']),$row['adv_url'],$row['adv_img'],$row['adv_desc'],);
+		}
+		$rs1->freeResult();
+
+		return $ads;
+        }
+
+
+}
+?>

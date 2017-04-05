@@ -1,0 +1,971 @@
+<?php
+
+class Database_Db_Widget extends Database_Db_Abstract {
+
+	private $orgcustMapper;
+
+	private $org_list='';
+	public function __construct() {
+		parent::__construct();
+
+	}
+
+
+
+	//{"gd":{"grid":{"backgroundColor":"#ffffff"}},"yearg":["2012"],"loc":["Bangalore"],"sd":{"series":{"shadowSize":0}},"xd":[[[1,"11Jan"],[2,"12Jan"],[3,"16Jan"],[4,"14Feb"],[5,"16Feb"],[6,"21Feb"],[7,"22Feb"],[8,"23Feb"],[9,"10Jul"],[10,"21Dec"],[11,"10Jan"],[2,"12Jan"],[3,"16Jan"],[12,"25Jan"],[13,"15Feb"],[14,"7Mar"],[15,"16May"],[16,"18May"],[17,"3Dec"]]],"xm":{"data":["30"]},"xz":["1","0.1"],"yd":[[[3,"arm_Bangalore"],[1,"nokia_bangalore"]]],"ym":{"data":["30"]},"yz":["1","5"],"xs":{"xautoscaleMargin":"0.001"},"ys":{"yautoscaleMargin":"0.001"},"ds":{"plt":[[{"data":[[{"data":[[1,"1"]],"advdesc":"images\/placeads.jpg","label":""},{"data":[[2,"1"]],"advdesc":"images\/placeads.jpg","label":""},{"data":[[3,"1"]],"advdesc":"images\/placeads.jpg","label":""},{"data":[[4,"1"]],"advdesc":"images\/placeads.jpg","label":""},{"data":[[5,"1"]],"advdesc":"images\/placeads.jpg","label":""},{"data":[[6,"1"]],"advdesc":"images\/placeads.jpg","label":""},{"data":[[7,"1"]],"advdesc":"images\/placeads.jpg","label":""},{"data":[[8,"1"]],"advdesc":"","label":""},{"data":[[9,"1"]],"advdesc":"images\/placeads.jpg","label":""},{"data":[[10,"1"]],"advdesc":"images\/placeads.jpg","label":""},{"data":[[11,"3"]],"advdesc":"images\/placeads.jpg","label":""},{"data":[[2,"3"]],"advdesc":"images\/placeads.jpg","label":""},{"data":[[3,"3"]],"advdesc":"images\/placeads.jpg","label":""},{"data":[[12,"3"]],"advdesc":"images\/placeads.jpg","label":""},{"data":[[13,"3"]],"advdesc":"images\/placeads.jpg","label":""},{"data":[[14,"3"]],"advdesc":"images\/placeads.jpg","label":""},{"data":[[15,"3"]],"advdesc":"images\/placeads.jpg","label":""},{"data":[[16,"3"]],"advdesc":"","label":""},{"data":[[17,"3"]],"advdesc":"images\/placeads.jpg","label":""}]]}]]}}
+
+        public function doWidget($country,$state, $location,$org,$year,$flag,$scenario,$user_id,$graph_share_token)
+        {
+        
+ 			$loc=array($location);
+ 			$org_list='';
+			//  get the list of org from the org_customisation table
+			//  set the the $org id with list of organisaitons
+			//  get session information from the session variable
+			// return array($scenario);
+
+			 if(!empty($year))
+			     $year=$year;
+			 else
+			     $year=$_SESSION['year'];
+
+			 if($year=='Year' || $year=='')
+				$year=$_SESSION['year'];
+
+
+			 switch ($scenario) {
+			     case 1:
+				 $org_list=$this->scenario1($user_id,$year) ;
+				 break;
+			     case 2:
+				 $org_list=$this->scenario2($year,$location,$org) ;
+				 break;
+			     case 3:
+				 $org_list=$this->scenario3($year,$org) ;
+				 break;
+			     case 4:
+				 $org_list=$this->scenario4($year,$location) ;
+				 break;
+			     case 5:
+				 $org_list=$this->scenario5($year) ;
+				 break;
+			     case 6: //link
+				 $org_list=$this->scenario2($year,$location,$org) ;
+				 break;
+			     case 7:
+				 $org_list=$this->scenario7($graph_share_token) ;
+				 break;
+			     case 8:
+				 $org_list=$this->scenario8($year,$country) ;
+				 break;
+			     case 9:
+				 $org_list=$this->scenario9($year,$country,$location) ;
+				 break;
+			     case 20:
+				 $org_list=$this->scenario6($year,$country,$location,$org) ;
+				 break;
+			     case 61:
+				 $org_list=$this->scenario61($year,$country,$org) ;
+				 break;
+			     
+
+			 }
+			// return $country.$state.$location.$org.$year.$scenario;
+			//  print_r($org_list."---".$scenario);
+
+			/*if($org_list!="")
+			{*/
+			//  return   $org_list	;
+
+			//$tok =split('","',$org_list);
+			$tok =explode('","',$org_list);
+
+			$tokcount=count($tok);
+			 //print_r($tokcount);
+
+
+			$ploting['plt'][0][0]['data'][0]= $this->getLabelData($org_list,$user_id);
+			$yaxis[0]=$this->getYaxisData($org_list,$user_id);
+			//hardcoding
+
+			$ymax=array("data"=>array($tokcount*6));
+			$yearg=array($year);
+			//hardcoding
+			$yzoomRange=array("1", "5");
+			$yautoscaleMargin=array("yautoscaleMargin"=>'0.001');
+			$xautoscaleMargin=array("xautoscaleMargin"=>'0.001');
+
+			//x axis//hardcoding
+			$xmax=array("data"=>array("30"));
+			$xzoomRange= array("1", "0.1");
+			$xaxis[0]=$this->getXaxisData($org_list,$user_id);
+			$xdatacount=$this->getXDataCount($org_list,$user_id);
+
+
+
+
+			//series
+
+			$seriesdata['series']['lines']=array('show'=>'true');
+			$seriesdata['series']['points']=array('show'=>'true');
+			$seriesdata['series']=array('shadowSize'=>0);
+
+			$griddata['grid']=array('hoverable'=>'true');
+			$griddata['grid']=array('clickable'=>'true');
+			$griddata['grid']=array('backgroundColor'=>'#ffffff');
+
+			$linedata=array('show'=>'true');
+
+			$pointdata=array('show'=>'true');
+
+			$selectiondata=array('mode'=>'xy');
+
+			$zoomdata=array('interactive'=>'true');
+
+			$pandata=array('interactive'=>'true');
+
+			$colorsdata=$this->getColorData();
+
+			$legenddata=$this->getLegend();
+			return array("gd"=>$griddata,"yearg"=>$yearg,"loc"=>$loc,"sd"=>$seriesdata,"xd"=>$xaxis, "xm"=>$xmax, "xz"=>$xzoomRange,"xcount"=>$xdatacount,  "ycount"=>$tokcount,"yd"=>$yaxis, "ym"=>$ymax, "yz"=>$yzoomRange,"xs"=>$xautoscaleMargin, "ys"=>$yautoscaleMargin,"ds"=>$ploting );
+
+			/*}
+			else
+			{
+
+				return array();
+
+			}*/
+ 	}
+
+
+
+ 	//[dayofyear,company], {label}]
+	//[{"org":"nokia_bangalore","orgevcnt":"10","location_name":"bangalore","orgid":"1","dates":{"09/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"9","dayofw":"Mon"},"10/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"10","dayofw":"Tue"},"11/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"11","dayofw":"Wed"},"16/Jan/2012":{"advert":"","description":"DateDescription","dayofy":"16","dayofw":"Mon"},"17/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"17","dayofw":"Tue"},"18/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"18","dayofw":"Wed"},"19/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"19","dayofw":"Thu"},"24/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"24","dayofw":"Tue"},"25/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"25","dayofw":"Wed"},"26/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"26","dayofw":"Thu"}}},{"org":"cisco_Bangalore","orgevcnt":"8","location_name":"Bangalore","orgid":"2","dates":{"10/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"10","dayofw":"Tue"},"11/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"11","dayofw":"Wed"},"12/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"12","dayofw":"Thu"},"18/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"18","dayofw":"Wed"},"19/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"19","dayofw":"Thu"},"14/Feb/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"45","dayofw":"Tue"},"20/Mar/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"80","dayofw":"Tue"},"17/Apr/2012":{"advert":"","description":"DateDescription","dayofy":"108","dayofw":"Tue"}}},{"org":"nest_kochi","orgevcnt":"5","location_name":"kochi","orgid":"3","dates":{"10/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"10","dayofw":"Tue"},"11/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"11","dayofw":"Wed"},"12/Jan/2012":{"advert":"","description":"DateDescription","dayofy":"12","dayofw":"Thu"},"18/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"18","dayofw":"Wed"},"19/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"19","dayofw":"Thu"}}},{"org":"verizon_chennai","orgevcnt":"5","location_name":"chennai","orgid":"4","dates":{"10/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"10","dayofw":"Tue"},"11/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"11","dayofw":"Wed"},"17/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"17","dayofw":"Tue"},"18/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"18","dayofw":"Wed"},"19/Jan/2012":{"advert":"","description":"DateDescription","dayofy":"19","dayofw":"Thu"}}},{"org":"acusis_Bangalore","orgevcnt":"8","location_name":"Bangalore","orgid":"5","dates":{"10/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"10","dayofw":"Tue"},"11/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"11","dayofw":"Wed"},"19/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"19","dayofw":"Thu"},"25/Jan/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"25","dayofw":"Wed"},"16/Feb/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"47","dayofw":"Thu"},"21/Feb/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"52","dayofw":"Tue"},"11/Jul/2012":{"advert":"Adv Snippet","description":"DateDescription","dayofy":"193","dayofw":"Wed"},"22/Aug/2012":{"advert":"","description":"DateDescription","dayofy":"235","dayofw":"Wed"}}}]
+	public function getLabelData($org,$user_id)
+	{
+
+	 //$org='"cisco","intel"';
+	 
+	// return $org.$user_id;
+
+	    //$month=array("jan"=>"","");
+
+	    if( trim($org)!=="Organisation" )
+	    {
+	       if($org=='')
+	       		$org="''";
+	       		
+	       	 if(empty($user_id))
+	         {	
+			 $rs=$this->db->query('select ifnull(concat("[",group_concat(org_hols_json),"]"),"") as data from   year_org_prof  where user_id=:userid and org_id in ('.$org.') and is_deleted=0 order by org_id');
+		 $rs->bindValue(':userid', 'system');
+		 }
+		 else
+		 {
+		 	$rs=$this->db->query('select ifnull(concat("[",group_concat(org_hols_json),"]"),"") as data from   year_org_prof  where user_id=:userid and org_id in ('.$org.')  and is_deleted=0  order by org_id');
+		 $rs->bindValue(':userid', $user_id );
+		 }
+
+	    }
+	    else
+	    {
+	         if(empty($user_id))
+	         {
+	    		 $rs=$this->db->query('select concat("[",group_concat(org_hols_json),"]") as data from  year_org_prof  where user_id=:userid  and is_deleted=0 order by org_id');
+	    	 $rs->bindValue(':userid', 'system');
+	    	 }
+	    	 else
+	    	 {
+	    		 $rs=$this->db->query('select concat("[",group_concat(org_hols_json),"]") as data from   year_org_prof  where user_id=:userid  and is_deleted=0 order by org_id');
+	    	 $rs->bindValue(':userid', $user_id);
+    	 
+	    	 }
+	    	 
+	    }
+
+ 		$handlerres=$rs->execute();
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+		return false;
+		}
+
+		$otlist=$rs->value('data');
+
+		$rs->freeResult();
+		$decoded= json_decode($otlist,true);
+
+
+		$j=0;
+
+		if($decoded=='')
+		{
+	 	   $array3 = array("No Data Found");
+		}
+		else
+		{
+ 			$j=0;
+			$i=1;
+			$data=array();
+			foreach($decoded   as $key=>$item)
+			{
+	 			foreach($decoded[$j]['dates']  as $key=>$item)
+				{
+					$key = strtotime(str_replace('/','-',$key));
+					if (!array_key_exists($key, $data))
+					{
+						array_push($data,$key);
+						$i=$i+1;
+					}
+				}
+				$j=$j+1;
+			}
+			sort($data);
+			$data2=array_values(array_unique($data));  //all dates
+			$len=sizeof($data2);
+		  	// return $data2;
+			$j=0;
+			$array3 = array();
+			foreach($decoded   as $key=>$item)
+			{
+
+				$orgid= $decoded[$j]['orgid'] ;
+				$orgevcnt= $decoded[$j]['orgevcnt'] ;
+
+ 				$partialdate=array();
+				foreach($decoded[$j]['dates']  as $key=>$item) //15 partial dates
+				{
+					array_push( $partialdate,  strtotime(str_replace('/','-',$key)))	;
+				}
+ 				// return $a;
+				$keys = array_keys($decoded[$j]['dates']); // 01/jan/2012
+
+				for($p=0,$loop=1; $p<$len;$p++,$loop++)  // all dates loop
+				{
+  					  $foundval=array_search(  $data2[$p] ,$partialdate);
+
+ 					  if(strlen($foundval)==0 )
+					  {
+ 					  	$value=$decoded[$j]['dates'][$keys[$foundval]];  // label and advs
+  						$data1= array("data"=> array(array($loop,null)), "orgevcnt"=>$orgevcnt,"datedesc"=>$value['description'],"advdesc"=>$value['advert'],"label"=>'<div id="wadsid" class="wads"><div style="float:left;margin:1px;"><a id="'.$p.'"  href="'.$value['advert_href'].'"><img src="'.Config::SITE_HTTP_USER_PATH.$value['advert_img'].'" height="70" width="100" border=0 alt="'.$value['advert'].'"></a></div><div style="float:right">'.$value['description'].'</div></div>');
+					  }
+					  else
+					  {
+
+						$value=$decoded[$j]['dates'][$keys[$foundval]];  // label and advs
+						$data1= array("data"=> array(array($loop,$j+1)),// $orgid to $j+1
+						"orgevcnt"=>$orgevcnt,"datedesc"=>$value['description'],"advdesc"=>$value['advert'],"label"=>'<div  id="wadsid" class="wads"><div style="float:left;margin:1px;"><a id="'.$p.'"  href="'.$value['advert_href'].'"><img src="'.Config::SITE_HTTP_USER_PATH.$value['advert_img'].'" height="70" width="100" border=0 alt="'.$value['advert'].'"></a></div><div style="float:right">'.$value['description'].'</div></div>');
+					  }
+					  array_push($array3,$data1);
+
+				}
+				$j=$j+1;
+			}
+		}
+ 		// return json_decode('[{"data":[[1,"1"]]},{"data":[[2,"1"]]},{"data":[[3,"null"]]},{"data":[[4,"1"]]},{"data":[[5,"1"]]},{"data":[[6,"1"]]},{"data":[[7,"null"]]},{"data":[[8,"1"]]},{"data":[[9,"1"]]},{"data":[[10,"null"]]},{"data":[[11,"1"]]},{"data":[[12,"1"]]},{"data":[[13,"1"]]},{"data":[[14,"1"]]},{"data":[[15,"null"]]},{"data":[[16,"1"]]},{"data":[[17,"1"]]},{"data":[[18,"null"]]},{"data":[[19,"null"]]},{"data":[[20,"1"]]},{"data":[[21,"null"]]},{"data":[[22,"1"]]},{"data":[[1,"null"]]},{"data":[[2,"null"]]},{"data":[[3,"3"]]},{"data":[[4,"null"]]},{"data":[[5,"3"]]},{"data":[[6,"3"]]},{"data":[[7,"3"]]},{"data":[[8,"null"]]},{"data":[[9,"null"]]},{"data":[[10,"3"]]},{"data":[[11,"null"]]},{"data":[[12,"null"]]},{"data":[[13,"null"]]},{"data":[[14,"null"]]},{"data":[[15,"3"]]},{"data":[[16,"null"]]},{"data":[[17,"null"]]},{"data":[[18,"3"]]},{"data":[[19,"3"]]},{"data":[[20,"null"]]},{"data":[[21,"3"]]},{"data":[[22,"null"]]}]',true);
+  		 return $array3;
+
+	 }
+
+	public function getXDataCount($org,$user_id)
+	{
+			if( trim($org)!=="Organisation" )
+			{
+			     if($org=='')
+			      $org="''";
+		
+			      if(empty($user_id))
+			      {
+			      	$rs=$this->db->query('select count(distinct event_date) as cnt  from user_cust_org_event  where user_id=:userid and is_deleted=0 and org_id in ('.$org.') ');
+			      	$rs->bindValue(':userid', 'system');
+			      }
+			      else
+			      {
+			      	$rs=$this->db->query('select count(distinct event_date) as cnt  from user_cust_org_event  where user_id=:userid  and is_deleted=0  and org_id in ('.$org.') ');
+			      	$rs->bindValue(':userid',$user_id );
+			      
+			      }
+			}
+
+			else
+			{
+			 	if(empty($user_id))
+			 	{
+				$rs=$this->db->query('select count(distinct event_date) as cnt  from user_cust_org_event where user_id=:userid  and is_deleted=0  order by org_id');
+				$rs->bindValue(':userid', 'system');
+				}
+				else
+				{
+				$rs=$this->db->query('select count(distinct event_date) as cnt  from user_cust_org_event where user_id=:userid  and is_deleted=0  order by org_id');
+				$rs->bindValue(':userid', $user_id);
+			
+				}
+			}
+
+			$handlerres=$rs->execute();
+			if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+				return false;
+			}
+
+			$otlist=$rs->value('cnt');
+			$rs->freeResult();
+		return $otlist;
+	}
+
+
+	//[[3,"arm_Bangalore"],[1,"nokia_bangalore"]]  here 1,3 are organization id
+ 	//[companyid,companyname]
+	public function getYaxisData($org,$user_id)
+	{
+ 		if( trim($org)!=="Organisation" )
+ 		{
+ 		     if($org=='')
+ 		      $org="''";
+ 		      if(empty($user_id))
+			{
+		      $rs=$this->db->query('select ifnull(concat("[",group_concat(org_hols_json),"]"),"") as data from  year_org_prof where org_id in ('.$org.') and user_id=:userid  and is_deleted=0  order by org_id');
+		      $rs->bindValue(':userid', 'system');
+		      }
+		      else
+		      {
+
+		      $rs=$this->db->query('select ifnull(concat("[",group_concat(org_hols_json),"]"),"") as data from  year_org_prof where org_id in ('.$org.') and user_id=:userid  and is_deleted=0  order by org_id');
+		      $rs->bindValue(':userid', $user_id );
+			      
+		      }
+		}
+
+		else
+		{
+			if(empty($user_id))
+			{
+			$rs=$this->db->query('select concat("[",group_concat(org_hols_json),"]") as data from  year_org_prof where user_id=:userid  and is_deleted=0 order by org_id');
+			$rs->bindValue(':userid', 'system');
+			}
+			else
+			{
+			$rs=$this->db->query('select concat("[",group_concat(org_hols_json),"]") as data from  year_org_prof where user_id=:userid  and is_deleted=0  order by org_id');
+			$rs->bindValue(':userid', $user_id );
+			}
+			
+			
+			
+			
+		}
+			
+
+		$handlerres=$rs->execute();
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		}
+
+		$otlist=$rs->value('data');
+		$rs->freeResult();
+		$decoded= json_decode($otlist,true);
+		$json_o='[';
+		$j=0;
+		$i=1;
+		$loop= count($decoded);
+		if($decoded=='')
+		{
+		   $json_o=$json_o.'"No Data Found"';
+		}
+		else
+		{
+			//return $loop;
+			foreach($decoded   as $key=>$item)
+			{
+			   $orgid= $decoded[$j]['orgid'] ;
+			   $orgname= $decoded[$j]['org'] ;
+			    if($i==$loop)
+			   $json_o=$json_o.'['.$i.',"'.$orgname.'"]';//$orgid to $i
+			   else
+			   $json_o=$json_o.'['.$i.',"'.$orgname.'"],';//$orgid to $i
+
+			   $j=$j+1;
+			    $i=$i+1;
+			}
+		}
+		$json_o=$json_o.']';
+
+
+
+		$arr1=json_decode($json_o);
+
+
+		 $len=sizeof($arr1);
+
+
+		 //sort
+		// for($i=0;$i<$len;$i++)
+		//    usort($arr1,  array($this,"cmpcmpny"));
+
+		return $arr1;
+
+
+
+	 }
+
+
+ 	//[dayofyear,"2date"]
+	// output :[[1,"11Jan"],[2,"12Jan"],[3,"16Jan"],[4,"14Feb"],[5,"16Feb"],[6,"21Feb"],[7,"22Feb"],[8,"23Feb"],[9,"10Jul"],[10,"21Dec"],[11,"10Jan"],[2,"12Jan"],[3,"16Jan"],[12,"25Jan"],[13,"15Feb"],[14,"7Mar"],[15,"16May"],[16,"18May"],[17,"3Dec"]]
+	public function getXaxisData($org,$user_id)
+	{
+
+ 		if( trim($org)!=="Organisation" )
+		{
+		     if($org=='')
+		        $org="''";
+		        if(empty($user_id))
+			{
+			$rs=$this->db->query('select  ifnull(concat("[",group_concat(org_hols_json),"]"),"") as data from  year_org_prof where user_id=:userid  and is_deleted=0 and org_id in ('.$org.')  order by org_id');
+			$rs->bindValue(':userid', 'system');
+			}
+			else
+			{
+			$rs=$this->db->query('select  ifnull(concat("[",group_concat(org_hols_json),"]"),"") as data from  year_org_prof where user_id=:userid  and is_deleted=0 and org_id in ('.$org.')  order by org_id');
+			$rs->bindValue(':userid', $user_id);
+			
+			}
+		}
+		else
+		{
+			if(empty($user_id))
+			{
+			$rs=$this->db->query('select concat("[",group_concat(org_hols_json),"]") as data from  year_org_prof  where user_id=:userid  and is_deleted=0 order by org_id');
+			$rs->bindValue(':userid', 'system');
+			}
+			else
+			{
+			$rs=$this->db->query('select concat("[",group_concat(org_hols_json),"]") as data from  year_org_prof where user_id=:userid  and is_deleted=0 order by org_id');
+			$rs->bindValue(':userid', $user_id);
+			
+			}
+		}
+			
+		$handlerres=$rs->execute();
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+		return false;
+		}
+
+		$otlist=$rs->value('data');
+
+
+
+		$rs->freeResult();
+		$decoded= json_decode($otlist,true);
+
+
+		$monthnames = array('01'=>'Jan','02'=>'Feb','03'=>'Mar','04'=>'Apr','05'=>'May','06'=>'Jun','07'=>'Jul','08'=>'Aug','09'=>'Sep','10'=>'Oct','11'=>'Nov','12'=>'Dec');
+		$monthnum = array('Jan'=>'01','Feb'=>'02','Mar'=>'03','Apr'=>'04','May'=>'05','Jun'=>'06','Jul'=>'07','Aug'=>'08','Sep'=>'09','Oct'=>'10','Nov'=>'11','Dec'=>'12');
+
+ 		 // return $decoded;
+
+	 	if($decoded=='')
+		{
+
+		   $array3 = array("No Data Found");
+	 	}
+		else
+		{
+
+
+			$j=0;
+			$i=1;
+
+			$data=array();
+			foreach($decoded   as $key=>$item)
+			{
+				foreach($decoded[$j]['dates']  as $key=>$item)
+				{
+					$key = strtotime(str_replace('/','-',$key));
+					if (!array_key_exists($key, $data))
+					{
+						array_push($data,$key);
+						$i=$i+1;
+					}
+				}
+				$j=$j+1;
+			}
+			sort($data);
+			$data2=array_values(array_unique($data));  //all dates
+ 			$len=sizeof($data2);
+ 			$j=0;
+ 			$array3 = array();
+ 			foreach($decoded   as $key=>$item)
+			{
+
+				$orgid= $decoded[$j]['orgid'] ;
+ 				$partialdate=array();
+				foreach($decoded[$j]['dates']  as $key=>$item) //15 partial dates
+				{
+					array_push( $partialdate,  strtotime(str_replace('/','-',$key)))	;
+				}
+ 				$keys = array_keys($decoded[$j]['dates']); // 01/jan/2012
+ 				for($p=0,$loop=1; $p<$len;$p++,$loop++)  // all dates loop
+				{
+  					  $foundval=array_search(  $data2[$p] ,$partialdate);
+    					  if(strlen($foundval)!=0 )
+					  {
+						$value= $keys[$foundval];  // label and advs
+						$value = explode('/',  $value);
+						$d = $value[0]; //02
+						$M = $value[1]; //Jan
+						$Y = $value[2]; //2012
+						$value =  $d.$M ;
+ 						$data1=array($loop,''.$value.'');
+					  }
+					  else
+					  {
+
+						$data1=array($loop,'');
+					  }
+					  array_push($array3,$data1);
+
+				}
+
+				$j=$j+1;
+			}
+ 		 }
+ 		  //return json_decode('[[1,"02Jan"],[2,"05Jan"],[3,""],[4,"11Jan"],[5,"12Jan"],[6,"16Jan"],[7,""],[8,"02Feb"],[9,"14Feb"],[10,""],[11,"16Feb"],[12,"21Feb"],[13,"22Feb"],[14,"23Feb"],[15,""],[16,"08May"],[17,"10May"],[18,""],[19,""],[20,"10Jul"],[21,""],[22,"21Dec"],[1,""],[2,""],[3,"10Jan"],[4,""],[5,"12Jan"],[6,"16Jan"],[7,"25Jan"],[8,""],[9,""],[10,"15Feb"],[11,""],[12,""],[13,""],[14,""],[15,"07Mar"],[16,""],[17,""],[18,"16May"],[19,"18May"],[20,""],[21,"03Dec"],[22,""]]',true);
+ 		return $array3;
+
+	}
+
+
+	public function cmpcmpny($a, $b)
+	{
+
+	     if ($a[1]   == $b[1]  ) {
+
+		 return 0;
+	     }
+	     return ($a[1]   < $b[1] ) ? -1 : 1;
+	}
+
+	public function cmpdateid($a, $b)
+	{
+
+	     if ($a[0]   == $b[0]  ) {
+
+		 return 0;
+	     }
+	     return ($a[0]   < $b[0] ) ? -1 : 1;
+	}
+
+
+
+	public function getColorData()
+	{
+	  return array("#a0f0f0","#4444","#4534","#6000");
+	}
+
+	public function getLegend()
+	{
+	  return array('show'=>'false');
+	}
+
+
+	public function scenario1($user_id,$year)
+	{
+
+		$this->orgcustMapper = new Mappers_OrganisationCustomisation();
+		$cmpylist=$this->orgcustMapper->listOrganisationsByUserCustomisation($user_id,$year);
+
+ 		$i=1;
+		$org_list1='';
+		$loop=0;
+ 		if (is_object($cmpylist)) {
+			foreach (get_object_vars($cmpylist) as $key => $val)
+			{
+
+			  if($key=='sel')
+			  {
+
+			    $loop = count((array)$val);
+
+
+
+
+			    foreach (get_object_vars($val) as $key => $val)
+			    {
+
+				if($i==$loop)
+				{
+					$org_list1=$org_list1.'"'.$key.'"';
+				}
+				else
+				{
+					$org_list1=$org_list1.'"'.$key.'"'.',';
+				}
+
+				$i=$i+1;
+			    }
+
+			  }
+
+			}
+
+		}
+		 return   $org_list1;
+
+	}
+
+	public function scenario2($year,$location,$org)
+	{ //	year,location, org  and userinfosession
+
+		$loc=array($location);
+		//check for  choosing only location and not organisation
+
+		$org_list1="";
+
+		$sql=' select distinct org_profile.org_id as org_id from org_profile INNER JOIN  org_event where org_event.year =:year and org_profile.year=org_event.year  and location=:location and org_event.org_id=org_profile.org_id  and org_event.is_deleted=0   and org_profile.is_deleted=0  ';
+		if($org!='' && $org!='Organisation')
+			$sql= $sql.' and organisation = :orgname ';
+
+		$rs = $this->db->query($sql);
+
+		$rs->bindValue(':year',$year);
+		$rs->bindValue(':location',$location);
+		if($org!='' && $org!='Organisation')
+			$rs->bindValue(':orgname',$org);
+
+		$handlerres=$rs->execute();
+
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+		   return false;
+		}
+
+		$i=1;
+		$loop=$rs->numberOfRows();
+		while($rst = mysql_fetch_assoc($handlerres)){
+
+			if($i==$loop)
+			   $org_list1=$org_list1.'"'.$rst['org_id'].'"';
+			else
+			   $org_list1=$org_list1.'"'.$rst['org_id'].'",';
+
+			$i=$i+1;
+
+		}
+		$rs->freeResult();
+
+
+
+ 		return  $org_list1;
+	}
+
+
+	public function scenario3( $year,$org)
+	{ //	year,location, org  and userinfosession
+
+			//$loc=array($location);
+			//check for  choosing only location and not organisation
+
+			$org_list1="";
+
+			$sql=' select distinct org_profile.org_id as org_id from org_profile INNER JOIN  org_event where org_event.year =:year and org_profile.year=org_event.year    and org_event.org_id=org_profile.org_id and org_event.is_deleted=0   and org_profile.is_deleted=0 ';
+			if($org!='' && $org!='Organisation')
+				$sql= $sql.' and organisation = :orgname ';
+
+			$rs = $this->db->query($sql);
+
+			$rs->bindValue(':year',$year);
+			//$rs->bindValue(':location',$location);
+			if($org!=='' && $org!=='Organisation')
+				$rs->bindValue(':orgname',$org);
+
+			$handlerres=$rs->execute();
+
+
+			if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			   return false;
+			}
+
+			$i=1;
+			$loop=$rs->numberOfRows();
+			while($rst = mysql_fetch_assoc($handlerres)){
+
+				if($i==$loop)
+				   $org_list1=$org_list1.'"'.$rst['org_id'].'"';
+				else
+				   $org_list1=$org_list1.'"'.$rst['org_id'].'",';
+
+				$i=$i+1;
+
+			}
+			$rs->freeResult();
+
+
+
+	 		return  $org_list1;
+	}
+	public function scenario4( $year,$location)
+	{ //	year,location, org  and userinfosession
+
+		$loc=array($location);
+		//check for  choosing only location and not organisation
+
+		$org_list1="";
+
+		$sql=' select distinct org_profile.org_id as org_id from org_profile INNER JOIN  org_event where org_event.year =:year and org_profile.year=org_event.year  and location=:location and org_event.org_id=org_profile.org_id and org_event.is_deleted=0   and org_profile.is_deleted=0 ';
+
+		$rs = $this->db->query($sql);
+
+		$rs->bindValue(':year',$year);
+		$rs->bindValue(':location',$location);
+
+
+		$handlerres=$rs->execute();
+
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+		   return false;
+		}
+
+		$i=1;
+		$loop=$rs->numberOfRows();
+		while($rst = mysql_fetch_assoc($handlerres)){
+
+			if($i==$loop)
+			   $org_list1=$org_list1.'"'.$rst['org_id'].'"';
+			else
+			   $org_list1=$org_list1.'"'.$rst['org_id'].'",';
+
+			$i=$i+1;
+
+		}
+		$rs->freeResult();
+
+
+
+ 		return  $org_list1;
+	}
+
+	public function scenario5( $year)
+	{ //	year,location, org  and userinfosession
+
+		$loc=array($location);
+		//check for  choosing only location and not organisation
+
+		$org_list1="";
+
+		$sql=' select distinct org_profile.org_id as org_id from org_profile INNER JOIN  org_event where org_event.year =:year and org_profile.year=org_event.year    and org_event.org_id=org_profile.org_id and org_event.is_deleted=0   and org_profile.is_deleted=0 ';
+
+		$rs = $this->db->query($sql);
+
+		$rs->bindValue(':year',$year);
+
+
+		$handlerres=$rs->execute();
+
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+		   return false;
+		}
+
+		$i=1;
+		$loop=$rs->numberOfRows();
+		while($rst = mysql_fetch_assoc($handlerres)){
+
+			if($i==$loop)
+			   $org_list1=$org_list1.'"'.$rst['org_id'].'"';
+			else
+			   $org_list1=$org_list1.'"'.$rst['org_id'].'",';
+
+			$i=$i+1;
+
+		}
+		$rs->freeResult();
+
+
+
+ 		return  $org_list1;
+	}
+	public function scenario7($graph_share_token)
+	{
+
+
+		$this->orgcustMapper = new Mappers_OrganisationCustomisation();
+		$cmpylist=$this->orgcustMapper->listOrganisationsDataByGraphToken($graph_share_token );
+ 		$i=1;
+		$org_list1='';
+		$loop=0;
+
+		if (is_object($cmpylist)) {
+			foreach (get_object_vars($cmpylist) as $key => $val)
+			{
+			  if($key=='sel')
+			  {
+
+			    $loop = count((array)$val);
+
+			    foreach (get_object_vars($val) as $key => $val)
+			    {
+				if($i==$loop)
+					$org_list1=$org_list1.'"'.$key.'"';
+				else
+					$org_list1=$org_list1.'"'.$key.'"'.',';
+				$i=$i+1;
+			    }
+
+			  }
+
+			}
+		} elseif (is_array($cmpylist)) {
+
+			$loop = count($cmpylist);
+
+			for ($j=0;$i<$loop ; $j++)
+			{
+
+			 if($j==$loop-1)
+				$org_list1=$org_list1.''.$cmpylist[$j][orgid].'';
+			 else
+				$org_list1=$org_list1.''.$cmpylist[$j][orgid].''.',';
+			}
+
+		} else {
+			    print_r('check there');
+		}
+
+		return  $org_list1;
+
+	}
+
+	public function scenario8( $year,$cntry)
+	{ //	year,location, org  and userinfosession
+		 
+		//$loc=array($location);
+		//check for  choosing only location and not organisation
+
+		$org_list1="";
+
+		$sql=' select distinct org_profile.org_id as org_id from org_profile INNER JOIN  org_event where org_event.year =:year and org_profile.year=org_event.year  and country=:cntry and org_event.org_id=org_profile.org_id and org_event.is_deleted=0   and org_profile.is_deleted=0 ';
+
+		$rs = $this->db->query($sql);
+
+		$rs->bindValue(':year',$year);
+		$rs->bindValue(':cntry',$cntry);
+
+
+		$handlerres=$rs->execute();
+
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+		   return false;
+		}
+
+		$i=1;
+		$loop=$rs->numberOfRows();
+		while($rst = mysql_fetch_assoc($handlerres)){
+
+			if($i==$loop)
+			   $org_list1=$org_list1.'"'.$rst['org_id'].'"';
+			else
+			   $org_list1=$org_list1.'"'.$rst['org_id'].'",';
+
+			$i=$i+1;
+
+		}
+		$rs->freeResult();
+
+
+
+ 		return  $org_list1;
+	}
+
+	public function scenario6($year,$cntry,$location,$org)
+	{ //	year,location, org  and userinfosession
+
+		$loc=array($location);
+		//check for  choosing only location and not organisation
+
+		$org_list1="";
+
+		$sql=' select distinct org_profile.org_id as org_id from org_profile INNER JOIN  org_event where org_event.year =:year and org_profile.year=org_event.year and org_event.country_code=org_profile.country and location=:location and org_event.org_id=org_profile.org_id  and org_profile.country=:cntry and org_event.is_deleted=0   and org_profile.is_deleted=0';
+		if($org!='' && $org!='Organisation')
+			$sql= $sql.' and organisation = :orgname ';
+
+		$rs = $this->db->query($sql);
+
+		$rs->bindValue(':year',$year);
+		$rs->bindValue(':location',$location);
+		if($org!='' && $org!='Organisation')
+			$rs->bindValue(':orgname',$org);
+
+		$rs->bindValue(':cntry',$cntry);
+
+		$handlerres=$rs->execute();
+
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+		   return false;
+		}
+
+		$i=1;
+		$loop=$rs->numberOfRows();
+		while($rst = mysql_fetch_assoc($handlerres)){
+
+			if($i==$loop)
+			   $org_list1=$org_list1.'"'.$rst['org_id'].'"';
+			else
+			   $org_list1=$org_list1.'"'.$rst['org_id'].'",';
+
+			$i=$i+1;
+
+		}
+		$rs->freeResult();
+
+
+
+ 		return  $org_list1;
+	}
+	public function scenario61($year,$cntry,$org)
+	{ //	year, , org  and userinfosession
+
+		 
+		//check for  choosing only location and not organisation
+
+		$org_list1="";
+
+		$sql=' select distinct org_profile.org_id as org_id from org_profile INNER JOIN  org_event where org_event.year =:year and org_profile.year=org_event.year and org_event.country_code=org_profile.country  and org_event.org_id=org_profile.org_id  and org_profile.country=:cntry and org_event.is_deleted=0   and org_profile.is_deleted=0';
+		if($org!='' && $org!='Organisation')
+			$sql= $sql.' and organisation = :orgname ';
+
+		$rs = $this->db->query($sql);
+
+		$rs->bindValue(':year',$year);
+		$rs->bindValue(':cntry',$cntry);
+		if($org!='' && $org!='Organisation')
+			$rs->bindValue(':orgname',$org);
+
+		$rs->bindValue(':cntry',$cntry);
+
+		$handlerres=$rs->execute();
+
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+		   return false;
+		}
+
+		$i=1;
+		$loop=$rs->numberOfRows();
+		while($rst = mysql_fetch_assoc($handlerres)){
+
+			if($i==$loop)
+			   $org_list1=$org_list1.'"'.$rst['org_id'].'"';
+			else
+			   $org_list1=$org_list1.'"'.$rst['org_id'].'",';
+
+			$i=$i+1;
+
+		}
+		$rs->freeResult();
+
+
+
+ 		return  $org_list1;
+	}
+}
+?>

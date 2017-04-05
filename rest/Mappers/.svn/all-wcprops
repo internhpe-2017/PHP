@@ -1,0 +1,215 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/commondays/!svn/ver/2183/trunk/rest/Mappers
+END
+ReligionCustomisation.php
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/commondays/!svn/ver/2183/trunk/rest/Mappers/ReligionCustomisation.php
+END
+CDVersion.php
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/commondays/!svn/ver/249/trunk/rest/Mappers/CDVersion.php
+END
+Country.php
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/commondays/!svn/ver/2122/trunk/rest/Mappers/Country.php
+END
+CountryEvent.php
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/commondays/!svn/ver/1752/trunk/rest/Mappers/CountryEvent.php
+END
+Updates.php
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/commondays/!svn/ver/1411/trunk/rest/Mappers/Updates.php
+END
+RSS.php
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/commondays/!svn/ver/1176/trunk/rest/Mappers/RSS.php
+END
+CntryTabs.php
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/commondays/!svn/ver/2167/trunk/rest/Mappers/CntryTabs.php
+END
+ReligionEvent.php
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/commondays/!svn/ver/2106/trunk/rest/Mappers/ReligionEvent.php
+END
+Client.php
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/commondays/!svn/ver/1566/trunk/rest/Mappers/Client.php
+END
+User.php
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/commondays/!svn/ver/1714/trunk/rest/Mappers/User.php
+END
+OrganisationCustomisation.php
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/commondays/!svn/ver/2183/trunk/rest/Mappers/OrganisationCustomisation.php
+END
+Widget.php
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/commondays/!svn/ver/1515/trunk/rest/Mappers/Widget.php
+END
+Advertise.php
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/commondays/!svn/ver/762/trunk/rest/Mappers/Advertise.php
+END
+Sourcing.php
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/commondays/!svn/ver/346/trunk/rest/Mappers/Sourcing.php
+END
+DateInfo.php
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/commondays/!svn/ver/360/trunk/rest/Mappers/DateInfo.php
+END
+Group.php
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/commondays/!svn/ver/2183/trunk/rest/Mappers/Group.php
+END
+SendMail.php
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/commondays/!svn/ver/1636/trunk/rest/Mappers/SendMail.php
+END
+Organisation.php
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/commondays/!svn/ver/1884/trunk/rest/Mappers/Organisation.php
+END
+OrganisationEvent.php
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/commondays/!svn/ver/1824/trunk/rest/Mappers/OrganisationEvent.php
+END
+WidgetReli.php
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/commondays/!svn/ver/1814/trunk/rest/Mappers/WidgetReli.php
+END
+UserCustomisation.php
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/commondays/!svn/ver/346/trunk/rest/Mappers/UserCustomisation.php
+END
+OrgTabs.php
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/commondays/!svn/ver/2166/trunk/rest/Mappers/OrgTabs.php
+END
+Share.php
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/commondays/!svn/ver/1400/trunk/rest/Mappers/Share.php
+END
+WidgetCntry.php
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/commondays/!svn/ver/1523/trunk/rest/Mappers/WidgetCntry.php
+END
+Cache.php
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/commondays/!svn/ver/249/trunk/rest/Mappers/Cache.php
+END
+FTags.php
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/commondays/!svn/ver/2054/trunk/rest/Mappers/FTags.php
+END
+Religion.php
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/commondays/!svn/ver/2176/trunk/rest/Mappers/Religion.php
+END
+Location.php
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/commondays/!svn/ver/1774/trunk/rest/Mappers/Location.php
+END
+News.php
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/commondays/!svn/ver/1319/trunk/rest/Mappers/News.php
+END
+Test.php
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/commondays/!svn/ver/2181/trunk/rest/Mappers/Test.php
+END
+UserEvent.php
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/commondays/!svn/ver/346/trunk/rest/Mappers/UserEvent.php
+END
+State.php
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/commondays/!svn/ver/1949/trunk/rest/Mappers/State.php
+END
+Mail.php
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/commondays/!svn/ver/1782/trunk/rest/Mappers/Mail.php
+END
+CountryCustomisation.php
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/commondays/!svn/ver/2183/trunk/rest/Mappers/CountryCustomisation.php
+END
+EventDetails.php
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/commondays/!svn/ver/1673/trunk/rest/Mappers/EventDetails.php
+END

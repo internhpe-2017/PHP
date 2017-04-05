@@ -1,0 +1,61 @@
+<?php
+
+
+class Mappers_Religion {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_Religion();
+	}
+
+
+	public function findReligion($cntrycode) {
+		return $this->db->findReligion($cntrycode);
+	}
+
+
+	public  function listReligionByUserCustomisation($user,$year){
+		return $this->db->listReligionByUserCustomisation($user,$year);
+
+
+	}
+        public function listReligionDataByGraphToken($graph_share_token ) {
+     
+   
+     	    return $this->db->listReligionDataByGraphToken($graph_share_token );	
+        }
+
+	public function createReligionCustomisation($cntryids,$year,$userid) {
+	
+		 return $this->db->createReligionCustomisation($cntryids ,$year,$userid);
+	}
+	
+	public function createReligion($jdata,$userid) {
+		return $this->db->createReligion($jdata,$userid);
+	}
+
+        public function listReligionList() {
+		return $this->db->listReligionList();
+
+	}
+        public function listReligionByCountry($cntrycode,$year) {
+		return $this->db->listReligionByCountry($cntrycode,$year);
+
+	}
+       public function religionLookup($cntrycode,$term) {
+		return $this->db->religionLookup($cntrycode,$term);
+
+	}
+	
+       public function listReligion( ) {
+		return $this->db->listReligion( );
+
+	}
+	
+	
+	
+	
+
+	 
+}
+?>

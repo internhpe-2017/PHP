@@ -1,0 +1,117 @@
+<?php
+
+
+
+class Services_OrganisationCustomisation {
+	private $orgcustMapper;
+ 
+	public function __construct() {
+		$this->orgcustMapper = new Mappers_OrganisationCustomisation();
+  	}
+
+	public function deleteOrganisationCustomisation($userid,$jdata) {
+		return $this->orgcustMapper->deleteOrganisationCustomisation($userid,$jdata);
+	}
+
+	public function updateOrganisationCustomisation($userid,$jdata) {
+		return $this->orgcustMapper->updateOrganisationCustomisation($userid,$jdata);
+	}
+
+	public function findOrganisationCustomisation($userid) {
+ 	return $this->orgcustMapper->findOrganisationCustomisation($userid);
+	}
+
+
+	public function createOrganisationCustomisation($request) {
+
+
+		//if(empty($user))
+
+		 $userid= $_SESSION['userinfo']['user_id'];
+
+		if(isset($request['pd']) && !empty($request['pd']))
+
+		{
+		return $this->orgcustMapper->createOrganisationCustomisation($request['cmpygrp'], mysql_real_escape_string($request['pd']), mysql_real_escape_string($request['year']),$userid);
+		}
+	}
+
+	public function listOrganisationsByUserCustomisation($request) {
+
+		 	//if($year=='')
+		 		
+		 		 
+		 	if( isset($request['year']) && !empty($request['year']))
+		 	{
+		 		  $year=$request['year'];
+		 	}
+		 	else
+		 		$year=$_SESSION['year'];
+
+		 	if(empty($user))
+
+		 		    $user= $_SESSION['userinfo']['user_id'];
+
+
+		    return $this->orgcustMapper->listOrganisationsByUserCustomisation($user,$year);
+
+	}
+
+
+	public function listOrganisationsByUserCustomisationGraph($request) {
+
+
+
+		 	//	 	if($year=='')
+		 		 		 $year=$_SESSION['year'];
+
+		 		 	if(empty($user))
+		 		 	
+
+		 		    $user= $_SESSION['userinfo']['user_id'];
+
+		  return $this->orgcustMapper->listOrganisationsByUserCustomisationGraph($user,$year);
+
+	}
+
+
+     public function listOrganisationsDataByUserCustomisation($user,$year) {
+
+	       //if(isset($request['pd']) && !empty($request['pd']))
+
+		return $this->orgcustMapper->listOrganisationsDataByUserCustomisation($user,$year);
+     }
+
+     public function listOrganisationsDataByUserCustomisationByToken( $request) {
+
+
+
+
+		if(isset($request['token']) && !empty($request['token']) && isset($request['year']) && !empty($request['year']))
+		{
+
+			$token=mysql_real_escape_string($request['token']);
+			$year=mysql_real_escape_string($request['year']);
+
+		}
+
+		return $this->orgcustMapper->listOrganisationsDataByUserCustomisationByToken($token,$year);
+     }
+
+
+   public function listOrganisationsDataByGraphToken($request) {
+
+
+		if(isset($request['grtok']) && !empty($request['grtok'])  )
+		{
+ 			$grtok=mysql_real_escape_string($request['grtok']);
+
+		}
+
+	    return $this->orgcustMapper->listOrganisationsDataByGraphToken($grtok );
+   }
+
+
+
+}
+?>

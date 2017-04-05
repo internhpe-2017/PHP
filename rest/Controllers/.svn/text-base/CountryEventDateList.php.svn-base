@@ -1,0 +1,60 @@
+<?php
+
+
+class Controllers_CountryEventDateList extends Controllers_Abstract {
+	const IS_PUBLIC = 1;
+ 	public function validate(  )
+	{
+  		$this->validation = new Library_Validation();	 
+		//$this->validation->add_fields($this->request['params']['term'], 'req', 'Please Enter term',0);
+		//$request['cntry'],$request['module'],$request['year']
+  		return $this->validation->validate();
+ 	}
+
+	public function isPublic() {
+		return self::IS_PUBLIC;
+	}
+
+	public function get() {
+		$cntryevt = new Services_CountryEvent(); 
+ 		$this->error=$this->validate();
+ 		
+		if($this->error['value'])
+		{ 
+			$this->response=$this->error['error'] ;
+		}
+		else
+		{
+		$this->response =$cntryevt->findCountryEventDates($this->request['params']);
+		}
+ 		$this->responseStatus = 200;
+	}
+
+
+
+
+	public function post() {
+		$cntryevt = new Services_CountryEvent();
+ 		$this->error=$this->validate();
+ 		
+		if($this->error['value'])
+		{ 
+			$this->response=$this->error['error'] ;
+		}
+		else
+		{
+		$this->response =$cntryevt->findCountryEventDates($this->request['params']);
+		}
+ 		$this->responseStatus = 200;
+	}
+	 
+	public function put() {
+		return null;
+	}
+
+	public function delete() {
+		return null;
+	}
+	 
+}
+?>

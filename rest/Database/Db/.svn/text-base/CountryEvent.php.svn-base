@@ -1,0 +1,147 @@
+<?php
+
+class Database_Db_CountryEvent extends Database_Db_Abstract {
+	protected $table = Database_DatabaseTables::COUNTRY;
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+	public function getCountryEventDates($cntrycode,$module,$year) { 
+ 
+ 		$rs = $this->db->query('select c.country_name as cname ,ce.event_date as dt ,ce.event_desc as ds  from country c ,country_event  ce where ce.country_code=c.country_code  and  	ce.year=:year   and c.is_disabled=0  and ce.is_deleted=0 and c.country_code = :cntrycode ');
+		
+ 	 	$rs->bindValue(':cntrycode', $cntrycode);
+		$rs->bindValue(':year', $year);
+		 
+		$handlerres=$rs->execute();
+		
+		 
+		//if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+		//	return false;
+		//}
+ 
+		$loop= $rs->numberOfRows();
+		$i=1;
+		$starttag='[';
+		$endtag=']'; 		 
+ 		$clist[] =  array("Country"=> $cntrycode);
+ 		$json_d='';
+ 		$json_o='';
+ 		$msg='';
+		while($row = mysql_fetch_assoc($handlerres))
+		{  
+ 
+			if($i==$loop)
+			{
+				$json_o=$json_o.''.$row['dt'].'';
+				$json_d=$json_d.'"'.$row['ds'].'"'; 
+			}
+
+			else
+			{
+				$json_o=$json_o.''.$row['dt'].''.',';
+				$json_d=$json_d.'"'.$row['ds'].'"'.','; 
+			}
+
+			$i=$i+1;  
+		}
+		
+		//echo $json_o.'-----';
+		
+		if($json_o=='')
+		  $msg='"No Data Found"';
+
+		$json_o=$starttag.$json_o.$msg.$endtag;
+		$json_d=$starttag.$json_d.$msg.$endtag;
+		$rs->freeResult();
+		return  array('evtdata' => json_decode($json_o,true), 'evtdesc' => json_decode($json_d,true)) ;
+  		 
+	}
+     
+ 
+	public function findCountryEventDates($cntryname,$module,$year) { 
+ 
+ 		$rs = $this->db->query('select ce.dow as dow ,c.country_name as cname ,ce.event_date as dt ,ce.event_desc as ds  from country c ,country_event  ce where ce.country_code=c.country_code  and  	ce.year=:year   and c.is_disabled=0  and ce.is_deleted=0 and c.country_name = :cntryname ');
+		
+ 	 	$rs->bindValue(':cntryname', $cntryname);
+		$rs->bindValue(':year', $year);
+		 
+		$handlerres=$rs->execute();
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		}
+ 
+		 
+		
+		$clist = array();
+		$clist[] =  array("Country"=> $cntryname);
+		while($row = mysql_fetch_assoc($handlerres))
+		{  
+			$org['dt'] = $row['dt'];
+			$org['dow'] = $row['dow'];
+			
+			$org['ds'] = $row['ds'];
+
+
+			$llist=  array("value"=> $org  );
+			$clist[] =  $llist; 
+		}
+		
+				
+		$rs->freeResult();
+
+
+		return $clist	; 
+ 		 
+	}
+
+
+	//http://localhost/rest/EventDateDetails?eventdetail=10jan&year=2012
+	public function findEventDetails($eventdetail,$module,$year) {
+
+		 
+
+		$month=substr($eventdetail, -3, 3);
+		$day=substr($eventdetail, 0,strlen($eventdetail)-3);
+
+
+		$finaldate='"'.$day.'/'.$month.'/'.$year.'"';
+
+		 // return $finaldate;
+		$rs = $this->db->query("select ce.dow as dow,cntry.country_code as cntrycode ,ce.event_date as dt ,ce.event_desc as ds from country cntry ,country_event  ce where ce.year=:year   and cntry.is_disabled=0 and ce.is_deleted=0   and ce.event_date=:dateinfo  and ce.country_code=cntry.country_code order by cntry.country_code");
+		//$rs->bindValue(':cntrycode',$cntry);
+		$rs->bindValue(':year', $year);
+		$rs->bindValue(':dateinfo', $finaldate);
+
+		$handlerres=$rs->execute();
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		}
+
+
+		$clist = array();
+
+		while($row = mysql_fetch_assoc($handlerres))
+		{  
+			$org['dt'] = $row['dt'];
+			$org['dow'] = $row['dow'];
+			$org['ds'] = $row['ds'];
+			$org['ctry'] = $row['cntrycode'];
+			$llist=  array("value"=> $org  );
+			$clist[] =  $llist; 
+			//$location=$row['loc'];
+
+		}
+		//$clist[] =  array( "Location"=>$location);
+
+
+		$rs->freeResult();
+
+		return $clist	;
+		  
+ 	}
+}
+?>

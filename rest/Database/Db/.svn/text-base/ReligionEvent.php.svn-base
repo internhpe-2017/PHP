@@ -1,0 +1,216 @@
+<?php
+
+class Database_Db_ReligionEvent extends Database_Db_Abstract {
+	protected $table = Database_DatabaseTables::RELIGION_EVENT;
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+
+	public function getCntryStReligionEventDates ($cntrycode ,$year,$statecode,$religc) { 
+
+ 		$rs = $this->db->query('select re.event_date as dt ,re.event_desc as ds,r.religion_name from religion_event re,religion r, country c where r.country_code=:cntrycode and r.country_code=c.country_code  and re.country_code=r.country_code  and re.country_code=c.country_code  and re.religion_id=r.religion_id and re.year=:year    and c.is_disabled=0  and re.is_deleted=0 and re.religion_id=:rdcode and re.state_id=:stcode');
+		
+ 	 	$rs->bindValue(':stcode', $statecode);
+ 	 	$rs->bindValue(':rdcode', $religc);
+ 	 	$rs->bindValue(':cntrycode', $cntrycode);
+		$rs->bindValue(':year', $year);
+		 
+		$handlerres=$rs->execute();
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		}
+ 
+		$loop= $rs->numberOfRows();
+		$i=1;
+		$json_o='';
+		$json_d='';
+		$msg='';
+		 
+		$starttag='[';
+		$endtag=']'; 		 
+ 		$clist[] =  array("Religion"=> $cntrycode);
+		while($row = mysql_fetch_assoc($handlerres))
+		{  
+ 
+			if($i==$loop)
+			{
+				$json_o=$json_o.''.$row['dt'].'';
+				$json_d=$json_d.'"'.$row['ds'].'"'; 
+			}
+
+			else
+			{
+				$json_o=$json_o.''.$row['dt'].''.',';
+				$json_d=$json_d.'"'.$row['ds'].'"'.','; 
+			}
+
+			$i=$i+1;  
+		}
+		
+		if($json_o=='')
+		  $msg='"No Data Found"';
+
+		$json_o=$starttag.$json_o.$msg.$endtag;
+		$json_d=$starttag.$json_d.$msg.$endtag;
+		$rs->freeResult();
+		return  array('evtdata' => json_decode($json_o,true), 'evtdesc' => json_decode($json_d,true)) ;	
+	}
+ 	public function getCntryReligionEventDates($cntrycode,$year,$relig,$statecode,$module) { 
+ 
+ 		$rs = $this->db->query('select re.event_date as dt ,re.event_desc as ds,r.religion_name from religion_event re,religion r, country c where r.country_code=:cntrycode and r.country_code=c.country_code  and re.country_code=r.country_code  and re.country_code=c.country_code  and re.religion_id=r.religion_id and re.year=:year  and re.state_id=:stcode  and r.religion_code=:relcode   and c.is_disabled=0  and re.is_deleted=0 ');
+		
+ 	 	$rs->bindValue(':cntrycode', $cntrycode);
+		$rs->bindValue(':year', $year);
+		$rs->bindValue(':stcode', $statecode);
+		$rs->bindValue(':relcode', $relig);
+		 
+		$handlerres=$rs->execute();
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		}
+ 
+		$loop= $rs->numberOfRows();
+		$i=1;
+		$json_o='';
+		$json_d='';
+		$msg='';
+		 
+		$starttag='[';
+		$endtag=']'; 		 
+ 		$clist[] =  array("Religion"=> $cntrycode);
+		while($row = mysql_fetch_assoc($handlerres))
+		{  
+ 
+			if($i==$loop)
+			{
+				$json_o=$json_o.''.$row['dt'].'';
+				$json_d=$json_d.'"'.$row['ds'].'"'; 
+			}
+
+			else
+			{
+				$json_o=$json_o.''.$row['dt'].''.',';
+				$json_d=$json_d.'"'.$row['ds'].'"'.','; 
+			}
+
+			$i=$i+1;  
+		}
+		
+		if($json_o=='')
+		  $msg='"No Data Found"';
+
+		$json_o=$starttag.$json_o.$msg.$endtag;
+		$json_d=$starttag.$json_d.$msg.$endtag;
+		$rs->freeResult();
+		return  array('evtdata' => json_decode($json_o,true), 'evtdesc' => json_decode($json_d,true)) ;
+  		 
+	}
+     
+	//on click on y axis date label religion name 
+	public function findReligionEventDates($relig,$statecode,$cntrycode,$module,$year) { 
+ 
+ 		$rs = $this->db->query('select re.event_date as dt ,re.event_desc as ds,r.religion_name from religion_event re,religion r, country c where r.country_code=:cntrycode and r.country_code=c.country_code  and re.country_code=r.country_code  and re.country_code=c.country_code and re.religion_id=r.religion_id and re.year=:year    and c.is_disabled=0  and re.is_deleted=0 and r.religion_name=:reliname and re.state_id=:state_id');
+		
+ 	 	$rs->bindValue(':cntrycode', $cntrycode);
+		$rs->bindValue(':year', $year);
+		$rs->bindValue(':reliname', $relig);
+		$rs->bindValue(':state_id', $statecode);
+		 
+		$handlerres=$rs->execute();
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		}
+ 
+		 
+		
+		$clist = array();
+		$clist[] =  array("Religion"=> $relig);
+		while($row = mysql_fetch_assoc($handlerres))
+		{  
+			$relidt['dt'] = $row['dt'];
+			$relidt['ds'] = $row['ds'];
+
+
+			$llist=  array("value"=> $relidt  );
+			$clist[] =  $llist; 
+		}
+		
+				
+		$rs->freeResult();
+
+
+		return $clist	; 
+ 		 
+	}
+
+
+	//http://localhost/rest/ReliEventDates?eventdetail=10jan&year=2012
+	//on click on x axis date lable
+	public function findEventDetails($eventdetail,$module,$year,$cntrycode,$statecode,$relig) {
+
+		 
+
+		$month=substr($eventdetail, -3, 3);
+		$day=substr($eventdetail, 0,strlen($eventdetail)-3);
+
+
+		$finaldate='"'.$day.'/'.$month.'/'.$year.'"';
+
+		// return $finaldate;
+		 
+		 
+		 if( $relig !='all') 
+		 {
+		 
+		$rs = $this->db->query("select re.event_date as dt ,re.event_desc as ds,r.religion_name as religname,c.country_code as cntrycode from religion_event re,religion r, country c where r.country_code=:cntrycode and r.country_code=c.country_code  and re.country_code=r.country_code  and re.country_code=c.country_code  and  re.event_date=:dateinfo  and re.religion_id=r.religion_id and re.year=:year    and c.is_disabled=0  and re.is_deleted=0 and r.religion_name=:reliname");
+		$rs->bindValue(':reliname', $relig);
+		
+		}
+		
+		else
+		{
+
+		$rs = $this->db->query("select re.event_date as dt ,re.event_desc as ds,r.religion_name as religname,c.country_code as cntrycode from religion_event re,religion r, country c where r.country_code=:cntrycode and r.country_code=c.country_code  and re.country_code=r.country_code  and re.country_code=c.country_code  and  re.event_date=:dateinfo  and re.religion_id=r.religion_id and re.year=:year    and c.is_disabled=0  and re.is_deleted=0 ");
+		 
+		
+		}
+		
+		$rs->bindValue(':cntrycode',$cntrycode);
+		$rs->bindValue(':year', $year);
+		$rs->bindValue(':dateinfo', $finaldate);
+		
+
+		$handlerres=$rs->execute();
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		}
+
+
+		$clist = array();
+
+		while($row = mysql_fetch_assoc($handlerres))
+		{  
+			$org['dt'] = $row['dt'];
+			$org['ds'] = $row['ds'];
+			$org['rname'] = $row['religname'];
+			$llist=  array("value"=> $org  );
+			$clist[] =  $llist; 
+			//$location=$row['loc'];
+
+		}
+		//$clist[] =  array( "Location"=>$location);
+
+
+		$rs->freeResult();
+
+		return $clist	;
+		  
+ 	}
+}
+?>

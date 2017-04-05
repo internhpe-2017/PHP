@@ -1,0 +1,85 @@
+<?php
+
+
+class Mappers_User {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_User();
+	}
+
+
+
+	public function createUser($jdata) {
+
+
+	}
+
+ 
+	public function findUser($userid) {
+		return $this->db->findUser($userid);
+
+
+	}
+
+	public function findUserProfile($userid,$passwd) {
+		return $this->db->findUserProfile($userid,$passwd);
+
+
+	}
+
+
+	public function updateUserProf($param) {
+		return $this->db->updateUserProf($param);
+
+
+	}
+
+	public function updateUpdateLocation($param) {
+		return $this->db->updateUpdateLocation($param);
+
+
+	}
+
+	public function updateUserAccount($param) {
+		return $this->db->updateUserAccount($param);
+
+
+	}
+
+	public function deleteUser($userid) {
+
+
+	}
+
+	public function listUser() {
+	}
+
+	 
+
+	public function fblogin($uname,$email,$userloc) {
+		return $this->db->fblogin($uname,$email,$userloc);
+	}
+        
+	public function register($uname,$pass, $name ,$lname,$year,$cntry ) {
+		return $this->db->register($uname,$pass, $name ,$lname,$year,$cntry );
+	}
+
+        public function login($uname,$pass) {
+		 return $this->db->login($uname,$pass);
+	}
+        
+	public function forgotpass($uname){
+             return $this->db->forgotpass($uname);
+        }
+	public function changepass($params){
+             return $this->db->changepass($params);
+        }
+	public function idcheck($params){
+             return $this->db->idcheck($params);
+        }
+    
+}
+
+
+?>

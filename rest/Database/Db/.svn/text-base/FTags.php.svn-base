@@ -1,0 +1,121 @@
+<?php
+
+class Database_Db_FTags extends Database_Db_Abstract {
+ 
+	public function __construct() {
+		parent::__construct();
+	}
+
+        
+ 	
+       public function listTags() {
+       		 
+       		 
+
+ 		$sql = " SELECT * FROM festivaltags ORDER BY frequency DESC LIMIT 12 ";
+ 		$rs=$this->db->query($sql);
+ 
+		 
+		
+ 		$handlerres=$rs->execute();
+		if($this->db->isError()) {
+			return false;
+		}
+			$llist = array();
+  		 
+		  if(mysql_num_rows($handlerres)>0){
+	
+	 
+
+	
+		 
+		 
+
+
+		 for ($x = 0; $x < mysql_num_rows($handlerres); $x++) {
+		    $row = mysql_fetch_assoc($handlerres);
+		       $clist[] =  array("tag"=>$row["ftag_name"],"freq"=>$row["frequency"]); 
+		  }	
+		  $llist[]=array("tags"=>$clist) ;
+		}
+		 
+		$rs->freeResult();
+	 
+		return $llist;
+	}
+
+
+ 	 public function listTagsByCntryYear($cntryc,$year) {
+
+
+ 
+		$sql = " SELECT * FROM festivaltags where year=:year and country_code=:ccode ORDER BY frequency DESC LIMIT 12 ";
+ 		$rs=$this->db->query($sql); 
+
+ 	 	$rs->bindValue(':ccode', $cntryc);
+ 	 	$rs->bindValue(':year', $year); 
+	 
+ 		$handlerres=$rs->execute();
+		if($this->db->isError()) {
+			return false;
+		}
+		
+		$llist = array();
+  		 
+		  if(mysql_num_rows($handlerres)>0){ 
+		  
+
+
+		 for ($x = 0; $x < mysql_num_rows($handlerres); $x++) {
+		    $row = mysql_fetch_assoc($handlerres);
+		       $clist[] =  array("tag"=>$row["ftag_name"],"freq"=>$row["frequency"]); 
+		  }	
+		  $llist[]=array("tags"=>$clist) ;
+		}
+		 
+		$rs->freeResult();
+	 
+		return $llist;
+ 	 }
+
+ 	 public function listTagsByCntry($cntryc) {
+       		 
+       		 
+		$sql = " SELECT * FROM festivaltags where country_code=:ccode ORDER BY frequency DESC LIMIT 12 ";
+ 		$rs=$this->db->query($sql); 
+
+ 	 	$rs->bindValue(':ccode', $cntryc); 
+ 	 	
+	 
+ 		$handlerres=$rs->execute();
+
+
+
+		if($this->db->isError()) {
+			return false;
+		}
+  		  $llist = array();
+		  if(mysql_num_rows($handlerres)>0){
+	
+	 
+
+	
+		 
+		 
+
+
+		 for ($x = 0; $x < mysql_num_rows($handlerres); $x++) {
+		    $row = mysql_fetch_assoc($handlerres);
+		       $clist[] =  array("tag"=>$row["ftag_name"],"freq"=>$row["frequency"]); 
+		  }	
+		  $llist[]=array("tags"=>$clist) ;
+		}
+		 
+		$rs->freeResult();
+	 
+		return $llist;
+	}	 
+
+	 
+}
+?>

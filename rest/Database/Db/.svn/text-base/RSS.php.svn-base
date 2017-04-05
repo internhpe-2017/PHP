@@ -1,0 +1,82 @@
+<?php
+
+class Database_Db_RSS extends Database_Db_Abstract {
+	protected $table1 = Database_DatabaseTables::RSS;
+	protected $table2 = Database_DatabaseTables::RSS_ITEM;
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+	public function createRSS($jdata) {
+
+ 	}
+
+  	public function findRSS($rsstype,$year) { 
+ 
+		$rs=$this->db->query('select rss_id,title,link,description,language,pubdate,lastBuildDate,docs,managingEditor,webMaster from rss where type=:rsstype  and year=:year and is_deleted=0');
+		$rs->bindValue(':rsstype', $rsstype);
+		$rs->bindValue(':year', $year);
+		
+		$handlerres=$rs->execute();
+
+		if($this->db->isError()) {
+			return false;
+		}
+		$output1='';
+		$output2='';
+		
+ 		while ($line1 = mysql_fetch_assoc($handlerres))
+		{
+		
+ 			 $output1 ="<?xml version=\"1.0\"?> <rss version=\"2.0\"><channel><title>"
+			.htmlentities($line1['title'])."</title><link>"
+			.htmlentities(Config::SITE_HTTP_USER_PATH.$line1['link'])."</link><description>"
+			.htmlentities($line1['description'])."</description><language>"
+			.htmlentities(strip_tags($line1['language']))."</language><pubDate>"
+			.htmlentities($line1['pubdate'])."</pubDate><lastBuildDate>"
+			.htmlentities($line1['lastBuildDate'])."</lastBuildDate><docs>"
+			.htmlentities(Config::SITE_HTTP_USER_PATH.$line1['docs'])."</docs> <managingEditor>"
+			.htmlentities($line1['managingEditor'])."</managingEditor><webMaster>"
+			.htmlentities($line1['webMaster'])."</webMaster>";
+			
+			
+			 $rs1=$this->db->query('select title,link,description,pubdate from rss_item where rss_id=:rssid and year=:year and type=:rsstype  and is_deleted=0');
+			 //$rs1->bindValue(':rssid', $line1['rss_id']); 
+			 $rs1->bindValue(':rssid', $line1['rss_id']); 
+			 $rs1->bindValue(':year', $year);			
+			 $rs1->bindValue(':rsstype', $rsstype);			
+
+			 $handlerres1=$rs1->execute();
+			 while ($line2 = mysql_fetch_assoc($handlerres1))
+			 {
+ 				$output2.= "<item><title>".htmlentities($line2['title'])."</title><link>".htmlentities(Config::SITE_HTTP_USER_PATH.$line2['link'].'organisation')."</link><pubDate>".htmlentities($line2['pubdate'])."</pubDate><description>".htmlentities(strip_tags($line2['description']))."</description></item>";
+  			 } 
+			 $rs1->freeResult();
+			 
+ 		} 			 
+		$rs->freeResult();
+		return $output1.$output2."</channel></rss>";	
+
+ 	}
+
+	public function updateRSS($rsstype) {
+
+
+ 	}
+
+	public function deleteRSS($rsstype) {
+
+
+ 	}
+
+  	public function listRSS($countid) { 
+  	
+ 	}
+
+        public function listAllRSS() { 
+
+ 	}
+
+}
+?>

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/commondays/!svn/ver/1873/trunk/rest/Library/KM
+END
+SHA1.php
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/commondays/!svn/ver/1855/trunk/rest/Library/KM/SHA1.php
+END
+IHashAlgorithm.php
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/commondays/!svn/ver/1855/trunk/rest/Library/KM/IHashAlgorithm.php
+END
+MessageDigest.php
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/commondays/!svn/ver/1859/trunk/rest/Library/KM/MessageDigest.php
+END
+AuthUtility.php
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/commondays/!svn/ver/1873/trunk/rest/Library/KM/AuthUtility.php
+END
+MD5.php
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/commondays/!svn/ver/1859/trunk/rest/Library/KM/MD5.php
+END

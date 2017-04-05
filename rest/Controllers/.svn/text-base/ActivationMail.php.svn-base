@@ -1,0 +1,75 @@
+<?php
+
+class Controllers_ActivationMail extends Controllers_Abstract {
+	const IS_PUBLIC = 1;
+ 	public function validate(  )
+	{
+  		$this->validation = new Library_Validation();	 
+  		
+ 		$this->validation->add_fields($this->request['params']['confirmkey'], 'req', 'Enter confirmkey',0);
+		$this->validation->add_fields($this->request['params']['confirmkey'], 'alphanum', 'Enter alpha numeric value for confirmkey',1);
+ 		
+		$this->validation->add_fields($this->request['params']['type'], 'req', 'Enter type ',2);
+		$this->validation->add_fields($this->request['params']['type'], 'alpha', 'Enter alpha value for type ',3);
+		
+  		return $this->validation->validate();
+ 	}
+  
+	public function isPublic() {
+
+ 		return self::IS_PUBLIC;
+
+ 	}
+ 
+ 	public function get() {
+ 		$mail = new Services_SendMail(); 	
+
+ 		$this->error=$this->validate();
+ 		
+		if($this->error['value'])
+		{ 
+			$this->response=$this->error['error'] ;
+		}
+		else
+		{
+			$test=$mail->sendmail($this->request['params']);;
+			$this->response = $test['result'];
+			if($this->response=="success")
+			{
+			     header("location:home.php");
+			     exit();
+			}
+    		}
+   		$this->responseStatus = 200;
+ 	}
+ 
+ 
+ 	public function post() {
+ 		$mail = new Services_SendMail();
+ 		$this->error=$this->validate();
+ 		
+		if($this->error['value'])
+		{ 
+			$this->response=$this->error['error'] ;
+		}
+		else
+		{
+
+ 			$this->response = $mail->sendmail($this->request['params']);
+ 		}
+
+   		$this->responseStatus = 200;	
+   		 
+        }
+ 	// @codeCoverageIgnoreStart
+ 	public function put() {
+ 		return null;
+ 	}
+ 
+ 	public function delete() {
+ 		return null;
+ 	}
+	// @codeCoverageIgnoreEnd
+ 
+}
+?>

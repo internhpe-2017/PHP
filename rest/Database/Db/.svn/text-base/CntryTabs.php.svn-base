@@ -1,0 +1,104 @@
+<?php
+
+class Database_Db_CntryTabs extends Database_Db_Abstract {
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+
+    	public function getCntryGenTab($year,$cntrycode) {
+
+		// no of comanies have holiday for next 10 days in a year  ,in a country
+
+		/*
+
+		each organisations total number of leaves in a year in  a country
+		select count(a.org_id) as counter , a.org_id from org_event a , org_profile b where a.year =2012  and  b.year=2012 and a.org_id=b.org_id and b.country='IND' group by a.org_id;  
+
+		*/
+
+		/*
+
+		each organisations total number of leaves in a year  from  current date to another 3 months 
+		select count(a.org_id) as counter ,a.event_date ,a.org_id from org_event a , org_profile b where b.year=2012 and a.org_id=b.org_id and a.year =2012 and a.doy>5 and a.doy<5+90 and b.country='IND' group by a.org_id;
+
+		*/
+
+		/*
+
+		select @rownum:=@rownum+1 `rownum`, p.* from org_event p, (SELECT @rownum:=0) r  where year =2012 and doy>5 and doy<5+10 order by org_id desc limit 10;
+
+		*/
+
+		/*
+
+		different holidays  lists in a country in a year 
+		select   a.org_id,b.organisation,a.doy from org_event a, org_profile b where a.year=2012 and b.year=2012 and a.org_id=b.org_id and b.country='IND' ;
+
+		select @rownum:=@rownum+1 `rownum`,b.org_id   from org_event  b ,(SELECT @rownum:=0) r   where b.year =2012 and b.doy>5 and b.doy<5+10  group by b.org_id;
+		//
+		select count( doy) from org_event;
+
+		*/
+
+		/*
+
+		total number of organisation registered and org name in a year in a country 
+		select b.c,organisation from org_profile a, (select count(*) as c  from org_profile  where country='IND' and year=2012) b where country='IND' and year=2012;
+
+		*/
+
+		$org = array();
+		 
+		$rs=$this->db->query('select widget_json_data from widget_cntry_tabs  where  year =:year and country_code=:cntry_code');
+		 	
+		$rs->bindValue(':year', $year);
+		$rs->bindValue(':cntry_code', $cntrycode);
+		
+		$handlerres=$rs->execute();
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		}
+		
+ 		while ($line1 = mysql_fetch_assoc($handlerres))
+		{
+		
+			$org['widget_json_data'] = $line1['widget_json_data'];
+		 	  
+		}
+		
+		$rs->freeResult();		
+ 		return json_decode($org['widget_json_data']);
+		 
+	   
+ 	}
+
+
+	public function getCntryPersTab( ) {
+		$row='{    "status": "1",    "id": "id",    "price": "price",    "txt":[""]}';
+		return json_decode($row); 
+ 	}
+
+	public function getCntryCorpTab( ) {
+	
+		/*
+		how mnay counties have been added 
+		*/
+
+		$row='{    "status": "1",    "id": "id",    "price": "price",    "txt": [""]}';
+		return json_decode($row); 
+ 	}
+
+
+
+	public function getCntryPreferanceTab( ) {
+
+		$row='{    "status": "1",    "id": "id",    "price": "price",    "txt": [""]}';
+		return json_decode($row); 
+
+ 	}
+
+
+}
+?>

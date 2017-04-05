@@ -1,0 +1,36 @@
+<?php
+
+
+class Mappers_UserCustomisation {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_UserCustomisation();
+	}
+
+
+    public function createUserCustomisation($jdata) {
+
+
+ 	}
+
+    public function findUserCustomisation($userid) {
+   		return $this->db->findUserCustomisation($userid);
+
+
+ 	}
+
+	public function updateUserCustomisation($userid) {
+
+
+ 	}
+
+	public function deleteUserCustomisation($userid) {
+
+
+ 	}
+
+    public function listUserCustomisation() {
+
+
+?>

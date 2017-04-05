@@ -1,0 +1,344 @@
+<?php
+
+class Database_Db_Religion extends Database_Db_Abstract {
+	protected $table = Database_DatabaseTables::RELIGION;
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+        public function findlock($country_code,$year) {
+
+		$lockdata = array();
+	   	$rs = $this->db->query('select yc.lockedit as lockedit   from  country c , year_country_prof yc where  c.country_code=:country_code   and yc.year=:year and is_deleted=0 and is_disabled=0 and c.country_code=yc.country_code ');
+ 
+		$rs->bindValue(':country_code', $country_code); 
+		$rs->bindValue(':year', $year);
+		
+		
+		$rs->execute();
+		
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		}
+
+ 
+		$lockdata  = $rs->value('lockedit');
+		$rs->freeResult();
+		return $lockdata;
+
+ 	}
+	public function createReligion($jdata,$userid) {
+
+		if($this->db->isError()) {
+			return false;
+		}
+
+ 		 
+ 		
+ 		 
+ 		
+ 
+		$link_year=$jdata['reli_cntry'].'-'.$jdata['year'].'-'.'religion';	
+
+		$link_locat_year=$jdata['reli_cntry'].'-'.$jdata['reli_loc'].'-'.$jdata['year'].'-'.'religion';	
+		
+		$link_locat_reli_year=$jdata['reli_cntry'].'-'.$jdata['reli_loc'].'-'.$jdata['pr_reli'].'-'.$jdata['year'].'-'.'religion';	
+		 
+		$lockdata=$this->findlock($jdata['reli_cntry'],$jdata['year']);
+		 
+		 
+		$jdata_escaped=mysql_real_escape_string(json_encode($jdata)) ;
+		
+		
+	 	
+		if( $lockdata=='on')
+		{
+
+		$sql = "INSERT INTO sourcing (json_add,is_validate,type,email) VALUES ('$jdata_escaped', '1','5','$userid')";
+		}
+		
+		else
+		{
+		
+		$sql = "INSERT INTO sourcing (json_add,is_validate,type,email) VALUES ('$jdata_escaped', '0','5','$userid')";
+		}
+		
+		$rs=$this->db->query($sql);
+ 		$handlerres=$rs->execute(); 
+ 		
+		$orgUtils = new Library_Utilities(); 
+		
+		 
+		$orgUtils->addtoyahoo($link_year,'/');
+		$orgUtils->addtogoogle($link_year,'/');
+		$orgUtils->addtobookmark($link_year,'/');
+		$orgUtils->addtoror($link_year,'','','/'); 
+		
+		
+ 
+
+		$orgUtils->addtoyahoo($link_locat_year,'/');
+		$orgUtils->addtogoogle($link_locat_year,'/');
+		$orgUtils->addtobookmark($link_locat_year,'/');
+		$orgUtils->addtoror($link_locat_year,'','','/'); 
+
+
+		$orgUtils->addtoyahoo($link_locat_reli_year,'/');
+		$orgUtils->addtogoogle($link_locat_reli_year,'/');
+		$orgUtils->addtobookmark($link_locat_reli_year,'/');
+		$orgUtils->addtoror($link_locat_reli_year,'','','/'); 
+		return true;
+
+
+ 	}
+
+        public function findReligion($cntrycode) {
+
+		if($cntrycode=="")
+ 			  $cntrycode='IND';
+ 			  
+	 	$sql = "SELECT * FROM country WHERE is_disabled=:isdisb and country_code=:cntrycode";
+ 		
+		$rs=$this->db->query($sql);
+		$rs->bindValue(':isdisb', 0);
+		$rs->bindValue(':cntrycode', $cntrycode);
+		$handlerres=$rs->execute();
+		if($this->db->isError()) {
+			return false;
+		}
+ 		$llist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+ 			$clist =  array("country"=>array( 'country_lat'=>trim($rst['cap_loc_latitude'] ),'country_long'=>trim($rst['cap_loc_longitude'] ),  'country_cap'=>trim($rst['country_cap'] ),'country_name'=>trim($rst['country_name'] ),'country_cap'=>trim($rst['country_cap'] ), 'max_hols'=>trim($rst['max_hols']), 'country_code'=>trim($rst['country_code']) ));
+ 			$llist[] =  $clist;
+		}
+		$rs->freeResult();
+		return  $llist;
+
+
+ 	}
+
+	public function updateReligion($orgid) {
+
+
+ 	}
+
+	public function deleteReligion($orgid) {
+
+
+ 	}
+
+        public function listReligionList() {
+
+
+
+		$sql = "SELECT * FROM religion WHERE is_deleted=0 order  by religion_name";
+		$rs=$this->db->query($sql);
+ 		$handlerres=$rs->execute();
+		if($this->db->isError()) {
+			return false;
+		}
+
+
+		 
+		$clist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+			$clist = array_merge($clist,array($rst['religion_name']=>trim($rst['religion_name']) ));
+		}
+		$rs->freeResult();
+		//return  array($clist);
+		return   ($clist);
+
+
+ 	}
+ 	
+ 	
+ 	
+       public function listReligionByCountry($cntrycode,$year) {
+
+
+		$sql = "SELECT * FROM religion WHERE is_deleted=0 and   country_code=:cntrycode order  by religion_name";
+		$rs=$this->db->query($sql);
+		$rs = $this->db->query($sql);
+		$rs->bindValue(':cntrycode', $cntrycode);
+		//$rs->bindValue(':year', $year);
+ 		$handlerres=$rs->execute();
+		if($this->db->isError()) {
+			return false;
+		}
+
+
+		 
+		$clist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+			$clist = array_merge($clist,array($rst['religion_name']=>trim($rst['religion_name'])));
+		}
+		$rs->freeResult();
+		//return  array($clist);
+		return   $clist;
+
+ 	}
+
+
+       public function listReligion() {
+
+		$sql = "SELECT distinct religion_name FROM religion WHERE is_deleted=0 order  by religion_name";
+		$rs=$this->db->query($sql);
+		$rs = $this->db->query($sql);
+ 		//$rs->bindValue(':year', $year);
+ 		$handlerres=$rs->execute();
+		if($this->db->isError()) {
+			return false;
+		}
+
+
+		 
+		$clist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+			$clist[] =  $rst['religion_name'];
+		}
+		$rs->freeResult();
+		//return  array($clist);
+		return   $clist;
+ 
+ 	}
+
+
+	//{"sel":{"1":"india","2":"finland"},"nosel":[]} 
+        public function listReligionByUserCustomisation($user,$year) {
+    
+ 		 
+ 
+		$rs=$this->db->query('select  concat("{",concat((  ifnull((select   CONCAT("\"sel\":{",GROUP_CONCAT( "",CONCAT("\"",CONCAT(country_code,"\":\"",CONCAT(country_name,"","")),"\"") ,""),"}") from country  where country_code in ( select  country_code from country_customisation where user_id=:userid1 and year=:year1  and is_deleted=0  order by country_code) and is_disabled=0 order by country_code ),"\"sel\":{}")),",", ifnull((select   CONCAT("\"nosel\":{",GROUP_CONCAT( "",CONCAT("\"",CONCAT(country_code,"\":\"",CONCAT(country_name,"","")),"\"") ,""),"}") from country where country_code not in ( select  country_code from country_customisation where user_id=:userid2 and year=:year3 and is_deleted=0 order by country_code) and is_disabled=0  order by country_code ), "\"nosel\":{}") ),"}") as data');
+
+ 		
+		$rs->bindValue(':userid1', $user);
+		$rs->bindValue(':userid2', $user);
+		$rs->bindValue(':year1', $year);
+ 		$rs->bindValue(':year3', $year);
+ 		 
+ 		$handlerres=$rs->execute(); 
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		} 
+		
+		$otlist=$rs->value('data'); 
+		
+ 		$rs->freeResult();
+  				
+		return json_decode($otlist); 
+ 	}
+
+     public function listReligionDataByGraphToken($graph_share_token ) {
+     		//descrypt 
+    		$cryp = new Library_Cryp();
+    		//utils
+    		$utils = new Library_Utilities();
+    		
+    		$ug=substr($graph_share_token,0, $utils->lastIndexOf($graph_share_token,'-'));
+    		
+    		 
+    		$decry=$cryp->decrypt($graph_share_token);
+    		 
+		$cntry_list= strtok($decry, '_');
+		$user_id= strtok('_');
+		$year= strtok('_');
+		
+		
+		//var_dump($cntry_list);exit;
+  		//return $cntry_list;
+  		// hardcoding
+		$rs=$this->db->query('select GROUP_CONCAT( "", org_json_data   ,"") as data from org_profile where org_id in (2,1) and year=:year and is_deleted=0');
+ 		 
+		//$rs->bindValue(':orglist', str_replace($cntry_list,'"',''));
+ 		$rs->bindValue(':year', $year);
+  		$handlerres=$rs->execute(); 
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		} 
+				
+		$otlist=$rs->value('data'); 		
+ 		$rs->freeResult();  				
+		return json_decode('['.$otlist.']',true); 
+
+     } 
+ 
+ 
+
+
+
+	 public function religionLookup($cntrycode,$term) {
+
+		if(   !is_null($cntrycode))
+		{
+			//$sql = "SELECT location_id, location_name FROM location l ,state s WHERE l.location_name  like '".$term."%' and (s.country_code='{$cntry}' or s.country_code is null ) and l.state_id=s.state_id and s.country_code = l.country_code ";
+
+			$sql = "SELECT religion_id, l.religion_name FROM religion l ,country s WHERE l.religion_name  like '".$term."%'   and s.country_code = l.country_code and  l.country_code =:cntry  and is_deleted=0 and is_disabled=0 order by religion_name ";
+		}
+
+
+
+		$rs=$this->db->query($sql);
+		$rs->bindValue(':cntry', $cntrycode);
+		$handlerres=$rs->execute();
+
+		if($this->db->isError()) {
+		return false;
+		}
+
+		$llist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+		 $llist[] = array("id"=>$rst['religion_id'], "value"=>$rst['religion_name']);
+		}
+		$rs->freeResult();
+		return  ($llist);
+
+	}
+	
+	
+	 public function religionCodeToName($rcode ) {
+	
+			
+			 $sql = "SELECT distinct l.religion_name FROM religion l   WHERE l.religion_code=:rcode   and is_deleted=0 ";
+			 
+	
+	
+	
+			$rs=$this->db->query($sql);
+			$rs->bindValue(':rcode', $rcode);
+			$handlerres=$rs->execute();
+	
+			if($this->db->isError()) {
+			return false;
+			}
+	
+			$llist = array();
+			while($rst = mysql_fetch_assoc($handlerres)){
+			 $llist[] = array("rname"=>$rst['religion_name']);
+			}
+			$rs->freeResult();
+			return  ($llist);
+	
+	}
+
+	 public function religionNameToCode($rname ) {
+	
+			
+			$sql = "SELECT distinct l.religion_code FROM religion l   WHERE l.religion_name=:rname  and is_deleted=0 "; 	
+			$rs=$this->db->query($sql);
+			$rs->bindValue(':rname', $rname);
+			$handlerres=$rs->execute();	
+			if($this->db->isError()) {
+				return false;
+			}
+			
+			$rst = mysql_fetch_assoc($handlerres);						  
+			$rcode=$rst['religion_code']; 
+			$rs->freeResult();
+			return  $rcode;	
+	}
+		
+			 
+}
+?>

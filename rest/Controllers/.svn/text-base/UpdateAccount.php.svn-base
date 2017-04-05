@@ -1,0 +1,57 @@
+<?php
+
+
+
+class Controllers_UpdateAccount extends Controllers_Abstract {
+	const IS_PUBLIC = 0;
+ 	public function validate(  )
+	{
+  		$this->validation = new Library_Validation();	 
+		//$this->validation->add_fields($this->request['params']['term'], 'req', 'Please Enter term',0);
+  		return $this->validation->validate();
+ 	}
+
+	public function isPublic() {
+		return self::IS_PUBLIC;
+	}
+
+	public function get() {
+		$user = new Services_User();
+		$this->error=$this->validate();
+ 		
+		if($this->error['value'])
+		{ 
+			$this->response=$this->error['error'] ;
+		}
+		else
+		{			$this->response = $user->updateUserAccount($this->request['params']);
+		}
+		$this->responseStatus = 200;
+  	}
+
+
+	public function post() {           
+		$user = new Services_User();
+		$this->error=$this->validate();
+ 		
+		if($this->error['value'])
+		{ 
+			$this->response=$this->error['error'] ;
+		}
+		else
+		{			$this->response = $user->updateUserAccount($this->request['params']);
+		}
+		$this->responseStatus = 200;
+    	}
+
+	// @codeCoverageIgnoreStart
+	public function put() {
+		return null;
+	}
+
+	public function delete() {
+		return null;
+	}
+	// @codeCoverageIgnoreEnd
+}
+?>

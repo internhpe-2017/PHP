@@ -1,0 +1,27 @@
+<?php
+
+
+class Mappers_Widget {
+	 
+
+	public function __construct() {
+		
+	}
+
+
+	public function doWidget( $country,$state,$location,$org ,$year,$flag,$scenario,$user_id,$graph_share_token) {
+	 	$db = new Database_Db_Widget();	
+		return $db->doWidget($country,$state,$location,$org ,$year,$flag,$scenario,$user_id,$graph_share_token);
+	}
+
+ 
+	public function doCntryWidget( $cntry,$year,$flag,$scenario,$user_id,$graph_share_token) {
+		$db = new Database_Db_WidgetCntry();	
+		return $db->doWidget( $cntry,$year,$flag,$scenario,$user_id,$graph_share_token);
+	}
+
+
+
+
+}
+?>

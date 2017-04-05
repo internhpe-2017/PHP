@@ -1,0 +1,163 @@
+<?php
+
+class Database_Db_Location extends Database_Db_Abstract {
+	protected $table = Database_DatabaseTables::LOCATION;
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+	public function createLocation($jdata) {
+
+
+ 	}
+
+    public function searchLocation($cntry,$term,$state) {
+
+
+		if( !is_null($term) &&  !is_null($state) && !is_null($cntry))
+			$sql = "SELECT location_id, location_name FROM location l ,state s WHERE l.location_name  like '".$term."%' and (l.state_id='{$state}' or l.state_id is null ) and (s.country_code='{$cntry}' or s.country_code is null ) and l.state_id=s.state_id and s.country_code = l.country_code and l.is_deleted=0 and s.is_deleted=0 ";
+
+		/*if( !is_null($term) && !is_null($cntry))
+			$sql = "SELECT location_id, location_name FROM location l ,state s WHERE l.location_name  like '".$term."%' and (s.country_code='{$cntry}' or s.country_code is null ) and l.state_id=s.state_id";
+			*/
+ 
+ 
+		$rs=$this->db->query($sql);
+		//$rs->bindValue(':cntry', $cntry);
+		$handlerres=$rs->execute();
+
+		if($this->db->isError()) {
+		return false;
+		}
+
+		$llist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+		 $llist[] = array("id"=>$rst['location_id'], "value"=>$rst['location_name']);
+		}
+		$rs->freeResult();
+		return  ($llist);
+
+
+ 	}
+
+	 public function locationLookup($cntry,$term,$state) {
+
+ 
+		if( !is_null($term) && !is_null($cntry))
+		{
+			//$sql = "SELECT location_id, location_name FROM location l ,state s WHERE l.location_name  like '".$term."%' and (s.country_code='{$cntry}' or s.country_code is null ) and l.state_id=s.state_id and s.country_code = l.country_code ";
+			
+			$sql = "SELECT location_id, location_name FROM location l ,state s WHERE l.location_name  like '".$term."%'   and s.country_code = l.country_code  and s.is_deleted=0   and l.is_deleted=0 group by location_id, location_name";
+		}
+			 
+ 
+ 
+		$rs=$this->db->query($sql);
+		//$rs->bindValue(':cntry', $cntry);
+		$handlerres=$rs->execute();
+
+		if($this->db->isError()) {
+		return false;
+		}
+
+		$llist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+		 $llist[] = array("id"=>$rst['location_id'], "value"=>$rst['location_name']);
+		}
+		$rs->freeResult();
+		return  ($llist);
+
+
+ 	}
+	public function updateLocation($orgid) {
+
+
+ 	}
+
+	public function deleteLocation($orgid) {
+
+
+ 	}
+
+	public function getLocationFromName($locationName,$countrycode) {
+
+		$sql1="select  location_id from location where location_name=:locname and country_code=:ctrycode and  is_deleted=0";
+		
+		 
+		$rs1=$this->db->query($sql1);
+		$rs1->bindValue(':locname', $locationName);
+		$rs1->bindValue(':ctrycode',$countrycode);
+ 		$handlerres=$rs1->execute();
+ 		 
+		
+		 if(($rs1->numberOfRows() == 0) || $this->db->isError()) {
+ 		 	return false;
+		 }
+ 		 
+		$val=$rs1->value('location_id');
+		$rs1->freeResult();
+		return $val;
+		
+		 
+
+
+ 	}
+
+	/*
+	[{"value":"Abad, West Bengal, India","label":"Abad, West Bengal, India","city":"Abad","state":"West Bengal","country":"India"},
+	 {"value":"Abadgarh, Uttar Pradesh, India","label":"Abadgarh, Uttar Pradesh, India","city":"Abadgarh","state":"Uttar Pradesh","country":"India"},
+	 {"value":"Abadpura, Punjab, India","label":"Abadpura, Punjab, India","city":"Abadpura","state":"Punjab","country":"India"}]
+	*/
+
+
+         public function listLocation() {
+
+		$sql = "select l.location_id as locationid,s.state_name as statename,s.state_id as stateid ,l.location_name as locationname,c.country_name as countryname  FROM  country   c , state s   left JOIN  location   l    ON  s.state_id=l.state_id  where  s.country_code=c.country_code and    c.is_deleted=0  and  s.is_deleted=0";
+		$rs=$this->db->query($sql);
+ 		$handlerres=$rs->execute();
+		if($this->db->isError()) {
+			return false;
+		}
+
+		$clist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+			
+			
+			$llist=  array("value"=>$rst['locationname'].','.$rst['statename'].','.$rst['stateid'].','.trim($rst['countryname']),"label"=>$rst['locationname'].','.$rst['statename'].','.trim($rst['countryname']),"locationid"=>$rst['locationid'],"city"=>$rst['locationname'],"state"=>$rst['statename'],"country"=>trim($rst['countryname']));
+			
+			$clist[] =  $llist;
+		}
+		$rs->freeResult();
+		return $clist;
+
+
+ 	}
+ 	
+   	  // list state by country
+	  public function listLocationByCountry($cntrycode) {
+
+		$sql = "select l.location_id as locationid,s.state_name as statename,s.state_id as stateid ,l.location_name as locationname,c.country_name as countryname  FROM  country   c , state s   left JOIN  location   l    ON  s.state_id=l.state_id  where      s.country_code=:cntrycode and s.country_code=c.country_code  and  c.is_deleted=0  and  s.is_deleted=0";
+		$rs=$this->db->query($sql);
+		$rs->bindValue(':cntrycode', $cntrycode);
+		$handlerres=$rs->execute();
+		if($this->db->isError()) {
+			return false;
+		}
+
+		$clist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+			
+			
+			$llist=  array("value"=>$rst['locationname'].','.$rst['statename'].','.$rst['stateid'].','.trim($rst['countryname']),"label"=>$rst['locationname'].','.$rst['statename'].','.trim($rst['countryname']),"locationid"=>$rst['locationid'],"city"=>$rst['locationname'],"state"=>$rst['statename'],"country"=>trim($rst['countryname']));
+			
+			$clist[] =  $llist;
+		}
+		$rs->freeResult();
+		return $clist;
+
+
+ 	} 	 
+
+}
+?>

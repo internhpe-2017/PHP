@@ -1,0 +1,185 @@
+<?php
+
+class Database_Db_OrganisationEvent extends Database_Db_Abstract {
+	protected $table = Database_DatabaseTables::ORG_EVENT;
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+	public function createOrganisationEvent($jdata) {
+
+
+ 	}
+
+        public function findOrganisationEvent($orgid) {
+
+
+ 	}
+
+	public function updateOrganisationEvent($orgid) {
+
+
+ 	}
+
+	public function deleteOrganisationEvent($orgid) {
+
+
+ 	}
+
+
+	public function findOrganisationEventList($orgdetail,$year) {
+ 
+  		
+ 		
+		$cmpny = strtok($orgdetail, '_');	
+		$location= strtok('_');
+ 
+ 		$org = array();
+ 		 
+		$json_lock='';
+		
+		 
+		 
+		$rs = $this->db->query("select op.organisation as org ,op.location as loc ,oe.event_date as dt ,oe.event_desc as ds  from org_profile op ,org_event  oe where  oe.org_id=op.org_id and op.organisation=:orgname and op.year=oe.year and 	oe.year=:year and op.year=:year  and location=:location and op.is_deleted=0  and oe.is_deleted=0");
+ 		$rs->bindValue(':orgname',$cmpny);
+		$rs->bindValue(':year', $year);
+		$rs->bindValue(':year', $year);
+		$rs->bindValue(':location', $location);
+		 
+		$handlerres=$rs->execute();
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		}
+ 	   
+		$clist = array();
+		$clist[] =  array("Organisation"=> $cmpny,"Location"=>$location);
+		while($row = mysql_fetch_assoc($handlerres))
+		{  
+			$org['dt'] = $row['dt'];
+			$org['ds'] = $row['ds'];
+			 
+
+			$llist=  array("value"=> $org  );
+			$clist[] =  $llist; 
+		}
+
+		
+		$rs->freeResult();
+
+		return $clist	; 
+ 	}
+
+
+	
+	public function findOrganisationEventDates($orgid,$year,$uid) {
+	 
+	
+			$org = array();
+			$json_lock='';			
+			if(empty($uid)) 
+			{
+				$rs = $this->db->query('select org_hols_json,lockedit  from year_org_prof where user_id=:userid  and org_id = :orgid and year =:year and is_deleted=0 ');
+				$rs->bindValue(':orgid', $orgid);
+				$rs->bindValue(':year', $year);
+				$rs->bindValue(':userid', 'system');
+			}
+			else
+			{
+				$rs = $this->db->query('select org_hols_json,lockedit  from year_org_prof where user_id=:userid and org_id = :orgid and year =:year and is_deleted=0  ');
+	 			$rs->bindValue(':orgid', $orgid);
+				$rs->bindValue(':year', $year);
+				$rs->bindValue(':userid', $uid);
+			} 
+			
+			 
+			$handlerres=$rs->execute();	
+			if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+				return false;
+			} 
+					   
+			while($row = mysql_fetch_assoc($handlerres))
+			{        
+				$org['organisation'] = $row['org_hols_json'];
+				$org['lockedit'] = $row['lockedit'];
+			}
+	 		$json_lock=$org['lockedit']; 
+			 
+			
+			 
+			
+			
+	
+			$rs->freeResult();
+	
+	
+	
+			$decoded= json_decode($org['organisation'],true); 
+			//return  $decoded['dates'];
+	
+			$loop= sizeof($decoded['dates'] );
+			$i=1;
+			$starttag='[';
+			$endtag=']'; 
+			  
+			  $json_o='';
+			  $json_d='';
+			  $msg='';
+			  
+			  
+			  
+			  
+			
+			foreach($decoded['dates']  as $key=>$item)
+			{
+		
+	
+				if($i==$loop)
+				{
+	
+					$json_o=$json_o.'"'.$key.'"';
+					$json_d=$json_d.'"'.$decoded['dates'][$key]['description'].'"';
+	
+	
+	
+				}
+	
+				else
+				{
+					$json_o=$json_o.'"'.$key.'"'.',';
+					$json_d=$json_d.'"'.$decoded['dates'][$key]['description'].'"'.',';
+	
+				}
+	
+				$i=$i+1;
+			  
+			  
+	
+			} 
+	
+			if($json_o=='')
+			  $msg='"No Data Found"';
+	
+			$json_o=$starttag.$json_o.$msg.$endtag;
+			$json_d=$starttag.$json_d.$msg.$endtag;
+			//$json_lock=$starttag.$json_lock.$msg.$endtag;
+			
+			
+			 
+			return  array('evtdata' => json_decode($json_o,true), 'evtdesc' => json_decode($json_d,true),'lockedit' => $json_lock) ;
+	
+	 
+ 	}
+	
+	
+	
+	public function listOrganisationEvent($orgid) {
+
+
+ 	}
+
+
+
+}
+?>

@@ -1,0 +1,34 @@
+<?php
+ class Services_Share {
+	private $share;
+ 
+	public function __construct() {
+		$this->share = new Mappers_Share();
+ 
+	}
+
+ 	public function getMyContacts($request) {
+		$inviter= new OpenInviter();
+		$oi_services=$inviter->getPlugins();
+		if (isset($request['provider_box'])) 
+		{
+			if (isset($oi_services['email'][$request['provider_box']]))
+			   $plugType='email';
+			elseif (isset($oi_services['social'][$request['provider_box']]))
+			   $plugType='social';
+			else $plugType='';
+		}
+		else 
+		{
+		   $plugType = '';
+		}
+		return $this->share->getMyContacts ('kksclt@gmail.com','dd','gmail');
+	}
+
+
+	
+ 
+
+	 
+}
+?>

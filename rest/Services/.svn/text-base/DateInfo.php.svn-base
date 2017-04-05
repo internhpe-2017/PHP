@@ -1,0 +1,65 @@
+<?php
+
+
+class Services_DateInfo{
+
+ 
+	public function __construct() {
+  	}
+ 	
+	public function get($request) {
+
+
+	    $year = $this->findYear($request);
+
+
+  		return $year;
+
+ 	}
+
+	public function findYear($request) {
+		$dateinfoMapper = new Mappers_DateInfo();
+
+
+      if( (isset($request['orgid']) && !empty($request['orgid'])) &&
+			(isset($request['year']) && !empty($request['year'])))  {
+
+
+		  $year = $dateinfoMapper->findYear(mysql_real_escape_string($request['orgid']),mysql_real_escape_string($request['year']));
+		  return $year;
+		}
+
+		return $year ;
+
+
+
+	}
+
+	public  function createYear($request){
+
+
+	}
+    public function listYear($request) {
+
+
+
+		if( (isset($request['pc']) && !empty($request['pc'])) )  {
+			$dateinfoMapper = new Mappers_DateInfo();
+
+			$countid=trim(mysql_real_escape_string($request['pc']));
+			$year =  $dateinfoMapper->listYear($countid);
+		}
+		return $year;
+
+	}
+
+	 public function listYears() {
+	 $dateinfoMapper = new Mappers_DateInfo();
+	 	$year = $dateinfoMapper->listYears();
+	 return $year;
+
+	}
+
+
+}
+?>

@@ -1,0 +1,49 @@
+<?php
+
+class Database_Db_Updates extends Database_Db_Abstract {
+ 
+ 	protected $table_updates = Database_DatabaseTables::UPDATES;
+	public function __construct() {
+		parent::__construct();
+	}
+
+ 
+	public function findUpdates($updates,$year) {
+	
+	
+ 	$rs = $this->db->query("SELECT * FROM (  select * from  updates  where is_deleted='0'   ORDER BY updates_id ,published_at DESC  LIMIT 0,10) AS `table` ORDER by updates_id,published_at DESC");
+  	//$rs->bindValue(':year', $year);
+ 
+
+	$handlerres=$rs->execute();
+
+	if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+		return false;
+	}
+
+
+	$nlist = array();	
+	$clist = array();
+	
+ 	
+	 while($row=$this->db->db_fetch($handlerres))
+ 	{  
+		$nlist['title']=$row->updates_title ;
+		$nlist['sub_title']=$row->updates_sub_title ;
+		$nlist['image']=$row->updates_image ;
+		//$nlist['desc']=$row->updates_description;
+ 		$nlist['date']=date("F j, Y",strtotime($row->published_at));
+ 		$clist[]=array("updatesid"=>$nlist);
+ 		 
+	}
+ 	 
+
+	$rs->freeResult();
+
+	return $clist	;
+
+ 	}
+
+
+}
+?>

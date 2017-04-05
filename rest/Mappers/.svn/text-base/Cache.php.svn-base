@@ -1,0 +1,27 @@
+<?php
+
+
+class Mappers_Cache {
+	private static $instance;
+
+	private function __construct() {}
+
+	public static function getCache() {
+		if(!Config::USE_CACHE) {
+			throw new Exception('Cache is not enabled', 500);
+		}
+		if(is_object(self::$instance)) {
+			return $instance;
+		}
+		switch(Config::CACHE_CLASS) {
+			case 'Memcached':
+				self::$instance = Mappers_Cache_Memcached::getInstance();
+				break;
+			default:
+				throw new Exception('Invalid cache', 500);
+				break;
+		}
+		return self::$instance;
+	}
+}
+?>

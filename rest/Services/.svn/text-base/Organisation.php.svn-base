@@ -1,0 +1,105 @@
+<?php
+
+
+class Services_Organisation{
+
+ 
+	public function __construct() {
+  	}
+
+	 
+	public function findOrganisation($request) {
+		$orgMapper = new Mappers_GetOrganisation();
+
+
+		if( (isset($request['orgid']) && !empty($request['orgid'])) &&
+			(isset($request['year']) && !empty($request['year'])))  { 
+		  $org = $orgMapper->findOrganisation(mysql_real_escape_string($request['orgid']),mysql_real_escape_string($request['year']));
+		  return $org;
+		} 
+		return $org ; 
+	}
+
+
+	public  function createOrganisation($request){
+
+		//[{"user_id":"saju@gmail.com","year":"2011", "statename":"kerala" ,"location": "bangalore" ,"country":"india","organisation":"cisco","date":[{"4/Jan":{"advert":"bumblebee adv","description":"diwali day"}},{"7/Mar":{"advert":"","description":""}},{"6/Jun":{"advert":"","description":""}}]}]
+		//format
+		$orgMapper = new Mappers_Organisation();
+		
+
+		//$dates =  explode(",",trim($request['pd']));
+		$dates = json_decode("[".$request['pd']."]",true);
+		$userid= trim(mysql_real_escape_string($request['uid']));
+		//$datedesc = explode(",",trim($request['pdd']));
+		$jdata = json_encode(array('lock'=>trim(mysql_real_escape_string($request['plk']),"'"),'state'=>trim(mysql_real_escape_string($request['ps']),"'"), 'year'=>trim(mysql_real_escape_string($request['py']),"'"),"country"=>trim(mysql_real_escape_string($request['pc'])),"location"=>trim(mysql_real_escape_string($request['pl'])),"uid"=>trim(mysql_real_escape_string($request['uid'])),"org"=>trim(mysql_real_escape_string($request['po'])),"org_type"=>trim(mysql_real_escape_string($request['pot'])),"dates"=>$dates));
+		// return $jdata;
+
+    		return  $orgMapper->createOrganisation($jdata,$userid);
+
+	}
+
+
+ 
+
+
+	public function findLocationOrganisationEventDates($request) {
+	 $orgMapper = new Mappers_Organisation();
+	  if( (isset($request['uid']) && !empty($request['uid'])))  
+		return  $orgMapper->findLocationOrganisationEventDates(mysql_real_escape_string($request['orgid']),mysql_real_escape_string($request['year']),mysql_real_escape_string($request['locid']),$request['uid']);
+	}
+
+
+	public function findOrganisationProfile($request) {
+	 $orgMapper = new Mappers_Organisation();
+		return  $orgMapper->findOrganisationProfile(mysql_real_escape_string($request['orgid']),mysql_real_escape_string($request['year']));
+	}
+
+	public function findOrganisationProfileByName($request) {
+	 $orgMapper = new Mappers_Organisation();
+		return  $orgMapper->findOrganisationProfile(mysql_real_escape_string($request['orgname']),mysql_real_escape_string($request['year']));
+	}
+
+	public function searchOrganisation($request) {
+		
+	
+ 		$orgMapper = new Mappers_Organisation();
+		
+		return  $orgMapper->searchOrganisation(mysql_real_escape_string($request['term']),mysql_real_escape_string($request['year']));
+
+	}
+
+
+
+	public function searchOrganisationByLoc($request) {
+	 $orgMapper = new Mappers_Organisation();
+		return  $orgMapper->searchOrganisationByLoc(mysql_real_escape_string($request['sloc']),mysql_real_escape_string($request['term']),mysql_real_escape_string($request['year']));
+	}
+
+	public function addOrganisationProfile($request) {
+	 $orgMapper = new Mappers_Organisation();
+		return  $orgMapper->addOrganisationProfile($jdata);
+	}
+
+
+	public function findOrganisationType() {
+	 $orgMapper = new Mappers_Organisation();
+		return  $orgMapper->findOrganisationType();
+
+	}
+
+   public function listAllOrganisations($country,$state,$loc,$year,$org) {
+	$orgMapper = new Mappers_Organisation();
+	return  $orgMapper->listAllOrganisations($country,$state,$loc,$year,$org);
+   
+   
+   }
+
+    public function listOrganisationsByLocation($country,$state,$loc,$year,$org) {
+	$orgMapper = new Mappers_Organisation();
+	return  $orgMapper->listOrganisationsByLocation($country,$state,$loc,$year,$org);
+
+    }
+
+}
+?>

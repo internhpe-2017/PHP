@@ -1,0 +1,64 @@
+<?php
+
+
+class Controllers_SearchOrganisation extends Controllers_Abstract {
+	const IS_PUBLIC = 1;
+ 	public function validate(  )
+	{
+  		$this->validation = new Library_Validation();	 
+		$this->validation->add_fields($this->request['params']['term'], 'req', 'Please Enter term',0);
+		$this->validation->add_fields($this->request['params']['term'], 'alpha', 'Please Enter alpha term 123 ',1);
+ 		$this->validation->add_fields($this->request['params']['year'], 'req', 'Please Enter num year',2);
+		$this->validation->add_fields($this->request['params']['year'], 'num', 'Please Enter num year 222',3);
+ 		return $this->validation->validate();
+ 	}
+
+ 	public function isPublic() {
+		return self::IS_PUBLIC;
+	}
+
+	public function get() {
+		$org = new Services_Organisation();
+		
+ 		$this->error=$this->validate();
+ 		$this->response =$this->error['value'];
+		
+		if($this->error['value'])
+		{ 
+			$this->response=$this->error['error'] ;
+		}
+		else
+		{
+			//check response validation here
+			$this->response =$org->searchOrganisation($this->request['params']);
+		} 
+ 		$this->responseStatus = 200;
+	}
+
+	public function post() {
+		$org = new Services_Organisation();
+ 		$this->error=$this->validate();
+ 		
+		if($this->error['value'])
+		{ 
+			$this->response=$this->error['error'] ;
+		}
+		else
+		{
+
+  			$this->response = $org->searchOrganisation($this->request['params']);
+  		}
+  		
+		$this->responseStatus = 200;
+	}
+	// @codeCoverageIgnoreStart
+	public function put() {
+		return null;
+	}
+
+	public function delete() {
+		return null;
+	}
+	// @codeCoverageIgnoreEnd
+}
+?>

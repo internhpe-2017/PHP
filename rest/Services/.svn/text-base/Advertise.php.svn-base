@@ -1,0 +1,129 @@
+<?php
+
+
+class Services_Advertise{
+
+ 
+	public function __construct() {
+  	}
+ 	
+	public function get($request) {
+
+
+	   	 $org = $this->findAdvertise($request);
+
+
+ 	 
+ 		return $org;
+
+ 	}
+
+	public function findAdvertise($request) {
+		$advMapper = new Mappers_Advertise();
+		
+
+
+     		 if( (isset($request['orgid']) && !empty($request['orgid'])) &&
+			(isset($request['year']) && !empty($request['year'])))  {
+
+		 	$org = $advMapper->findAdvertise(mysql_real_escape_string($request['orgid']),mysql_real_escape_string($request['year']));
+		  	return $org;
+		 }
+
+		return $org ;
+
+
+
+	}
+
+
+	public  function createAdvertise($request){
+
+
+	}
+
+
+
+	public function listAdvertise() {
+
+		if( (isset($request['pc']) && !empty($request['pc'])) )  {
+			$advMapper = new Mappers_Advertise();
+
+			$countid=trim(mysql_real_escape_string($request['pc']));
+			$Advertise =  $advMapper->listAdvertise($countid);
+		}
+		return $Advertise;
+
+	}
+
+	public function listAllAdvertise() {
+		$advMapper = new Mappers_Advertise();
+		$advertise = $advMapper->listAllAdvertise();
+		return $advertise;
+
+	}
+
+
+	public function showBanner($request) {
+		$advMapper = new Mappers_Advertise();
+		$orgUtils = new Library_Utilities();
+
+
+		$loc = new Mappers_Location();
+		 //echo  $request['location'].'--------'.$request['cntry'];
+
+		$locid=$loc->getLocationFromName( $request['location'],$request['cntry']);
+		//20067
+ 		$arg=$advMapper->showBanner($locid,$request['year']);
+
+		//echo $locid.'---------'.$request['year'].'-------'.$request['location'].'--------'.$request['cntry'];
+
+
+ 		$json='{"html": "';
+		$json=$json.'<div  id=\"cdwgtid\" class=\"cdwgt1\">';
+		
+		$json=$json.'<div  id=\"likes\" style=\"width:20px;height:30px;padding-top:10px;margin-left:75px\"><ul style=\"list-style-type:none\"> <li><div class=\"g_button\" > <div class=\"g-plusone\"  data-size=\"medium\" data-width=\"16px\" id=\"gplusone\"></div></div></li> <li><div class=\"like_button\" ><fb:like class=\"fb_edge_widget_with_comment fb_iframe_widget\" href=\"http://www.facebook.com/connectdays\" send=\"false\" layout=\"button_count\"  show_faces=\"false\" font=\"verdana\" colorscheme=\"light\"></fb:like></div></li> </ul></div>';
+		
+		$json=$json.'<div  id=\"logolinkid\" class=\"logolink\"><a href=\"'.$arg["adv_url_main"].'\" title=\"'.$arg["adv_head_title"].'\"><img alt=\"Connect Days\" src=\"ads/image/abc.jpg\"/></a></div>';
+		$l=0;
+		for( $i=1;$i<=sizeof($arg[1]);$i++,$l++)
+		{
+				$json=$json.'<div  class=\"wdgt1row\"> <h4>'.$arg[1][$i][0][0][2].'</h4>';
+				$json=$json.'<div  id=\"'.$arg[1][$i][0][0][1].'\" class=\"wdgt1group\">';
+				$json=$json.'<ul class=\"wdgt1group\"> ';
+				for( $j=0;$j<sizeof($arg[1][$i]);$j++)
+				{
+							//for( $k=0;$k<sizeof($arg[1][$i][$j]);$k++)
+							{
+								$uri=$orgUtils->escapeToHTMLString($arg[1][$i][$j][2]);
+								$json=$json.'<li class=\"wdgt1item\"> ';
+								$json=$json.'<a href=\"'.$arg[1][$i][$j][1].'/\" target=\"_new\"> ';
+								$json=$json.'<div  class=\"wdgt-1-item-img\"   style=\"background: url('.Config::SITE_HTTP_USER_PATH.$uri.') no-repeat\"> </div> ';
+								$json=$json.'<div  class=\"wdgt1itemtext\">'.$arg[1][$i][$j][3].'</div>   ';
+								$json=$json.'</a> ';
+								$json=$json.'</li> ';
+							}
+				}
+				$l=0;
+				$json=$json.'</ul>';
+				$json=$json.'</div>';
+				$json=$json.'<div  class=\"wdgt-1-row-buttons\"> ';
+				$json=$json.'<a href=\"#\" id=\"wdgt-1-new-products-next\" class=\"wdgt1arrowl\">&lt;</a> ';
+				$json=$json.'<a href=\"#\" id=\"wdgt-1-new-products-prev\" class=\"wdgt1arrowr\">&gt;</a>';
+				$json=$json.'</div>';
+				$json=$json.'</div>';
+		}
+		$json=$json.'</div>"';
+		$json=$json.'}';
+
+		/*
+		$json='{"html": "<div  class=\"cdwgt1\"><div  class=\"logolink\"><a href=\"http://www.bumblebeeholidays.com\" title=\"\"></a></div><div  class=\"wdgt1row\"> <h4>Travel</h4><div  id=\"wdgt-1-new-products\" class=\"wdgt1group\"><ul class=\"wdgt1group\"> <li class=\"wdgt1item\"> <a href=\"http://www.bumblebeeholidays.com/\"> <div  class=\"wdgt-1-item-img\"   style=\"background: url(http://localhost/images/bb_image.gif) no-repeat\"> </div> <div  class=\"wdgt1itemtext\">Holidays</div>   </a> </li> </ul></div><div  class=\"wdgt-1-row-buttons\"> <a href=\"#\" id=\"wdgt-1-new-products-next\" class=\"wdgt1arrowl\">&lt;</a> <a href=\"#\" id=\"wdgt-1-new-products-prev\" class=\"wdgt1arrowr\">&gt;</a></div></div><div  class=\"wdgt1row\"> <h4>Deals</h4><div  id=\"wdgt-1-theme-products\" class=\"wdgt1group\"><ul class=\"wdgt1group\"> <li class=\"wdgt1item\"> <a href=\"http://www.bumblebeeholidays.com/\"> <div  class=\"wdgt-1-item-img\"   style=\"background: url(http://localhost/images/bb_image.gif) no-repeat\"> </div> <div  class=\"wdgt1itemtext\">Three</div>   </a> </li> <li class=\"wdgt1item\"> <a href=\"http://www.bumblebeeholidays.com/\"> <div  class=\"wdgt-1-item-img\"   style=\"background: url(http://localhost/images/b_image.gif) no-repeat\"> </div> <div  class=\"wdgt1itemtext\">Four</div>   </a> </li> </ul></div><div  class=\"wdgt-1-row-buttons\"> <a href=\"#\" id=\"wdgt-1-new-products-next\" class=\"wdgt1arrowl\">&lt;</a> <a href=\"#\" id=\"wdgt-1-new-products-prev\" class=\"wdgt1arrowr\">&gt;</a></div></div><div  class=\"wdgt1row\"> <h4>Events</h4><div  id=\"wdgt-1-recommended-products\" class=\"wdgt1group\"><ul class=\"wdgt1group\"> <li class=\"wdgt1item\"> <a href=\"http://www.bumblebeeholidays.com/\"> <div  class=\"wdgt-1-item-img\"   style=\"background: url(http://localhost/images/bb_image.gif) no-repeat\"> </div> <div  class=\"wdgt1itemtext\">New Objectivity Stool</div>   </a> </li> </ul></div><div  class=\"wdgt-1-row-buttons\"> <a href=\"#\" id=\"wdgt-1-new-products-next\" class=\"wdgt1arrowl\">&lt;</a> <a href=\"#\" id=\"wdgt-1-new-products-prev\" class=\"wdgt1arrowr\">&gt;</a></div></div></div>"}';
+
+		*/
+
+		return $json;
+
+	}
+
+}
+?>

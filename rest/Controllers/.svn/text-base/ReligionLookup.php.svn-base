@@ -1,0 +1,55 @@
+<?php
+
+
+class Controllers_ReligionLookup extends Controllers_Abstract {
+	const IS_PUBLIC = 1;
+ 	public function validate(  )
+	{
+  		$this->validation = new Library_Validation();	 
+		//$this->validation->add_fields($this->request['params']['term'], 'req', 'Please Enter term',0);
+  		return $this->validation->validate();
+ 	}
+
+	public function isPublic() {
+		return self::IS_PUBLIC;
+	}
+
+	public function get() {
+		$religion = new Services_Religion();
+		$this->error=$this->validate();
+ 		
+		if($this->error['value'])
+		{ 
+			$this->response=$this->error['error'] ;
+		}
+		else
+		{	 		//  print_r($this->request['content-type']);
+		$this->response =$religion->religionLookup($this->request['params']);
+		}
+		$this->responseStatus = 200;
+	}
+
+	public function post() {
+		$religion = new Services_Religion();
+		$this->error=$this->validate();
+ 		
+		if($this->error['value'])
+		{ 
+			$this->response=$this->error['error'] ;
+		}
+		else
+		{	  		$this->response = $religion->religionLookup($this->request['params']);
+		}
+		$this->responseStatus = 200;
+	}
+	// @codeCoverageIgnoreStart
+	public function put() {
+		return null;
+	}
+
+	public function delete() {
+		return null;
+	}
+	// @codeCoverageIgnoreEnd
+}
+?>

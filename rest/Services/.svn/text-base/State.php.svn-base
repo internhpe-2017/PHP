@@ -1,0 +1,82 @@
+<?php
+
+
+class Services_State{
+
+ 
+	public function __construct() {
+  	}
+ 	
+	public function get($request) {
+
+
+	    $org = $this->findState($request);
+
+
+  		return $org;
+
+ 	}
+
+	public function findState($request) {
+		$statMapper = new Mappers_State();
+
+
+      if( (isset($request['orgid']) && !empty($request['orgid'])) &&
+			(isset($request['year']) && !empty($request['year'])))  {
+
+
+		  $org = $statMapper->findState(mysql_real_escape_string($request['orgid']),mysql_real_escape_string($request['year']));
+		  return $org;
+		}
+
+		return $org ;
+
+
+
+	}
+
+
+	public  function createState($request){
+
+
+	}
+
+
+  	  public function listDefaultState($request) {
+		$state ='';
+
+
+		if( (isset($request['pc']) && !empty($request['pc'])) )  {
+			$statMapper = new Mappers_State();
+			$countid=trim(mysql_real_escape_string($request['pc']));
+			$state =  $statMapper->listDefaultState($countid);
+		}
+		return $state;
+
+	}
+
+
+  	  public function listState($request) {
+		$state ='';
+
+
+		if( (isset($request['pc']) && !empty($request['pc'])) )  {
+			$statMapper = new Mappers_State();
+
+			$countid=trim(mysql_real_escape_string($request['pc']));
+			$state =  $statMapper->listState($countid);
+		}
+		return $state;
+
+	}
+
+	 public function listAllStates() {
+	 $statMapper = new Mappers_State();
+	 	$state = $statMapper->listState();
+	 return $state;
+
+	}
+
+
+}
+?>

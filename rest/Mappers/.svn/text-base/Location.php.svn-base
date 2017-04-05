@@ -1,0 +1,40 @@
+<?php
+
+
+class Mappers_Location {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_Location();
+	}
+
+
+	public function searchLocation($cntry,$term,$state) {
+		return $this->db->searchLocation($cntry,$term,$state);
+	}
+
+	public function locationLookup($cntry,$term,$state) {
+		return $this->db->locationLookup($cntry,$term,$state);
+	}
+
+	public function createLocation($jdata) {
+		return $this->db->createLocation($jdata);
+	}
+
+        public function listLocation() {
+		return $this->db->listLocation();
+
+	}
+	//list state of country
+        public function listLocationByCountry($cntrycode) {
+		return $this->db->listLocationByCountry($cntrycode);
+
+	}
+
+	public function getLocationFromName($locationName,$countrycode) {
+		return $this->db->getLocationFromName($locationName,$countrycode);
+	
+	}
+
+}
+?>

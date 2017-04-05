@@ -1,0 +1,728 @@
+<?php
+
+class Database_Db_WidgetReli extends Database_Db_Abstract {
+
+	private $cntrycode ='';
+	private $statecode ='';
+ 	private $year= '';
+	private $widget= '';
+ 	private  $flag= '';
+ 	private  $scenario=0;
+  	private  $user_id='';
+  	private  $graph_share_token=''; 	
+	private  $relilist='';
+	
+	public function __construct() {
+		parent::__construct();		 
+	}
+	public function doWidget($relilist,$cntrycode,$statecode,$year,$flag,$scenario,$user_id,$graph_share_token) {
+	
+	 //return $scenario.'scenario';
+ 			$relig_list='';
+			 if(!empty($year)) 
+			     $year=$year;
+			 else
+			     $year=$_SESSION['year'];	
+
+			 if($year=='Year' || $year=='') 		    
+				$year=$_SESSION['year'];		
+
+
+			 
+			 	
+			 //echo  $scenario.$relilist;
+ 
+			 switch ($scenario) {
+			     case 14:
+				 $relig_list=$this->scenario14($year) ;		          
+				 break;
+			     case 15:
+				 $relig_list=$this->scenario15($year,$cntrycode,$statecode,$relilist) ;
+				 break;
+			     case 16:
+				 $relig_list=$this->scenario16($year,$user_id) ;
+				 break;
+			     case 17:
+				 $relig_list=$this->scenario17($graph_share_token) ;
+				 break;
+			     case 18:
+				 $relig_list=$this->scenario18($relilist,$year,$cntrycode,$statecode) ;//$cntrycode,$statecode,$year
+				 break;
+			 
+
+			 }
+			   
+			 
+			 
+			 
+			 
+
+ 			
+			$tok =preg_split('","',$relig_list);
+			$tokcount=count($tok); 
+			
+			$ploting['plt'][0][0]['data'][0]= $this->getLabelData($cntrycode,$statecode,$relig_list,$year,$user_id);	
+			 //return $tokcount;
+			// return $ploting['plt'][0][0]['data'][0].'---';
+			//   return $cntrycode.$year.$statecode.$relig_list.$user_id;
+			
+			$yaxis[0]=$this->getYaxisData($cntrycode,$year,$statecode,$relig_list,$user_id); 
+			
+			 
+ 
+			//this should be calulated 
+			$ymax=array("data"=>array($tokcount*6));
+			$yearg=array($year);
+			//hardcoding
+			$yzoomRange=array("1", "5");
+			$yautoscaleMargin=array("yautoscaleMargin"=>'0.001');
+			$xautoscaleMargin=array("xautoscaleMargin"=>'0.001');
+
+			//x axis//hardcoding
+			$xmax=array("data"=>array("25"));
+			$xzoomRange= array("1", "0.1");
+			$xaxis[0]=$this->getXaxisData($cntrycode,$year,$statecode,$relig_list,$user_id);
+			
+			
+			$xdatacount=$this->getXDataCount($cntrycode,$year,$statecode,$relig_list,$user_id);
+			 
+			//series
+ 			$seriesdata['series']['lines']=array('show'=>'true');
+			$seriesdata['series']['points']=array('show'=>'true');
+			$seriesdata['series']=array('shadowSize'=>0);
+
+			$griddata['grid']=array('hoverable'=>'true');
+			$griddata['grid']=array('clickable'=>'true');
+			$griddata['grid']=array('backgroundColor'=>'#ffffff');
+
+			$linedata=array('show'=>'true');
+ 			$pointdata=array('show'=>'true');
+ 			$selectiondata=array('mode'=>'xy');
+ 			$zoomdata=array('interactive'=>'true');
+ 			$pandata=array('interactive'=>'true');
+ 			$colorsdata=$this->getColorData();
+  			$legenddata=$this->getLegend();
+  			
+  			$loc=$statecode;
+			
+			
+			return array("gd"=>$griddata,"yearg"=>$yearg,"loc"=>$loc,"sd"=>$seriesdata,"xd"=>$xaxis, "xm"=>$xmax, "xz"=>$xzoomRange,"xcount"=>$xdatacount,  "ycount"=>$tokcount,"yd"=>$yaxis, "ym"=>$ymax, "yz"=>$yzoomRange,"xs"=>$xautoscaleMargin, "ys"=>$yautoscaleMargin,"ds"=>$ploting );
+
+			 
+	
+	}
+	
+	
+	 
+
+
+	public function getLabelData($cntrycode,$statecode,$relilist,$year,$user_id)
+	{  
+		//if( trim($cntry)!=="" ) 
+		//
+		  
+		
+		//$variableq='select   ifnull(concat("[",group_concat(relig_hols_json),"]"),"") as data from year_religion_prof where  year=:year and country_code=:cntry and state_id in ("'.$statecode.'") and religion_id in ('.$relilist.')';
+		
+		//echo $variableq;
+		
+		 if(trim($user_id)!="" )
+		 {	
+		 
+ 		
+			$rs=$this->db->query('select   ifnull(concat("[",group_concat(relig_hols_json),"]"),"") as data from year_religion_prof where  year=:year and country_code=:cntry and state_id in ('.$statecode.') and religion_id in (:relig) and user_id=:userid  and is_deleted=0  ')  ;
+			$rs->bindValue(':year', $year);
+			$rs->bindValue(':cntry', $cntrycode);
+			$rs->bindRaw(':relig', $relilist);
+			$rs->bindValue(':userid', $user_id);
+
+  		}  	
+  		
+  		if( trim($user_id)=="" ) 
+		{
+
+ 
+			$rs=$this->db->query('select   ifnull(concat("[",group_concat(relig_hols_json),"]"),"") as data from year_religion_prof where  year=:year and country_code=:cntry and state_id in (:statecode) and religion_id in (:relig) and user_id=:userid  and is_deleted=0  ');
+			$rs->bindValue(':year', $year);
+			$rs->bindValue(':cntry', $cntrycode);
+			$rs->bindValue(':statecode', $statecode);
+			$rs->bindRaw(':relig', $relilist);
+			$rs->bindValue(':userid', 'system');
+  		
+  		}
+  		  //return  '------'.$cntrycode.$statecode.$relilist.$year ;
+ 		/*  
+		else
+			$rs=$this->db->query('select ifnull(concat("[",group_concat(relig_hols_json),"]"),"") as data from  country c,year_religion_prof yr where      c.country_code=yr.country_code  and yr.year=:year order by country_name');
+		*/
+		
+		
+ 		//$rs->bindRaw(':statecode', $statecode); 
+		$handlerres=$rs->execute(); 
+		
+		// $rs->numberOfRows().'----';
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+	 
+			return false;
+		} 
+		
+		//return $otlist.'------';
+		
+
+		$otlist=$rs->value('data');
+		
+		   
+		
+
+		$rs->freeResult();
+		$decoded= json_decode($otlist,true);  
+
+
+		$j=0;
+
+		if($decoded=='')
+		{
+		   $array3 = array("No Data Found");
+		}
+		else
+		{
+			$j=0;
+			$i=1;
+			$data=array();
+			foreach($decoded   as $key=>$item)
+			{  
+				foreach($decoded[$j]['dates']  as $key=>$item)	
+				{
+					$key = strtotime(str_replace('/','-',$key));
+					if (!array_key_exists($key, $data))
+					{
+						array_push($data,$key);	
+						$i=$i+1;
+					}
+				}
+				$j=$j+1; 
+			} 
+			sort($data);
+			$data2=array_values(array_unique($data));  //all dates 
+			$len=sizeof($data2);
+			// return $data2;
+			$j=0; 	
+			$array3 = array(); 
+			foreach($decoded   as $key=>$item)
+			{ 
+
+				$religid= $decoded[$j]['religionid'] ;
+				$orgevcnt= $decoded[$j]['relievcnt'] ;
+
+				$partialdate=array();
+				foreach($decoded[$j]['dates']  as $key=>$item) //15 partial dates
+				{ 
+					array_push( $partialdate,  strtotime(str_replace('/','-',$key)))	; 
+				}
+				// return $a;
+				$keys = array_keys($decoded[$j]['dates']); // 01/jan/2012
+
+				for($p=0,$loop=1; $p<$len;$p++,$loop++)  // all dates loop
+				{
+					  $foundval=array_search(  $data2[$p] ,$partialdate);
+
+					  if(strlen($foundval)==0 )
+					  {
+						$value=$decoded[$j]['dates'][$keys[$foundval]];  // label and advs
+						$data1= array("data"=> array(array($loop,null)), "relievcnt"=>$orgevcnt,"datedesc"=>$value['description'],"advdesc"=>$value['advert'],"label"=>'<div id="wadsid" class="wads"><div style="float:left;margin:1px;"><a id="'.$p.'"  href="'.$value['advert_href'].'"><img src="'.Config::SITE_HTTP_USER_PATH.$value['advert_img'].'" height="70" width="100" border=0 alt="'.$value['advert'].'"></a></div><div style="float:right">'.$value['description'].'</div></div>');
+					  }
+					  else
+					  {
+					  	$tempval=($j+1);
+
+						$value=$decoded[$j]['dates'][$keys[$foundval]];  // label and advs
+						$data1= array("data"=> array(array($loop,$tempval)), "relievcnt"=>$orgevcnt,"datedesc"=>$value['description'],"advdesc"=>$value['advert'],"label"=>'<div  id="wadsid" class="wads"><div style="float:left;margin:1px;"><a id="'.$p.'"  href="'.$value['advert_href'].'"><img src="'.Config::SITE_HTTP_USER_PATH.$value['advert_img'].'" height="70" width="100" border=0 alt="'.$value['advert'].'"></a></div><div style="float:right">'.$value['description'].'</div></div>');
+					  }
+					  array_push($array3,$data1);   
+
+				} 				 
+				$j=$j+1;
+			} 
+		}
+		
+		 return $array3;
+
+	 } 
+
+ 	 
+
+
+	public function getXDataCount($cntrycode,$year,$statecode,$reliid,$user_id)
+	{ 
+
+			if(trim($user_id)!="" )
+			{		
+
+
+
+				$rs=$this->db->query('select count(distinct event_date) as cnt  from user_cust_religion_event where state_id in ('.$statecode.') and religion_id in (:religid) and  country_code=:cntrycode  and year=:year order by religion_id  and user_id=:userid  and is_deleted=0  ');
+				$rs->bindValue(':year', $year);
+				$rs->bindValue(':cntrycode', $cntrycode);
+				$rs->bindValue(':userid', $user_id);
+				$rs->bindRaw(':religid', $reliid);
+		 
+
+			}
+			if(trim($user_id)=="" )
+			{
+			
+				$rs=$this->db->query('select count(distinct event_date) as cnt  from user_cust_religion_event where state_id in ('.$statecode.') and religion_id in (:religid) and  country_code=:cntrycode  and year=:year order by religion_id  and user_id=:userid  and is_deleted=0  ');
+				$rs->bindValue(':year', $year);
+				$rs->bindValue(':cntrycode', $cntrycode);
+				$rs->bindRaw(':religid', $reliid);
+				$rs->bindValue(':userid', 'system');
+
+			
+			}
+
+			 
+			$handlerres=$rs->execute(); 
+			if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+				return false;
+			} 
+
+			$otlist=$rs->value('cnt'); 
+			$rs->freeResult();
+			
+						   
+		return $otlist;
+	}
+
+
+	//[[3,"arm_Bangalore"],[1,"nokia_bangalore"]]  here 1,3 are organization id 
+ 	//[companyid,companyname] 
+ 
+
+
+
+
+	public function getYaxisData($cntrycode,$year,$statecode,$reliid,$user_id)
+	{ 
+  		//if( trim($cntry)!=="" )
+ 		 
+		if(trim($user_id)!="" )
+		{		
+			$rs=$this->db->query('select   ifnull(concat("[",group_concat(relig_hols_json),"]"),"") as data from year_religion_prof where  year=:year and country_code=:cntry and state_id in (:statecode) and religion_id in (:reliid) and user_id=:userid  and is_deleted=0  ');
+			$rs->bindValue(':year', $year);
+			$rs->bindValue(':cntry', $cntrycode);                
+			$rs->bindValue(':statecode', $statecode);                
+			$rs->bindValue(':userid', $user_id);
+			$rs->bindRaw(':reliid', $reliid);
+
+		}
+		
+		if(trim($user_id)=="" )
+		{
+		
+			$rs=$this->db->query('select   ifnull(concat("[",group_concat(relig_hols_json),"]"),"") as data from year_religion_prof where  year=:year and country_code=:cntry and state_id in (:statecode) and religion_id in (:reliid)  and user_id=:userid  and is_deleted=0  ');
+			$rs->bindValue(':year', $year);
+			$rs->bindValue(':statecode', $statecode);  
+			$rs->bindValue(':cntry', $cntrycode);
+			$rs->bindRaw(':reliid', $reliid);
+			$rs->bindValue(':userid', 'system');
+
+		}
+
+			//$variableq='select   ifnull(concat("[",group_concat(relig_hols_json),"]"),"") as data from year_religion_prof where  year=2013 and country_code="IND" and state_id in ("'.$statecode.'") and religion_id in ('.$reliid.')';
+
+			//echo $cntrycode.$year.$statecode.$reliid;		 
+
+
+
+
+
+			$handlerres=$rs->execute(); 
+			if(($rs->numberOfRows() == 0) || $this->db->isError()) 
+			{
+
+			// echo '%%%%%%%%'.$cntrycode.$year.$statecode.$reliid;	
+				return false;
+			}
+				 
+
+			$otlist=$rs->value('data'); 
+			 // echo  $otlist;
+
+
+			
+			$rs->freeResult();
+			$decoded= json_decode($otlist,true); 
+			 
+
+			$json_o='[';
+			$j=0;
+			$i=1;
+			$loop= count($decoded); 
+			 //echo  $decoded.$loop;
+			if($decoded=='')
+			{
+				$json_o=$json_o.'"No Data Found"'; 
+			}
+			else
+			{
+				// echo '-----------'.$json_o;
+				//return $loop;
+				foreach($decoded   as $key=>$item)
+				{ 
+				   $reliid= $decoded[$j]['religionid'] ;
+				   $reliname= $decoded[$j]['religion_name'] ;
+				   if($i==$loop)
+					$json_o=$json_o.'['.$i.',"'.$reliname.'"]';
+				   else
+					$json_o=$json_o.'['.$i.',"'.$reliname.'"],';
+
+				   $j=$j+1;
+				    $i=$i+1;
+				}
+				
+				 
+				// echo '------'.$json_o;
+			}
+			$json_o=$json_o.']';
+			
+
+
+			$arr1=json_decode($json_o);
+
+
+			$len=sizeof($arr1);
+
+
+			return $arr1;
+
+
+
+	 	 
+
+ 	//[dayofyear,"2date"]
+	// output :[[1,"11Jan"],[2,"12Jan"],[3,"16Jan"],[4,"14Feb"],[5,"16Feb"],[6,"21Feb"],[7,"22Feb"],[8,"23Feb"],[9,"10Jul"],[10,"21Dec"],[11,"10Jan"],[2,"12Jan"],[3,"16Jan"],[12,"25Jan"],[13,"15Feb"],[14,"7Mar"],[15,"16May"],[16,"18May"],[17,"3Dec"]]
+  	}
+ 
+ 
+	public function getXaxisData($cntrycode,$year,$statecode,$reliid,$user_id)
+	{ 
+  	
+  	
+ 			//if( trim($cntry)!=="" )
+		if(trim($user_id)!="" )
+		{		
+
+			$rs=$this->db->query('select   ifnull(concat("[",group_concat(relig_hols_json),"]"),"") as data from year_religion_prof where  year=:year and country_code=:cntry and state_id in (:statecode) and religion_id in (:reliid) and user_id=:userid  and is_deleted=0  ');
+
+			$rs->bindValue(':year', $year);
+			$rs->bindValue(':cntry', $cntrycode);
+			$rs->bindValue(':statecode', $statecode);
+			$rs->bindValue(':userid', $user_id);
+			$rs->bindRaw(':reliid', $reliid);
+
+		}
+		if(trim($user_id)=="" )
+		{
+			$rs=$this->db->query('select   ifnull(concat("[",group_concat(relig_hols_json),"]"),"") as data from year_religion_prof where  year=:year and country_code=:cntry and state_id in (:statecode) and religion_id in (:reliid)  and user_id=:userid  and is_deleted=0  ');
+
+			$rs->bindValue(':year', $year);
+			$rs->bindValue(':cntry', $cntrycode);
+			$rs->bindValue(':statecode', $statecode);
+			$rs->bindRaw(':reliid', $reliid);
+			$rs->bindValue(':userid', 'system');
+
+		}
+			 
+			/*else
+			     $rs=$this->db->query('select ifnull(concat("[",group_concat(relig_hols_json),"]"),"") as data from  country c,year_religion_prof yr	 where   c.country_code=yr.country_code  and yr.year=:year  ');
+			     */
+ 		
+		$handlerres=$rs->execute(); 
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+		return false;
+		} 
+
+		$otlist=$rs->value('data');
+		
+ 
+
+		$rs->freeResult();
+		$decoded= json_decode($otlist,true); 
+		
+		
+		$monthnames = array('01'=>'Jan','02'=>'Feb','03'=>'Mar','04'=>'Apr','05'=>'May','06'=>'Jun','07'=>'Jul','08'=>'Aug','09'=>'Sep','10'=>'Oct','11'=>'Nov','12'=>'Dec');
+		$monthnum = array('Jan'=>'01','Feb'=>'02','Mar'=>'03','Apr'=>'04','May'=>'05','Jun'=>'06','Jul'=>'07','Aug'=>'08','Sep'=>'09','Oct'=>'10','Nov'=>'11','Dec'=>'12');
+
+ 		 // return $decoded;
+		   
+	 	if($decoded=='')
+		{
+		
+		   $array3 = array("No Data Found");
+	 	}
+		else
+		{
+		
+ 
+			$j=0;
+			$i=1;
+		 
+			$data=array();
+			foreach($decoded   as $key=>$item)
+			{  
+				foreach($decoded[$j]['dates']  as $key=>$item)	
+				{
+					$key = strtotime(str_replace('/','-',$key));
+					if (!array_key_exists($key, $data))
+					{
+						array_push($data,$key);	
+						$i=$i+1;
+					}
+				}
+				$j=$j+1; 
+			} 
+			sort($data);
+			$data2=array_values(array_unique($data));  //all dates 
+ 			$len=sizeof($data2);
+ 			$j=0;  
+ 			$array3 = array();
+ 			foreach($decoded   as $key=>$item)
+			{ 
+
+				$religid= $decoded[$j]['religion'] ;
+ 				$partialdate=array();
+				foreach($decoded[$j]['dates']  as $key=>$item) //15 partial dates
+				{ 
+					array_push( $partialdate,  strtotime(str_replace('/','-',$key)))	; 
+				}
+ 				$keys = array_keys($decoded[$j]['dates']); // 01/jan/2012
+ 				for($p=0,$loop=1; $p<$len;$p++,$loop++)  // all dates loop
+				{
+  					  $foundval=array_search(  $data2[$p] ,$partialdate);
+    					  if(strlen($foundval)!=0 )
+					  {
+						$value= $keys[$foundval];  // label and advs   
+						$value = explode('/',  $value); 
+						$d = $value[0]; //02
+						$M = $value[1]; //Jan
+						$Y = $value[2]; //2012						 
+						$value =  $d.$M ; 
+ 						$data1=array($loop,''.$value.''); 
+					  }
+					  else
+					  {
+						 
+						$data1=array($loop,'');
+					  }
+					  array_push($array3,$data1);   
+ 					  
+				} 
+				 
+				$j=$j+1;
+			}			 
+ 		 }
+ 		  //return json_decode('[[1,"02Jan"],[2,"05Jan"],[3,""],[4,"11Jan"],[5,"12Jan"],[6,"16Jan"],[7,""],[8,"02Feb"],[9,"14Feb"],[10,""],[11,"16Feb"],[12,"21Feb"],[13,"22Feb"],[14,"23Feb"],[15,""],[16,"08May"],[17,"10May"],[18,""],[19,""],[20,"10Jul"],[21,""],[22,"21Dec"],[1,""],[2,""],[3,"10Jan"],[4,""],[5,"12Jan"],[6,"16Jan"],[7,"25Jan"],[8,""],[9,""],[10,"15Feb"],[11,""],[12,""],[13,""],[14,""],[15,"07Mar"],[16,""],[17,""],[18,"16May"],[19,"18May"],[20,""],[21,"03Dec"],[22,""]]',true);
+ 		return $array3;
+		 
+	} 
+ 
+	public function cmpcmpny($a, $b)
+	{ 
+
+	     if ($a[1]   == $b[1]  ) {
+
+		 return 0;
+	     }
+	     return ($a[1]   < $b[1] ) ? -1 : 1;
+	} 
+
+	public function cmpdateid($a, $b)
+	{ 
+
+	     if ($a[0]   == $b[0]  ) {
+
+		 return 0;
+	     }
+	     return ($a[0]   < $b[0] ) ? -1 : 1;
+	}
+ 
+
+
+	public function getColorData()
+	{ 
+	  return array("#a0f0f0","#4444","#4534","#6000");
+	} 
+	
+	public function getLegend()
+	{ 	
+	  return array('show'=>'false');
+	}
+	
+	
+	 
+
+ 
+	public function scenario15( $year,$cntrycode,$statecode,$relilst)
+	{  
+  
+ 		$relig_list1="";
+ 		$sql='select distinct religion.religion_id as relig_code from religion  INNER JOIN  religion_event where religion_event.year =:year and   religion.country_code=:cntrycode and religion.country_code=religion_event.country_code and  religion.religion_id in ( select religion_id from religion_event where country_code=:cntrycode1 and  religion_event.state_id in ("'.$statecode.'") ) and religion.is_deleted=0  and religion_event.is_deleted=0   and  religion_event.state_id in ("'.$statecode.'")';
+ 		
+		$rs = $this->db->query($sql);	
+ 		$rs->bindValue(':year',$year);
+		$rs->bindValue(':cntrycode',$cntrycode); 
+		$rs->bindValue(':cntrycode1',$cntrycode); 
+		
+ 		$handlerres=$rs->execute(); 
+ 		//print final query
+ 		//$this->query->getQuery
+ 		//print_r($rs)
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+		   return false;
+		}
+		// echo $sql;
+		$i=1;
+		$loop=$rs->numberOfRows();
+		while($rst = mysql_fetch_assoc($handlerres)){
+ 			if($i==$loop)
+			   $relig_list1=$relig_list1.''.$rst['relig_code'].''; 
+			else
+			   $relig_list1=$relig_list1.''.$rst['relig_code'].','; 
+ 			$i=$i+1;   
+ 		}
+		$rs->freeResult(); 
+ 		return  $relig_list1;       
+	}
+
+	public function scenario16($year,$user_id)
+	{
+
+		$this->cntryMapper = new Mappers_Country();
+		$cntrylist=$this->cntryMapper->listCountryByUserCustomisation($user_id,$year);
+
+ 		$i=1;
+		$relig_list1='';
+		$loop=0;
+ 		if (is_object($cntrylist)) {
+			foreach (get_object_vars($cntrylist) as $key => $val)
+			{
+
+			  if($key=='sel')
+			  {
+
+			    $loop = count((array)$val);
+
+
+
+
+			    foreach (get_object_vars($val) as $key => $val)
+			    {
+
+				if($i==$loop)
+				{
+					$relig_list1=$relig_list1.'"'.$key.'"';
+				}
+				else
+				{
+					$relig_list1=$relig_list1.'"'.$key.'"'.',';
+				}
+
+				$i=$i+1;
+			    }
+
+			  }
+
+			}
+
+		}
+		 return   $relig_list1;
+
+	}
+	public function scenario17($graph_share_token)
+	{
+
+
+		$this->cntryMapper = new Mappers_Country();
+		$cntrylist=$this->cntryMapper->listCountryDataByGraphToken($graph_share_token);
+ 		$i=1;
+		$relig_list1='';
+		$loop=0;
+
+		if (is_object($cntrylist)) {
+			foreach (get_object_vars($cntrylist) as $key => $val)
+			{
+			  if($key=='sel')
+			  {
+
+			    $loop = count((array)$val);
+
+			    foreach (get_object_vars($val) as $key => $val)
+			    {
+				if($i==$loop)
+					$relig_list1=$relig_list1.'"'.$key.'"';
+				else
+					$relig_list1=$relig_list1.'"'.$key.'"'.',';
+				$i=$i+1;
+			    }
+
+			  }
+
+			}
+		} elseif (is_array($cntrylist)) {
+
+			$loop = count($cntrylist);
+
+			for ($j=0;$i<$loop ; $j++)
+			{
+
+			 if($j==$loop-1)
+				$relig_list1=$relig_list1.''.$cntrylist[$j][orgid].'';
+			 else
+				$relig_list1=$relig_list1.''.$cntrylist[$j][orgid].''.',';
+			}
+
+		} else {
+			    print_r('check there');
+		}
+
+		return  $relig_list1;
+
+	}
+
+	public function scenario18($religlist, $year,$cntrycode,$statecode)
+	{  
+	
+	 
+			
+		$relig_list1='';
+  		$sql='select distinct religion.religion_id as relig_code from religion  INNER JOIN  religion_event where religion_event.year =:year  and religion.country_code=:cntrycode and religion.country_code=religion_event.country_code  religion.is_deleted=0 and religion_event.is_deleted=0 and  religion_event.state_id in ("'.$statecode.'") and religion.religion_name=:reliid' ; 
+  		
+  		 
+ 		$rs = $this->db->query($sql);
+ 		$rs->bindValue(':year',$year);
+		$rs->bindValue(':cntrycode',$cntrycode); 	 
+		$rs->bindValue(':reliid',$religlist); 
+ 		$handlerres=$rs->execute(); 
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+		   
+		   return false;
+		}
+		$i=1;
+		$loop=$rs->numberOfRows();
+		while($rst = mysql_fetch_assoc($handlerres)){
+ 			if($i==$loop)
+			   $relig_list1=$relig_list1.''.$rst['relig_code'].''; 
+			else
+			   $relig_list1=$relig_list1.''.$rst['relig_code'].','; 
+ 			$i=$i+1;   
+ 		}
+		$rs->freeResult(); 
+		 
+ 		return  $relig_list1;       
+	}
+
+
+
+}
+?>

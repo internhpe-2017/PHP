@@ -1,0 +1,296 @@
+<?php
+
+class Database_Db_OrganisationCustomisation extends Database_Db_Abstract {
+	protected $table = Database_DatabaseTables::ORG_CUSTOMISATION;
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+	public function createOrganisationCustomisation($cmpygrp,$orgids,$year,$userid) {
+	
+		 
+		 if(!empty($year)) 
+		     $year=$year;
+		 else
+		     $year=$_SESSION['year'];	
+		 
+		 if($year=='Year') 		    
+			$year=$_SESSION['year'];		
+
+		  
+		//$userid=$_SESSION['userinfo']['user_id'];
+		//$year='2012';
+		//$userid='w@t.com';
+		
+		$status=false;
+
+ 		if($this->db->isError()) {
+		    return $status;
+		}
+		  
+		
+		 try
+		 {
+		 
+			$this->db->startTransaction();
+
+			$sql = "delete from org_customisation where user_id=:userid and year =:year";
+			$rs = $this->db->query($sql);
+			$rs->bindValue(':userid', $userid);
+			$rs->bindValue(':year',$year);
+			$rs->execute(); 
+
+
+			// return $orgids;
+			// $stringLength = strlen($orgids);
+			// $orgids1 = substr($orgids, 1);  
+			// $orgids1=substr( $orgids,$lengids);
+
+			$tag = str_replace('"', '', $orgids);
+			$tok = strtok($tag , ',');
+			while ($tok !== false) 
+			{		 
+			try {  
+				$sql = "INSERT INTO org_customisation(user_id,org_id,year) VALUES ('$userid','$tok','$year')";
+
+				$rs1=$this->db->query($sql);
+				$handlerres1=$rs1->execute();	
+				 $tok = strtok(',');
+
+			}
+			catch (Exception $e) {    
+				 echo "Error".$e->getMessage();
+			} 
+			$status=true;	
+			}
+
+
+			try {  
+
+				$cryp = new Library_Cryp();
+				
+				$sql="SELECT  * FROM graph_group WHERE user_id =:userid  and year=:year1  group_type='ORGCUSTGRP'   and group_name=:gname" ;
+				$rs2=$this->db->query($sql);
+				$rs2->bindValue(':userid', $userid);
+				$rs2->bindValue(':year1', $year);
+				 $rs2->bindValue(':gname', $cmpygrp);
+				$handlerres2=$rs2->execute();
+
+				if($this->db->isError()) {
+					return false;
+				}
+
+
+				if(mysql_num_rows($handlerres2)>0){
+					//HARDCODING
+					$sql = "update graph_group set graph_share_token='".$cryp->encrypt($tag.'_'.$userid.'_'.$year)."' where user_id='$userid' and group_type='ORGCUSTGRP' and year='$year'  and group_name='$cmpygrp'";
+					$in_qry=mysql_query($sql);
+				}	
+				else{ 
+					$sql="INSERT INTO graph_group (user_id,group_name,graph_share_token,group_type,year) VALUES('$userid','$cmpygrp','".$cryp->encrypt('$tag'.'_'.'$userid'.'_'.'$year')."','ORGCUSTGRP','$year')";
+					$in_qry=mysql_query($sql); 
+				}
+				if($in_qry)
+					$_SESSION['userinfo']['graph_share_token']=$cryp->encrypt($tag.'_'.$userid.'_'.$year);
+
+
+
+			  }
+			  catch (Exception $e) {    
+			   echo "Error".$e->getMessage();
+			  } 
+			 $this->db->commitTransaction();
+		  }
+		  
+		  catch (Exception $e) {  
+		   
+			$this->db->rollbackTransaction();
+			echo "Error".$e->getMessage();
+		  } 
+		  
+		  
+ 		  $rs->freeResult();
+ 		  $rs1->freeResult();
+ 		  $rs2->freeResult();
+ 		  
+ 		  
+ 		  
+		  return $orgids;
+  	}
+
+        public function findOrganisationCustomisation($userid) {
+
+
+ 	}
+
+	public function updateOrganisationCustomisation($userid,$jdata) {
+
+
+ 	}
+
+	public function deleteOrganisationCustomisation($userid,$jdata) {
+
+
+ 	}
+
+	//{"sel":{"1":"ibm_bangalore","2":"test_bangalore"},"nosel":[]} 
+        public function listOrganisationsByUserCustomisation($user,$year) {
+    
+    		// list org ids
+    		// find the customised org name
+    		// find the user and location
+    		// get all the companies at his location
+    		// populate the json object 
+		 
+ 
+		$rs=$this->db->query('select  concat("{",concat((  ifnull((select   CONCAT("\"sel\":{",GROUP_CONCAT( "",CONCAT("\"",CONCAT(org_id,"\":\"",CONCAT(organisation,"_",location)),"\"") ,""),"}") from org_profile  where org_id in ( select  org_id from org_customisation where user_id=:userid1 and year=:year1   and is_deleted=0  order by organisation) and year=:year2 and is_deleted=0 order by organisation),"\"sel\":{}")),",", ifnull((select   CONCAT("\"nosel\":{",GROUP_CONCAT( "",CONCAT("\"",CONCAT(org_id,"\":\"",CONCAT(organisation,"_",location)),"\"") ,""),"}") from org_profile where org_id not in ( select  org_id from org_customisation where user_id=:userid2 and year=:year3  and is_deleted=0  order by organisation)   and is_deleted=0  and year=:year4 order by organisation), "\"nosel\":{}") ),"}") as data');
+
+		// $rs=$this->db->query('select  concat("{",concat((  ifnull((select   CONCAT("\"sel\":{",GROUP_CONCAT( "",CONCAT("\"",CONCAT(org_id,"\":\"",CONCAT(organisation,"_",location)),"\"") ,""),"}") from org_profile  where org_id in ( select  org_id from org_customisation where user_id='w@t.com' and year=2012) and year=2012),"\"sel\":{}")),",", ifnull((select   CONCAT("\"nosel\":{",GROUP_CONCAT( "",CONCAT("\"",CONCAT(org_id,"\":\"",CONCAT(organisation,"_",location)),"\"") ,""),"}") from org_profile where org_id not in ( select  org_id from org_customisation where user_id='w@t.com' and year=2012 )  and year=2012 ), "\"nosel\":{}") ),"}") as data');
+		
+		$rs->bindValue(':userid1', $user);
+		$rs->bindValue(':userid2', $user);
+		$rs->bindValue(':year1', $year);
+		$rs->bindValue(':year2', $year);
+		$rs->bindValue(':year3', $year);
+		$rs->bindValue(':year4', $year);
+		 
+ 		$handlerres=$rs->execute(); 
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		} 
+		
+		$otlist=$rs->value('data'); 
+		
+ 		$rs->freeResult();
+  				
+		return json_decode($otlist); 
+ 	}
+
+ 
+
+ 
+    
+        public function listOrganisationsByUserCustomisationGraph($user,$year) {
+    
+    		// list org ids
+    		// find the customised org name
+    		// find the user and location
+    		// get all the companies at his location
+    		// populate the json object 
+
+		   
+		//if($year=='')
+		//  $year=$_SESSION['year'];	
+		  
+		//if(empty($user))
+		//	   $user=$_SESSION['userinfo']['user_id'];
+		//$user='t@t.com';
+		//$year='2012';
+		$rs=$this->db->query('select  concat("{",concat((  ifnull((select   CONCAT("\"sel\":{",GROUP_CONCAT( "",CONCAT("\"",CONCAT(org_id,"\":\"",organisation),"\"") ,""),"}") from org_profile  where org_id in ( select  org_id from org_customisation where user_id=:userid1 and year=:year1  and is_deleted=0  order by organisation) and year=:year2  and is_deleted=0  order by organisation),"\"sel\":{}")),",", ifnull((select   CONCAT("\"nosel\":{",GROUP_CONCAT( "",CONCAT("\"",CONCAT(org_id,"\":\"",organisation),"\"") ,""),"}") from org_profile where org_id not in ( select  org_id from org_customisation where user_id=:userid2 and year=:year3  and is_deleted=0  order by organisation) and year=:year4  and is_deleted=0  order by organisation),"\"nosel\":{}") ),"}") as data');
+
+		//$rs=$this->db->query('select  concat("{",concat((  ifnull((select   CONCAT("\"sel\":{",GROUP_CONCAT( "",CONCAT("\"",CONCAT(org_id,"\":\"",organisation),"\"") ,""),"}") from org_profile  where org_id in ( select  org_id from org_customisation where user_id='w@t.com' and year='2012') and year='2012'),"\"sel\":{}")),",", (select   CONCAT("\"nosel\":{",GROUP_CONCAT( "",CONCAT("\"",CONCAT(org_id,"\":\"",organisation),"\"") ,""),"}") from org_profile where org_id not in ( select  org_id from org_customisation where user_id='w@t.com' and year='2012') and year='2012') ),"}") as data');
+		
+		$rs->bindValue(':userid1', $user);
+		$rs->bindValue(':userid2', $user);
+		$rs->bindValue(':year1', $year);
+		$rs->bindValue(':year2', $year);
+		$rs->bindValue(':year3', $year);
+		$rs->bindValue(':year4', $year);
+		
+		 
+ 		$handlerres=$rs->execute(); 
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		} 
+		
+		$otlist=$rs->value('data'); 
+		
+ 		$rs->freeResult();
+  				
+		return json_decode($otlist); 
+ 	}
+
+        public function listOrganisationsDataByUserCustomisation($user,$year) {
+    
+    		// list org ids
+    		// find the customised org name
+    		// find the user and location
+    		// get all the companies at his location
+    		// populate the json object 
+		   
+		/*if($year=='')
+		  $year=$_SESSION['year'];	
+		  
+		if(empty($user))
+		   $user=$_SESSION['userinfo']['user_id'];
+		   */
+		//$user='t@t.com';
+		//$year='2012';
+		if(empty($user))
+		{
+		$rs=$this->db->query('select GROUP_CONCAT( "", org_hols_json   ,"") from org_profile where org_id in (  select    org_id    from org_profile  where org_id in ( select  org_id from org_customisation where user_id=:userid1 and year=:year1  and is_deleted=0 ) and year=:year2  and is_deleted=0  ) as data');
+		$rs->bindValue(':userid1', 'system');
+
+ 		
+		}
+		else
+		{
+		$rs=$this->db->query('select GROUP_CONCAT( "", org_hols_json   ,"") from org_profile where org_id in (  select    org_id    from org_profile  where org_id in ( select  org_id from org_customisation where user_id=:userid1 and year=:year1  and is_deleted=0 ) and year=:year2  and is_deleted=0 ) as data');
+		$rs->bindValue(':userid1', $user);
+		
+		}
+		
+ 		$rs->bindValue(':year1', $year);
+		$rs->bindValue(':year2', $year);
+ 		
+		 
+ 		$handlerres=$rs->execute(); 
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		} 
+		
+		$otlist=$rs->value('data'); 
+		
+ 		$rs->freeResult();
+  				
+		return json_decode($otlist); 
+ 	}
+ 
+
+     public function listOrganisationsDataByGraphToken($graph_share_token ) {
+     		//descrypt 
+    		$cryp = new Library_Cryp();
+    		//utils
+    		$utils = new Library_Utilities();
+    		
+    		$ug=substr($graph_share_token,0, $utils->lastIndexOf($graph_share_token,'-'));
+    		
+    		//select org_id from org_customisation where user_id in (select user_id from user_profile where token='1c2057e9ba2d661a0b1916d12e888015') and year='';
+    		 
+    		$decry=$cryp->decrypt($graph_share_token);
+    		 
+		$org_list= strtok($decry, '_');
+		$user_id= strtok('_');
+		$year= strtok('_');
+		
+		
+		//var_dump($org_list);exit;
+  		//return $org_list;
+  		// hardcoding
+		$rs=$this->db->query('select GROUP_CONCAT( "", org_hols_json   ,"") as data from year_org_prof where org_id in (2,1) and year=:year  and is_deleted=0 ');
+ 		 
+		//$rs->bindValue(':orglist', str_replace($org_list,'"',''));
+ 		$rs->bindValue(':year', $year);
+  		$handlerres=$rs->execute(); 
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		} 
+				
+		$otlist=$rs->value('data'); 		
+ 		$rs->freeResult();  				
+		return json_decode('['.$otlist.']',true); 
+
+     } 
+}
+?>

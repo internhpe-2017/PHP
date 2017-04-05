@@ -1,0 +1,33 @@
+<?php
+
+class Database_Db_UserCustomisation extends Database_Db_Abstract {
+	protected $table = Database_DatabaseTables::USER_CUSTOMISATION;
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+	public function createUserCustomisation($jdata) {
+
+
+ 	}
+
+        public function findUserCustomisation($userid) {
+
+
+ 	}
+
+	public function updateUserCustomisation($userid) {
+
+
+ 	}
+
+	public function deleteUserCustomisation($userid) {
+
+
+ 	}
+
+
+
+}
+?>

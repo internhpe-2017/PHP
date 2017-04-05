@@ -1,0 +1,19 @@
+<?php
+
+
+class Services_CDVersion {
+ 
+	public function __construct() {
+  	}
+ 	
+	public function get() {
+		$versionMapper = new Mappers_CDVersion();
+		$result['Api'] = $versionMapper->findApiVersion();
+		$result['Data'] = $versionMapper->findDataVersion();
+		if(false === $result['Data']) {
+			throw new Exception('Internal server error', 500);
+		}
+		return $result;
+	}
+}
+?>

@@ -1,0 +1,62 @@
+<?php
+
+
+class Services_Group {
+
+	private $grpmapper;
+
+ 
+	public function __construct() {
+	$this->grpmapper = new Mappers_Group();
+	 
+  	}
+ 	
+	public function get($request) { 
+ 
+  		return $group; 
+ 	}
+ 
+ 	
+	public  function listGroupByUserCustomisation($request){
+		$grpmapper = new Mappers_Group();
+
+		if($year=='')
+		 	 $year=$_SESSION['year'];
+
+		if(empty($user)) 
+			$user= $_SESSION['userinfo']['user_id'];
+
+ 		$cust = $this->grpmapper->listGroupByUserCustomisation(mysql_real_escape_string( $user),mysql_real_escape_string($year));
+   		return $cust ; 
+	}
+
+	public function locateGroupByUserCustomisation($request) {
+	
+		$user="";
+ 
+ 		 if(isset($_SESSION['userinfo']['user_id']))		 
+			$user= $request['user']==""?$_SESSION['userinfo']['user_id']:$request['user'];
+		 if(!isset($_SESSION['userinfo']['user_id']))
+		 	$user= $request['user'];
+			
+			
+		
+		  
+		$year= ($request['year']==""?$_SESSION['year']:$request['year']);	
+		$grpname=$request['grpterm'];
+		return $this->grpmapper->locateGroupByUserCustomisation($user,$year,$grpname);
+
+	} 
+        public function listGroup() {
+		 
+
+		return $group = $grpmapper->listGroup( );
+
+	}
+	
+ 
+	 
+
+
+}
+?>

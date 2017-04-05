@@ -1,0 +1,55 @@
+<?php
+include('library/geoip.inc');
+include('library/geoipcity.inc');
+include('library/geoipregionvars.php');
+
+class Library_GeoLocation
+{
+	public function __construct() {
+	 
+	} 
+
+	public function getLocationByIP($ip){
+	      
+		//if(isset($ip)) 
+		if($ip)
+		{
+			// echo 'ip address before '.$ip;
+		      
+			$ip = $this->getCurrentIP();
+			  
+			 // echo 'ip address after '.$ip;
+		}			
+		else 
+		{
+		      //echo 'there';
+ 			//harcoding default ip
+			// $ip="1.125.236.216";   //aus
+			//$ip="171.1.68.4";      //singapore
+			 //$ip="0.125.236.216";   //unknown
+			//$ip="165.125.236.216"; //usa
+			  // $ip="25.125.236.216";  //gbr
+			  $ip="61.17.68.196";      //ind
+			  //echo 'ip address else '.$ip;
+		}
+		
+		$gi = geoip_open("library/GeoLiteCity.dat",GEOIP_STANDARD); 		
+ 		$record = geoip_record_by_addr($gi,$ip);
+  		geoip_close($gi);  
+
+ 		
+		return $record;
+	}
+
+	public function getCurrentIP(){
+		if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+		   	// echo 'HTTP_X_FORWARDED_FOR';
+			$ip = trim($_SERVER['HTTP_X_FORWARDED_FOR']);
+		} else {
+			// echo 'REMOTE_ADDR';
+			$ip = trim($_SERVER['REMOTE_ADDR']);
+		}
+		return $ip;
+	}	
+}
+?>

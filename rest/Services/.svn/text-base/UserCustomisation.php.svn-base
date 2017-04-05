@@ -1,0 +1,37 @@
+<?php
+
+
+class Services_UserCustomisation {
+	private $userCust;
+ 
+	public function __construct() {
+		$this->userCust = new Mappers_UserCustomisation();
+ 
+	}
+
+
+    public function createUserCustomisation($jdata) {
+
+
+ 	}
+
+    public function findUserCustomisation($userid) {
+   		return $this->userCust->findUserCustomisation($userid);
+
+
+ 	}
+
+	public function updateUserCustomisation($userid) {
+
+
+ 	}
+
+	public function deleteUserCustomisation($userid) {
+
+
+ 	}
+
+    public function listUserCustomisation() {
+
+
+?>

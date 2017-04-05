@@ -1,0 +1,85 @@
+<?php
+
+
+class Services_Mail {
+	private $mail;
+ 
+	public function __construct() {
+		$this->mail = new Mappers_Mail();
+ 
+	} 
+ 	public function sentfeedbackmail($request) {
+		  
+		 	 
+		 	
+		 $reg = $this->mail->sentfeedbackmail( );  
+		 		 
+		 return $reg;
+	}
+	
+	public function sentICS($request) {
+		  
+		 	 
+		 	
+		 $reg = $this->mail->sentICS( );  
+		 		 
+		 return $reg;
+	}
+
+
+	public function sentInviteMail($request) {
+		  
+		 	 
+		 	
+		 $reg = $this->mail->sentInviteMail( );  
+		 		 
+		 return $reg;
+	}
+	
+	
+ 	public function sentforgotpassword($request) {
+		 
+	         
+		 $reg = $this->mail->sentforgotpassword( );  
+		 
+		  
+		 return $reg;
+	}
+	 
+	 
+ 	public function feedbackmail($request) {
+ 			
+  		
+
+		  if( ( isset($request['captcha']) && !empty($request['captcha']) ) && (isset($request['fname']) && !empty($request['fname'])) && (isset($request['message']) && !empty($request['message'])) && (isset($request['email']) && !empty($request['email'])) )  
+		 {
+
+			 if (empty($_SESSION['captcha']) || trim(strtolower($request['captcha'])) != $_SESSION['captcha'])
+			{
+				unset($_SESSION['captcha']);
+				return json_decode('["Invalid Captcha"]');
+			}		
+			unset($_SESSION['captcha']);
+		 	$username = mysql_real_escape_string($request['fname']); 
+		 	$message = mysql_real_escape_string($request['message']); 
+		 	$email = mysql_real_escape_string($request['email']);  
+		 	$reg =  $this->mail->feedbackmail($email,$message,$email ); 
+		 }		 
+		 return $reg;
+	}
+	
+	
+
+ 	public function invitefriend($request) {
+		  if(   (isset($request['emailid']) && !empty($request['emailid'])) && (isset($request['femails']) && !empty($request['femails'])))  
+		 {
+ 		 	$comments = mysql_real_escape_string($request['comments']); 
+		 	$emailid = mysql_real_escape_string($request['emailid']); 
+		 	//$femails = mysql_real_escape_string($request['femails']);  
+		 	
+		 	$reg =  $this->mail->invitefriend($comments,$emailid,$request['femails'] ); 
+		 }		 
+		 return $reg;
+	} 
+}
+?>

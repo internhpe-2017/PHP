@@ -1,0 +1,19 @@
+<?php
+
+
+class Services_Test{
+ 
+ 
+	public function test($request) {
+		$test = new Mappers_Test(); 
+		 
+		return $test->test( );
+		 
+
+
+	}
+
+
+	 
+}
+?>

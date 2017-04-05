@@ -1,0 +1,104 @@
+<?php
+
+
+
+class Services_CountryCustomisation {
+	private $cntryCustMapper;
+ 
+	public function __construct() {
+		$this->cntryCustMapper = new Mappers_CountryCustomisation();
+ 
+ 	}
+
+	public function deleteCountryCustomisation($userid,$jdata) {
+		return $this->cntryCustMapper->deleteCountryCustomisation($userid,$jdata);
+	}
+
+	public function updateCountryCustomisation($userid,$jdata) {
+		return $this->cntryCustMapper->updateCountryCustomisation($userid,$jdata);
+	}
+
+	public function findCountryCustomisation($userid) {
+ 		return $this->cntryCustMapper->findCountryCustomisation($userid);
+	} 
+	public function listCountryByUserCustomisation($request) {
+
+ 		 
+ 		$year= ($request['year']==""?$_SESSION['year']:$request['year']);		
+ 		
+		if(empty($user))
+			$user= $_SESSION['userinfo']['user_id']; 
+		return $this->cntryCustMapper->listCountryByUserCustomisation($user,$year);
+	}
+
+
+	public function listCountrysByUserCustomisationGraph($request) {
+
+ 		$year= ($request['year']==""?$_SESSION['year']:$request['year']);	
+ 		if(empty($user))
+ 			$user= $_SESSION['userinfo']['user_id'];
+
+		return $this->cntryCustMapper->listCountrysByUserCustomisationGraph($user,$year);
+
+	}
+
+
+     public function listCountrysDataByUserCustomisation($user,$year) {
+
+	       //if(isset($request['pd']) && !empty($request['pd']))
+
+		return $this->cntryCustMapper->listCountrysDataByUserCustomisation($user,$year);
+     }
+
+     public function listCountrysDataByUserCustomisationByToken( $request) {
+
+
+
+
+		if(isset($request['token']) && !empty($request['token']) && isset($request['year']) && !empty($request['year']))
+		{
+
+			$token=mysql_real_escape_string($request['token']);
+			$year=mysql_real_escape_string($request['year']);
+
+		}
+
+		return $this->cntryCustMapper->listCountrysDataByUserCustomisationByToken($token,$year);
+     }
+
+
+	public function createCountryCustomisation($request) {
+
+
+		//if(empty($user))
+
+		 $userid= $_SESSION['userinfo']['user_id'];
+		 
+		 
+		 
+
+		if(isset($request['pd']) && !empty($request['pd']))
+
+		{
+		return $this->cntryCustMapper->createCountryCustomisation($request['cntrygrp'],  $request['pd'], mysql_real_escape_string($request['year']),$userid);
+		}
+	}
+
+
+ 
+   public function listCountrysDataByGraphToken($request) {
+
+
+		if(isset($request['grtok']) && !empty($request['grtok'])  )
+		{
+ 			$grtok=mysql_real_escape_string($request['grtok']);
+
+		}
+
+	    return $this->cntryCustMapper->listCountrysDataByGraphToken($grtok );
+   }
+
+
+
+}
+?>

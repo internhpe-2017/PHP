@@ -1,0 +1,33 @@
+<IfModule mod_rewrite.c>
+ 	RewriteEngine On
+	RewriteBase /rest
+ 
+        
+	RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+	#RewriteEngine on
+	#RewriteRule .* - [env=HTTP_AUTHORIZATION:%{HTTP:Authorization},last]
+
+	RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteCond %{REQUEST_FILENAME} !-s
+	RewriteRule ^(.*)$ index.php?RESTurl=$1 [QSA,NC,L]
+
+	RewriteCond %{REQUEST_FILENAME} -d
+	RewriteRule ^(.*)$ index.php [QSA,NC,L]
+
+	RewriteCond %{REQUEST_FILENAME} -s
+	RewriteRule ^(.*)$ index.php [QSA,NC,L]	
+</IfModule>
+
+<Files *.htm>
+	#Compress
+	SetOutputFilter DEFLATE
+</Files> 
+
+
+ErrorDocument 400 /error-msg.php
+ErrorDocument 401 /error-msg.php
+ErrorDocument 402 /error-msg.php
+ErrorDocument 403 /error-msg.php
+ErrorDocument 404 /error-msg.php
+ErrorDocument 500 /error-msg.php

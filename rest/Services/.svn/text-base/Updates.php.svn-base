@@ -1,0 +1,31 @@
+<?php
+
+
+class Services_Updates {
+ 	private $updates_mapper;
+ 
+	public function __construct() {
+		$this->updates_mapper = new Mappers_Updates();
+ 
+	}
+
+
+
+	public function findUpdates ($request) {
+
+	 if( (isset($request['updates']) && !empty($request['updates']) )  && (isset($request['year']) && !empty($request['year']) ))
+
+  	     return   $this->updates_mapper->findUpdates ($request['updates'],$request['year']) ;
+
+
+
+
+	}
+
+
+
+
+
+
+}
+?>

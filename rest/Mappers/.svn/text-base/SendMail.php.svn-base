@@ -1,0 +1,30 @@
+<?php
+
+
+class Mappers_SendMail {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_SendMail();
+	}
+
+
+	public function sendmail($type ,$confirmkey) {
+ 	 
+		if($type== 'UREG')
+			return $this->db->activatemail( $confirmkey );  
+		else if($type == 'UCONF')
+			return $this->db->confirmationmail( );  
+		else if($type == 'REACTI')
+			return $this->db->reactivationmail($email);  
+		else if($type == 'ACTIV')
+			return $this->db->sendactivationemail( );  
+ 	 
+ 	}
+
+	
+	 
+}
+
+
+?>

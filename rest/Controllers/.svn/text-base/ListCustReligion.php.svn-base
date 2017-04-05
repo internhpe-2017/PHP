@@ -1,0 +1,71 @@
+<?php
+
+
+class Controllers_ListCustReligion extends Controllers_Abstract {
+	const IS_PUBLIC = 0;
+ 	public function validate(  )
+	{
+  		$this->validation = new Library_Validation();	 
+		//$this->validation->add_fields($this->request['params']['term'], 'req', 'Please Enter term',0);
+  		return $this->validation->validate();
+ 	}
+
+	public function isPublic() {
+		return self::IS_PUBLIC;
+	}
+
+	public function get() {
+		$relig = new Services_ReligionCustomisation();
+		/*
+
+		if($this->request['content-type'] == 'xml')
+		$this->response.setContentType('application/xml');
+		else if($this->request['content-type'] == 'json')
+		$this->response.setContentType('application/json');
+
+		*/ 
+		$this->error=$this->validate();
+ 		
+		if($this->error['value'])
+		{ 
+			$this->response=$this->error['error'] ;
+		}
+		else
+		{	
+		$this->response = $relig->listReligionByUserCustomisation($this->request['params'] );
+		}
+			//  print_r($this->request['content-type']);
+
+ 
+ 		//$this->response =$custorgadd;
+ 		$this->responseStatus = 200;
+	}
+
+
+
+
+	public function post() {
+		$relig = new Services_ReligionCustomisation();
+		$this->error=$this->validate();
+ 		
+		if($this->error['value'])
+		{ 
+			$this->response=$this->error['error'] ;
+		}
+		else
+		{			
+			$this->response = $relig->listReligionByUserCustomisation($this->request['params'] );
+		}
+ 		$this->responseStatus = 200;
+	}
+	// @codeCoverageIgnoreStart
+	public function put() {
+		return null;
+	}
+
+	public function delete() {
+		return null;
+	}
+	// @codeCoverageIgnoreEnd
+}
+?>

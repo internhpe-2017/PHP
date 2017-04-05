@@ -1,0 +1,63 @@
+<?php
+
+class Database_Db_EventDetails extends Database_Db_Abstract {
+ 
+	public function __construct() {
+		parent::__construct();
+	}
+
+ 	//http://localhost/rest/EventDateDetails?eventdetail=10jan&year=2012
+	public function findEventDetails($eventdetail,$module,$year) {
+
+		if($module=='Organisation')
+		{
+			$month=substr($eventdetail, -3, 3);
+			$day=substr($eventdetail, 0,strlen($eventdetail)-3);
+
+
+			$finaldate='"'.$day.'/'.$month.'/'.$year.'"';
+
+			// return $finaldate;
+			$rs = $this->db->query("select op.organisation as org,op.location as loc ,oe.event_date as dt ,oe.event_desc as ds from org_profile op ,org_event  oe where   op.year=oe.year and   oe.year=:year and op.year=:year and op.is_deleted=0 and oe.is_deleted=0  and oe.event_date=:dateinfo and oe.org_id=op.org_id order by op.organisation");
+			//$rs->bindValue(':orgname',$cmpny);
+			$rs->bindValue(':year', $year);
+			$rs->bindValue(':year', $year);
+			$rs->bindValue(':dateinfo', $finaldate);
+
+			$handlerres=$rs->execute();
+
+			if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+				return false;
+			}
+
+
+			$clist = array();
+
+			while($row = mysql_fetch_assoc($handlerres))
+			{  
+				$org['dt'] = $row['dt'];
+				$org['ds'] = $row['ds'];
+				$org['loc'] = $row['loc'];
+				$org['org'] = $row['org'];
+
+
+				$llist=  array("value"=> $org  );
+				$clist[] =  $llist; 
+				//$location=$row['loc'];
+
+			}
+			//$clist[] =  array( "Location"=>$location);
+
+
+			$rs->freeResult();
+
+			return $clist	;
+		}
+
+		 
+ 	}
+
+
+
+}
+?>

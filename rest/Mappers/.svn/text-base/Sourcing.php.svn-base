@@ -1,0 +1,25 @@
+<?php
+
+
+class Mappers_Sourcing {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_Sourcing();
+	}
+
+
+
+	public function createSourcing($jdata) {
+
+		return $this->db->createSourcing($jdata);
+
+ 	}
+
+	public function listSourcing( ) {
+		return $this->db->listSourcing( );
+	}
+
+
+}
+?>

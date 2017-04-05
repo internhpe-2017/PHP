@@ -1,0 +1,46 @@
+<?php
+
+class Services_Client {
+	private $clientMapper;
+ 
+	public function __construct() {
+		$this->clientMapper = new Mappers_Client();
+ 
+	}
+
+
+
+	public function get($request) {
+	
+		if( isset($request['ip']) && !empty($request['ip']))
+		  $ipaddress=mysql_real_escape_string($request['ip']);
+		
+		$client = $this->findByIp($ipaddress);
+		return $client;
+
+	 }
+
+
+	/*public function login($client_id, $client_password ) {
+ 		$client = $this->clientMapper->login($client_id, $client_password );
+ 		return $client;
+	}*/
+
+
+
+	private function findIP($ipaddress) {
+
+ 
+
+		if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			$ipaddress = trim($_SERVER['HTTP_X_FORWARDED_FOR']);
+		} else {
+			$ipaddress = trim($_SERVER['REMOTE_ADDR']);
+		}
+
+		 // return $ipaddress ;
+		 //$ipaddress="30.3.4.6";
+ 		 return $this->clientMapper->findIP($ipaddress);
+	}
+}
+?>

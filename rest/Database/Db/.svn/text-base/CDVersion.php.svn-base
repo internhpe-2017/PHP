@@ -1,0 +1,23 @@
+<?php
+
+class Database_Db_CDVersion extends Database_Db_Abstract {
+	protected $table = Database_DatabaseTables::VERSIONS;
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+	public function findDataVersion() {
+		$vers = $this->db->query('select max(org_id)   from org_event');
+		$vers->bindTable(':table_versions', $this->table);
+		$vers->execute();
+
+		if($this->db->isError()) {
+			return false;
+		}
+
+		return $vers->value('data_version');
+	}
+
+}
+?>

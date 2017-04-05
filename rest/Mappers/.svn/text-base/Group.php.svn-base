@@ -1,0 +1,34 @@
+<?php
+
+
+class Mappers_Group {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_Group();
+	}
+
+
+ 
+
+	public  function listGroupByUserCustomisation($user,$year){
+		return $this->db->listGroupByUserCustomisation($user,$year);
+
+
+	}
+        
+
+        public function listGroup() {
+    		return $this->db->listGroup();
+    
+    	}
+    public function locateGroupByUserCustomisation($user,$year,$grpname) {
+		return $this->db->locateGroupByUserCustomisation($user,$year,$grpname);
+
+	}
+
+
+ 
+	 
+}
+?>

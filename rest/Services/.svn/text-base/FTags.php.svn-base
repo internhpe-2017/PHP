@@ -1,0 +1,53 @@
+<?php
+
+
+class Services_FTags { 
+
+	private $tagmapper;
+ 
+	public function __construct() {
+ 		 
+	}
+
+
+      public function listTagsByCntryYear($request) {
+		 
+ 		 $tagmapper = new Mappers_FTags();  		 
+ 		 if( ( isset($request['cntry']) && !empty($request['cntry'])) && ( isset($request['year']) && !empty($request['year'])) )
+		 {
+ 			$cntry=mysql_real_escape_string($request['cntry']);
+			$year=mysql_real_escape_string($request['year']); 
+			return    $tagmapper->listTagsByCntryYear($cntry,$year);
+		 }
+
+	}
+
+
+        public function listTags($request) {
+		 
+ 		 $tagmapper = new Mappers_FTags();
+
+		 return    $tagmapper->listTags( );
+
+	}
+        public function listTagsByCntry($request) {
+		 
+ 		 $tagmapper = new Mappers_FTags();
+ 		 
+ 		 
+ 		 if(isset($request['cntry']) && !empty($request['cntry'])  )
+		 {
+
+			$cntry=mysql_real_escape_string($request['cntry']);
+ 
+			return    $tagmapper->listTagsByCntry($cntry );
+		 }
+
+	}
+	
+
+	 
+
+
+}
+?>

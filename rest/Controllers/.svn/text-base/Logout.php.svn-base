@@ -1,0 +1,65 @@
+<?php
+
+class Controllers_Logout extends Controllers_Abstract {
+	const IS_PUBLIC = 1;
+ 	public function validate(  )
+	{
+  		$this->validation = new Library_Validation();	 
+		//$this->validation->add_fields($this->request['params']['term'], 'req', 'Please Enter term',0);
+  		return $this->validation->validate();
+ 	}
+
+	public function isPublic() {
+		return self::IS_PUBLIC;
+	}
+	
+	public function get() {
+	
+			//unset($_SESSION['isLoggedIn']);
+			unset($_SESSION['userinfo']);
+
+			unset($_SESSION['jdata']);
+			unset($_SESSION['isLoggedIn']);
+			unset($_SESSION['loggedAt']);
+			unset($_SESSION['module']);
+			unset($_SESSION['show']);
+			 
+			 
+			session_unset();
+	 		$this->response = "Loggedout";	 	 
+	   		$this->responseStatus = 200;	
+
+	}
+ 
+
+	public function post() {
+		$user = new Services_User();
+	 	/*$_SESSION['usersession']='';
+	 	$_SESSION['userinfo']='';
+	 	$_SESSION['userinfo']['name']='';
+	 	$_SESSION['year']='';
+	 	$_SESSION['location']='Bangalore';
+	 	*/
+ 		//unset($_SESSION['timeOut']);
+ 		unset($_SESSION['userinfo']);
+		unset($_SESSION['jdata']);
+	  	unset($_SESSION['isLoggedIn']);
+	  	unset($_SESSION['loggedAt']);
+		unset($_SESSION['module']);
+		
+	 	session_unset();
+	 	//session_destroy();
+	 	$this->response =  "Loggedout";	 	 
+   		$this->responseStatus = 200;	
+   		}
+	// @codeCoverageIgnoreStart
+	public function put() {
+		return null;
+	}
+
+	public function delete() {
+		return null;
+	}
+	// @codeCoverageIgnoreEnd
+}
+?>

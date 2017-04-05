@@ -1,0 +1,49 @@
+<?php
+
+
+class Services_RSS{
+
+ 
+	public function __construct() {
+ 
+ 	}	
+
+	public function findRSS($request) {
+		$rssMapper = new Mappers_RSS();
+
+
+		if( (isset($request['rsstype']) && !empty($request['rsstype'])) &&		(isset($request['year']) && !empty($request['year'])))  
+		{
+  	 
+
+			$rss = $rssMapper->findRSS(mysql_real_escape_string($request['rsstype']),mysql_real_escape_string($request['year']));
+		 
+		}
+
+		return $rss ;
+
+
+
+	}
+
+
+	public  function createRSS($request){
+
+
+	}
+
+
+
+        public function listRSS($request) {
+
+
+ 
+	}
+
+	public function listAllRSS() {
+ 
+	}
+
+
+}
+?>

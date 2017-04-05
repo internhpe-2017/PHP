@@ -1,0 +1,36 @@
+<?php
+
+
+class Mappers_ReligionEvent {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_ReligionEvent();
+	}
+
+ 
+
+	public function getCntryReligionEventDates($cntrycode ,$year,$relig,$statecode,$module)
+	{
+		       return $this->db->getCntryReligionEventDates ($cntrycode ,$year,$relig,$statecode,$module);
+
+	}
+	public function getCntryStReligionEventDates($cntrycode ,$year,$statecode,$relig)
+	{
+		       return $this->db->getCntryStReligionEventDates ($cntrycode ,$year,$statecode,$relig);
+
+	}
+	public function findEventDetails ($eventdetail,$module,$year,$cntrycode,$statecode,$relig) {
+	       return $this->db->findEventDetails ($eventdetail,$module,$year,$cntrycode,$statecode,$relig);
+	} 
+ 
+
+
+	public function findReligionEventDates( $relig,$statecode,$cntry,$module,$year) {
+		return $this->db->findReligionEventDates( $relig,$statecode,$cntry,$module,$year);
+	}
+ 
+ 
+
+}
+?>

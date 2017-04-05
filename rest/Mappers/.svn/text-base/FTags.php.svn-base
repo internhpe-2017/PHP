@@ -1,0 +1,30 @@
+<?php
+
+
+class Mappers_FTags {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_FTags();
+	}
+
+
+ 
+        public function listTags() {
+		return $this->db->listTags();
+
+	}
+        public function listTagsByCntry($cntry) {
+		return $this->db->listTagsByCntry($cntry);
+
+	}
+        public function listTagsByCntryYear($cntry,$year) {
+		return $this->db->listTagsByCntryYear($cntry,$year);
+
+	}
+
+
+
+	 
+}
+?>

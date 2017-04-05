@@ -1,0 +1,31 @@
+<?php
+
+
+class Mappers_OrgTabs {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_OrgTabs();
+	}
+
+
+	public function getOrgGenTab( $year,$cntrycode) {
+		return $this->db->getOrgGenTab( $year,$cntrycode);
+	}
+
+	public function getOrgPersTab( ) {
+		return $this->db->getOrgPersTab( );
+	}
+
+	public function getOrgCorpTab( ) {
+		return $this->db->getOrgCorpTab( );
+	}
+
+	public function getOrgPreferanceTab( ) {
+		return $this->db->getOrgPreferanceTab( );
+	}
+
+
+
+}
+?>

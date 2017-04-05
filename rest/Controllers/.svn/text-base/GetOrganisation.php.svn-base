@@ -1,0 +1,83 @@
+<?php
+
+
+class Controllers_GetOrganisation extends Controllers_Abstract {
+	const IS_PUBLIC = 0;
+ 	public function validate(  )
+	{
+  		$this->validation = new Library_Validation();	 
+		//$this->validation->add_fields($this->request['params']['term'], 'req', 'Please Enter term',0);
+  		return $this->validation->validate();
+ 	}
+
+	public function isPublic() {
+		return self::IS_PUBLIC;
+	}
+
+	public function get() {
+		$org = new Services_Organisation();
+		
+		
+		$link=$_REQUEST['link'];
+		$year=$_REQUEST['year'];
+
+		$this->error=$this->validate();
+ 		
+		if($this->error['value'])
+		{ 
+			$this->response=$this->error['error'] ;
+		}
+		else
+		{	
+
+			if($link!="")
+			{
+				//list($cntry, $state, $organisation,$location,$year) = split('-', $link);
+				 list($cntry, $state, $organisation,$location ) = preg_split('-', $link);
+			}
+			else
+			{
+			   // hardcoding
+			   $cntry=$_SESSION['geodata']['country3'];
+			   //$state="IND_KL";
+			   //$organisation="Cisco";
+			   $location=$_SESSION['geodata']['location'];
+			   if(empty($year)) 
+			      $year=$_SESSION['year'];
+			}
+
+
+			// $this->response=json_decode('['.$link.']');
+			 $this->response = $org->listAllOrganisations($cntry,$state,$location,$year,$organisation);
+		}
+		$this->responseStatus = 200;
+	}
+
+
+
+
+	public function post() {
+		$org = new Services_Organisation();
+		$this->error=$this->validate();
+ 		
+		if($this->error['value'])
+		{ 
+			$this->response=$this->error['error'] ;
+		}
+		else
+		{	
+			$this->response = $org->listAllOrganisations($cntry,$state,$location,$year,$organisation);
+		}
+ 		$this->responseStatus = 200;
+	}
+	// @codeCoverageIgnoreStart
+	public function put() {
+		return null;
+	}
+
+	public function delete() {
+		return null;
+	}
+	// @codeCoverageIgnoreEnd
+}
+?>

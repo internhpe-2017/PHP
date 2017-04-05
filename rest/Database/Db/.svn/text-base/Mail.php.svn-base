@@ -1,0 +1,299 @@
+<?php
+ 
+
+class Database_Db_Mail extends Database_Db_Abstract {
+	protected $table = Database_DatabaseTables::CONFIRM;
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+
+	public function sentforgotpassword(  ) {
+	
+
+ 		try {  		
+ 		// $reg ='sdsd';return  $reg ;
+ 		
+			$rs=$this->db->query("select `user_id`,`confirmkey`,`subject`,`message`, from confirm where type=:types and `confirm`=:confirm and sent_status=:status");
+ 			$rs->bindValue(':types', 'FPASS');
+			$rs->bindValue(':confirm', 0);
+ 
+			$rs->bindValue(':status', 0);
+			$handlerres=$rs->execute();	 
+ 		
+			if($this->db->isError()) {
+				return false;
+			} 
+ 		 
+				while($rst = mysql_fetch_assoc($handlerres))
+				{  
+
+					$uname=$rst['user_id'];
+					$confirmkey=$rst['confirmkey'];
+					$message=$rst['message'];
+					$subject=$rst['subject'];
+					 
+					$this->libmail = new Library_Mail(); 
+					// send the activation  mail 	
+					$mail_return=$this->libmail->forgotpasswordmail($uname ,$confirmkey,$message,$subject); 
+
+					if($mail_return==0)
+					{
+						try{ 
+
+							$rs1=$this->db->query("update confirm set `confirm`=1 ,`sent_status` =1 where `confirm`=:confirm  and type=:types and user_id=:userid");						 
+							$rs1->bindValue(':types', 'FPASS');
+							$rs1->bindValue(':confirm', 0);
+							$rs1->bindValue(':userid', $uname);
+							$handlerres=$rs1->execute();  
+ 
+
+
+						}
+						catch (Exception $e1) {    
+							echo "Error".$e1->getMessage();
+						} 
+						//$rs1->freeResult(); 
+				 
+					} 		
+
+					$action['result'] = 'success';   
+					array_push($action,'Change Password mail sent' . mysql_error()); 
+					return $action;	
+				} 
+				$rs->freeResult();
+				
+ 	 
+ 		
+ 		}
+ 		catch (Exception $e) {    
+ 			echo "Error".$e->getMessage();
+ 		}  
+ 		
+ 		
+ 		
+	}
+	public function sentICS( ) {
+	
+		$this->libmail = new Library_Mail(); 
+
+		$details = array(
+		    'email' => 'Test@test.com',
+		    'event_start' => time(),
+		    'event_end' => time() + 60*60*2
+		);	
+		
+		$mail_return=$this->libmail->sentICS($details); 
+		if($mail_return==0)
+		{
+		}
+
+		$action['result'] = 'success';   
+		array_push($action,'Freinds invite mail sent' . mysql_error()); 	
+		return $action;
+	
+	}
+	
+	
+	public function sentfeedbackmail( ) {
+	
+
+ 		try {  		
+ 		
+			$rs=$this->db->query("select `user_id`,`message`,`subject` from confirm where type=:types and `confirm`=:confirm  and sent_status=:status");
+ 			$rs->bindValue(':types', 'FBACK');
+			$rs->bindValue(':confirm', 0);
+			$rs->bindValue(':status', 0);
+			$handlerres=$rs->execute();	 
+ 		
+			if($this->db->isError()) {
+				return false;
+			} 
+ 		 
+				while($rst = mysql_fetch_assoc($handlerres))
+				{  
+
+					$uname=$rst['user_id'];
+					$message=$rst['message'];
+					$subject=$rst['subject'];
+					$this->libmail = new Library_Mail(); 
+					// send the activation  mail 	
+					$mail_return=$this->libmail->feedbackmail($uname ,$message,$subject); 
+
+					if($mail_return==0)
+					{
+						try{ 
+
+							$rs1=$this->db->query("update confirm set `confirm`=1 ,`sent_status` =1 where `confirm`=:confirm  and type=:types and user_id=:userid");						 
+							$rs1->bindValue(':types', 'FBACK');
+							$rs1->bindValue(':confirm', 0);
+							$rs1->bindValue(':userid', $uname);
+							$handlerres=$rs1->execute();  
+ 
+
+
+						}
+						catch (Exception $e1) {    
+							echo "Error".$e1->getMessage();
+						} 
+						//$rs1->freeResult(); 
+				 
+					} 		
+
+					$action['result'] = 'success';   
+					array_push($action,'Feedback   mail sent' . mysql_error()); 	 
+				}
+			 
+			 
+			$rs->freeResult();
+ 	 
+ 		
+ 		}
+ 		catch (Exception $e) {    
+ 			echo "Error".$e->getMessage();
+ 		}  
+ 		
+ 		
+ 		return $action;	
+	}
+
+
+
+	public function sentInviteMail( ) {
+  		try {  		
+ 		
+ 				$rs=$this->db->query("select `mail_id`,`sender`,`receiver`,`content`,`subject`  from  t_email where mail_type=:types and status=:status");
+				$rs->bindValue(':types', 'TAF');
+				$rs->bindValue(':status', 0);
+				$handlerres=$rs->execute();	 
+
+				if($this->db->isError()) {
+					return false;
+				} 
+ 		 
+				$action['result'] = 'failure';   
+				//array_push($action,'There are no mails to sent' . mysql_error()); 	 
+
+				while($rst = mysql_fetch_assoc($handlerres))
+				{  
+
+					$uname=$rst['receiver'];
+					$message=$rst['content'];
+					$subject=$rst['subject'];
+					$mailid=$rst['mail_id'];
+					$this->libmail = new Library_Mail(); 
+					// send the activation  mail 	
+					$mail_return=$this->libmail->sentInviteMail($uname ,$message,$subject); 
+
+					if($mail_return==0)
+					{
+						try{ 
+
+							$rs1=$this->db->query("update t_email set `status`=1  where mail_id=:mailid and  mail_type=:types and status=:status");						 
+							$rs1->bindValue(':types', 'TAF');
+							$rs1->bindValue(':mailid', $mailid);
+							$rs1->bindValue(':status', 0);							
+							$handlerres=$rs1->execute();  
+						}
+						catch (Exception $e1) {    
+							echo "Error".$e1->getMessage();
+						} 
+						//$rs1->freeResult(); 			 
+					} 		
+
+					$action['result'] = 'success';   
+					array_push($action,'Freinds invite mail sent' . mysql_error()); 	 
+				}		 
+			 
+				$rs->freeResult();		
+ 		}
+ 		catch (Exception $e) {    
+ 			echo "Error".$e->getMessage();
+ 		}  
+ 		
+ 		
+ 		return $action;	
+	}
+	public function invitefriend($comments,$emailid,$femails ) 
+	{
+			
+			if($this->db->isError()) {
+				return false;
+			} 
+			
+			$fullcontent=$comments." Vist and explore the Connectdays to connect your events and holidays";
+			$subject=" Your freind $emailid refered you to check http://www.connectdays.com "; 
+			
+ 			try{ 
+ 			
+				if( is_array( $femails ) ){ 
+				    foreach( $femails as $key=>$var ){   
+
+					 foreach ( $var as $k => $v )
+					 {
+					        
+						
+						 if($v!='femail' )
+						 {
+							 $sql = "INSERT INTO t_email (  mail_type , sender    , receiver  , status    , content   , subject   ) VALUES ('TAF','connectdays@gmail.com','$v','0','$fullcontent','$subject')"; 					
+							 $confirm=mysql_query($sql); 
+						 }
+ 				
+
+					 }
+				    }  
+				}
+
+ 			}
+			catch (Exception $e1) {    
+			       echo "Error".$e1->getMessage();
+			} 
+			$action['result'] = 'success';   
+			array_push($action,'Invite mail populated successfuly  ' . mysql_error()); 
+ 			return $action;
+	}
+	 
+
+	public function feedbackmail($username,$message,$email) {
+   		try {  		
+ 		
+			 
+			if($this->db->isError()) {
+				return false;
+			} 
+ 			try{ 
+
+
+				$sql = "INSERT INTO confirm (user_id,confirmkey,sender,confirm,type,sent_status,subject,message) VALUES ('$email','','connectdays@gmail.com','0','FBACK','0','Feedback mail from $username.','$message\n')"; 					
+				$confirm=mysql_query($sql);
+
+
+			}
+			catch (Exception $e1) {    
+				echo "Error".$e1->getMessage();
+			} 
+
+			$action['result'] = 'success';   
+			array_push($action,'User feedback mail populated successfuly  ' . mysql_error()); 	 
+
+ 	 
+ 		
+ 		}
+ 		catch (Exception $e) {    
+ 			echo "Error".$e->getMessage();
+ 		}  
+ 		
+ 		
+ 		return $action;
+
+	}
+
+ 
+
+
+	 
+ 	 
+ 
+}
+?>

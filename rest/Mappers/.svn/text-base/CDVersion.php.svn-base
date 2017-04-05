@@ -1,0 +1,19 @@
+<?php
+
+
+class Mappers_CDVersion {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_CDVersion();
+	}
+
+	public function findApiVersion() {
+		return Version::API_VERSION;
+	}
+
+	public function findDataVersion() {
+		return $this->db->findDataVersion();
+	}
+}
+?>

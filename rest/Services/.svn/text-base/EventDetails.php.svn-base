@@ -1,0 +1,22 @@
+<?php
+
+
+class Services_EventDetails {
+	private $event;
+	private $cevent;
+ 
+	public function __construct() {
+		$this->event = new Mappers_EventDetails();
+ 	}
+
+ 
+
+	public function findEventDetails ($request) {
+	
+	$year=substr($request['year'],4);
+	 
+	return $this->event->findEventDetails ($request['eventdetail'],$request['module'],$year);
+	} 
+	 
+}
+?>

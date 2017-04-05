@@ -1,0 +1,31 @@
+<?php
+
+
+class Mappers_CntryTabs {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_CntryTabs();
+	}
+
+
+	public function getCntryGenTab( $year,$cntrycode) {
+		return $this->db->getCntryGenTab( $year,$cntrycode);
+	}
+
+	public function getCntryPersTab( ) {
+		return $this->db->getCntryPersTab( );
+	}
+
+	public function getCntryCorpTab( ) {
+		return $this->db->getCntryCorpTab( );
+	}
+
+	public function getCntryPreferanceTab( ) {
+		return $this->db->getCntryPreferanceTab( );
+	}
+
+
+
+}
+?>

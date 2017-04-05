@@ -1,0 +1,71 @@
+<?php
+
+
+class Services_CntryTabs{
+
+ 
+	public function __construct() {
+  	}
+ 	
+	public function get($request) 
+	{
+
+ 		$tabinfo='';
+		return $tab;
+ 	}
+
+	public function getCntryGenTab($request) {
+		$tabMapper = new Mappers_CntryTabs();
+		if(  (isset($request['yr']) && !empty($request['yr']) )&&  (isset($request['cc']) && !empty($request['cc']) )) 
+		{
+			$tab = $tabMapper->getCntryGenTab(mysql_real_escape_string($request['yr']),mysql_real_escape_string($request['cc']));
+		}
+		return $tab ;
+	}
+
+
+	public function getCntryPersTab($request) {
+		$tabMapper = new Mappers_CntryTabs();
+      //if( (isset($request['orgid']) && !empty($request['orgid'])) &&			(isset($request['year']) && !empty($request['year'])))
+      {
+
+		   $tab = $tabMapper->getCntryPersTab();
+		   return $tab;
+	  }
+
+	  return $tab ;
+	}
+
+
+	public function getCntryCorpTab($request) {
+		$tabMapper = new Mappers_CntryTabs();
+      //if( (isset($request['orgid']) && !empty($request['orgid'])) &&			(isset($request['year']) && !empty($request['year'])))
+      {
+
+		   $tab = $tabMapper->getCntryCorpTab();
+		   return $tab;
+	  }
+
+	  return $tab ;
+	}
+
+
+
+	public function getCntryPreferanceTab($request) {
+		$tabMapper = new Mappers_CntryTabs();
+      //if( (isset($request['orgid']) && !empty($request['orgid'])) &&			(isset($request['year']) && !empty($request['year'])))
+      {
+
+		   $tab = $tabMapper->getCntryPreferanceTab();
+		   return $tab;
+	  }
+
+	  return $tab ;
+	}
+
+
+
+
+
+}
+?>

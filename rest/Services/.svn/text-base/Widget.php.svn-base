@@ -1,0 +1,741 @@
+<?php
+
+
+  class Services_Widget{
+
+
+	private $cntry ='';
+	private $state=  '';
+	private $organisation=  '';
+	private $location= '';
+	private $year= '';
+	private $widget= '';
+ 	private  $flag= '';
+ 	private  $scenario=0;
+ 	
+ 	private  $user_id='';
+ 	
+ 	
+ 	private  $graph_share_token='';
+ 	
+ 
+	public function __construct() {
+  	}		 
+		 
+				
+	public function unsetgraphvalues( ) { 
+	 //  unset($this->widget);
+  	}
+
+ 
+
+	public function doWidget($request) {
+		
+		$widgetMapper = new Mappers_Widget();
+		
+		// return $_SESSION['link'];
+		// if(  !empty($request['yr']) && !empty($request['ql'])  && !empty($request['qo'])  &&  ($request['flag']==0)  && !empty($_SESSION['link']) )
+		// using the permanent link
+		if( !empty($_SESSION['link']) ) 
+		{		$this->scenario=6;
+				//set in js
+ 				$this->link =$_SESSION['link'];
+				$this->cntry = strtok($this->link, '-');
+				$this->state= strtok('-');
+				$this->organisation= strtok('-');
+				$this->location= strtok('-');
+				//need to check year
+				//$this->year= strtok(  '-');	 
+				$this->year= $request['yr'];
+				unset($_SESSION['link']);
+				  
+				//json_decode($_SESSION['link']); 
+				//$this->user_id
+				//$this->graph_share_token	
+				 $this->flag=1;
+				$this->widget = $widgetMapper->doWidget($this->cntry,$this->state,$this->location,$this->organisation,$this->year,$this->flag,$this->scenario,$this->user_id,$this->graph_share_token);
+				return $this->widget ; 
+		}  	
+		
+		
+		if (!empty($_SESSION['grtok']) ) 
+		{
+				
+			 
+			 
+			
+			 $this->graph_share_token=$_SESSION['grtok'];
+
+			 //looged in ,take to customisation graph
+			// if( isset($request['flag']) &&  ($request['flag']==1)    )
+			 {
+			 
+				$this->scenario=7;
+				$this->flag=0;
+				$utils = new Library_Utilities();
+				$ug=substr($this->graph_share_token,0, $utils->lastIndexOf($this->graph_share_token,'-'));
+				$this->graph_share_token=$ug;
+				 
+  				// var_dump( $ug);exit;
+						 
+			 }	//logged in and
+			 
+			 unset($_SESSION['grtok']);
+			 $this->widget = $widgetMapper->doWidget($this->cntry,$this->state,$this->location,$this->organisation,$this->year,$this->flag,$this->scenario,$this->user_id,$this->graph_share_token);
+			 return $this->widget ; 
+			 
+			  
+		}
+		
+	 	
+		if (   !empty($_SESSION['userinfo']['user_id'])  )  //user  logged in
+		{
+		
+		         $this->user_id=$_SESSION['userinfo']['user_id'];
+		         // get to9ken from session
+
+			 if (!empty($request['pc']) &&!empty($request['yr']) &&  empty($request['ql'])  && empty($request['qo']) && isset($request['flag']) && ($request['flag']==1) )
+			 {
+			 	$this->scenario=8;
+			 	$this->flag=1;
+ 				if(!empty($request['yr']))
+				{
+			 	 	
+			 		$this->year= $request['yr'];
+			 	}
+			 	else
+			 	{
+			 		$this->year= $_SESSION['year'];
+			 	
+			 	}
+			 	
+
+				if($request['qo']=='Organisation')
+				{
+				    $this->organisation=  "" ;					
+				}
+				else
+				{
+				   $this->organisation= $request['qo']   ;
+				}
+
+				if(!empty($request['pc']))
+				{
+				    $this->cntry= $request['pc']   ;					
+				}
+				else
+				{
+				   $this->cntry= ""  ;
+				}
+
+				
+				if($request['ql']!='')
+				{
+				$this->location= $request['ql']   ;
+				    					
+				}
+				else
+				{
+				   
+				   $this->location=  "" ;
+				}
+ 				 
+				$this->state=""  ;
+
+				
+				//$this->Y_NL_O_FONE($request); 
+			 }		         
+			 /*if (!empty($request['pc']) &&!empty($request['yr']) &&  !empty($request['ql'])  && empty($request['qo']) && isset($request['flag']) && ($request['flag']==0) )
+			 {
+			
+			 	$this->scenario=9;
+			 	$this->flag=1;
+ 				if(!empty($request['yr']))
+				{
+			 	 	
+			 		$this->year= $request['yr'];
+			 	}
+			 	else
+			 	{
+			 		$this->year= $_SESSION['year'];
+			 	
+			 	}
+			 	
+
+				if($request['qo']=='Organisation')
+				{
+				    $this->organisation=  "" ;					
+				}
+				else
+				{
+				   $this->organisation= $request['qo']   ;
+				}
+
+				if(!empty($request['pc']))
+				{
+				    $this->cntry= $request['pc']   ;					
+				}
+				else
+				{
+				   $this->cntry= ""  ;
+				}
+
+				
+				if(!empty($request['ql']))
+				{
+				    $this->location=  "" ;					
+				}
+				else
+				{
+				   $this->location= $request['ql']   ;
+				}
+ 				 
+				$this->state=""  ;
+				
+				  //return  $this->location.$this->cntry.$this->organisation.$this->year;
+
+				
+				//$this->Y_NL_O_FONE($request); 
+			 }	*/			       
+			 if (!empty($request['yr']) && (!empty($request['ql']) && $request['ql']!='undefined' ) && empty($request['qo']) && isset($request['flag']) && ($request['flag']==1) )
+			 {
+			 	$this->scenario=4;
+			 	$this->flag=1;
+ 				if(!empty($request['yr']))
+				{
+			 	 	
+			 		$this->year= $request['yr'];
+			 	}
+			 	else
+			 	{
+			 		$this->year= $_SESSION['year'];
+			 	
+			 	}
+			 	
+
+				if($request['qo']=='Organisation')
+				{
+				    $this->organisation=  "" ;					
+				}
+				else
+				{
+				   $this->organisation= $request['qo']   ;
+				}
+				
+				if($request['ql']=='Place')
+				{
+				    $this->location=  "" ;					
+				}
+				else
+				{
+				   $this->location= $request['ql']   ;
+				}
+ 				$this->cntry = "" ;
+				$this->state=""  ;
+
+
+				//$this->Y_NL_O_FONE($request); 
+			 }		 
+			 if (!empty($request['yr']) && empty($request['ql'])  && empty($request['qo']) && isset($request['flag']) && ($request['flag']==1) )
+			 {
+			 	$this->scenario=5;
+			 	$this->flag=1;
+ 				if(!empty($request['yr']))
+				{
+			 	 	
+			 		$this->year= $request['yr'];
+			 	}
+			 	else
+			 	{
+			 		$this->year= $_SESSION['year'];
+			 	
+			 	}
+			 	
+
+				if($request['qo']=='Organisation')
+				{
+				    $this->organisation=  "" ;					
+				}
+				else
+				{
+				   $this->organisation= $request['qo']   ;
+				}
+				
+				if($request['ql']=='Place')
+				{
+				    $this->location=  "" ;					
+				}
+				else
+				{
+				   $this->location= $request['ql']   ;
+				}
+ 				$this->cntry = "" ;
+				$this->state=""  ;
+
+
+				//$this->Y_NL_O_FONE($request); 
+			 }		 		       
+			 //looged in ,take to customisation graph
+			 if(!empty($request['yr'])  && isset($request['flag']) &&  ($request['flag']==0)    )
+			 {
+			  	     
+			  	$this->scenario=1;
+			  	$this->flag=0;
+ 				if(!empty($request['yr']))
+				{
+			 	 	
+			 		$this->year= $request['yr'];
+			 	}
+			 	else
+			 	{
+			 		$this->year= $_SESSION['year'];
+			 	
+			 	}
+			 	 
+			 	 
+			 	
+				 
+			 }	//logged in and cliked on search 
+			  if (!empty($request['yr']) && ( !empty($request['ql']) && $request['ql']!='undefined' ) && !empty($request['qo']) &&   ($request['flag']==1) )
+			 {
+			 	$this->scenario=2;
+			 	$this->flag=1;
+ 				if(!empty($request['yr']))
+				{
+			 	 	
+			 		$this->year= $request['yr'];
+			 	}
+			 	else
+			 	{
+			 		$this->year= $_SESSION['year'];
+			 	
+			 	}
+			 	
+			 	
+				 
+				
+				if($request['qo']=='Organisation')
+				{
+				    $this->organisation=  "" ;					
+				}
+				else
+				{
+				   $this->organisation= $request['qo']   ;
+				}
+				
+				if($request['ql']=='Place')
+				{
+				    $this->location=  "" ;					
+				}
+				else
+				{
+				   $this->location= $request['ql']   ;
+				}
+
+  				$this->cntry = "" ;
+				$this->state=""  ;
+
+				//$this->Y_L_O_FONE($request);
+ 			  	 
+
+			 }		 
+			 
+			  if (!empty($request['yr']) && empty($request['ql'])  && !empty($request['qo']) && isset($request['flag']) && ($request['flag']==1) )
+			 {
+			 	$this->scenario=3;
+			 	$this->flag=1;
+ 				if(!empty($request['yr']))
+				{
+			 	 	
+			 		$this->year= $request['yr'];
+			 	}
+			 	else
+			 	{
+			 		$this->year= $_SESSION['year'];
+			 	
+			 	}
+			 	
+
+				if($request['qo']=='Organisation')
+				{
+				    $this->organisation=  "" ;					
+				}
+				else
+				{
+				   $this->organisation= $request['qo']   ;
+				}
+				
+				if($request['ql']=='Place')
+				{
+				    $this->location=  "" ;					
+				}
+				else
+				{
+				   $this->location= $request['ql']   ;
+				}
+ 				$this->cntry = "" ;
+				$this->state=""  ;
+
+
+				//$this->Y_NL_O_FONE($request); 
+			 }		 
+
+			 
+			 		 			 
+			
+		}
+		else if ( isset($request['flag'])   && ($request['flag']==1)  && empty($_SESSION['userinfo']['user_id']) ) //not loggedin
+		{
+		 	
+		 	
+
+		 	
+		 	
+		 	
+		 	 if (( isset($request['yr']) && !empty($request['yr'])) && (isset($request['ql']) && !empty($request['ql']) &&  $request['ql']!='undefined')  && !empty($request['qo']) &&   ($request['flag']==1) )
+			 {
+			     // echo 'aaa'.$request['ql'].'dd';
+			 	$this->scenario=2;
+			 	$this->flag=1;
+			 	
+			 	 
+			 	if(!empty($request['yr']))
+				{
+			 	 	
+			 		$this->year= $request['yr'];
+			 	}
+			 	else
+			 	{
+			 		$this->year= $_SESSION['year'];
+			 	
+			 	} 
+				
+				if($request['qo']=='Organisation')
+				{
+				    $this->organisation=  "" ;					
+				}
+				else
+				{
+				   $this->organisation= $request['qo']   ;
+				}
+				
+				
+				
+				if($request['ql']=='Place')
+				{
+				    $this->location=  "" ;					
+				}
+				else
+				{
+			  
+				   $this->location= $request['ql']   ;
+				}
+				
+
+				if(!empty($request['pc']))
+				{
+				    $this->cntry= $request['pc']   ;					
+				}
+				else
+				{
+				   $this->cntry= ""  ;
+				}				
+				$this->state=""  ;
+
+				//$this->Y_L_O_FONE($request);
+				
+				
+ 			  	
+
+			 }		 
+ 			else if (!empty($request['yr'])   && !empty($request['pc']) && !empty($request['qo']) && ( isset($request['flag']) &&  $request['flag']==1 ))
+			 {
+			 	$this->scenario=61;
+			 	$this->flag=1;
+ 				if(!empty($request['yr']))
+				{
+			 	 	
+			 		$this->year= $request['yr'];
+			 	}
+			 	else
+			 	{
+			 		$this->year= $_SESSION['year'];
+			 	
+			 	}
+			 	
+				 
+				if($request['qo']=='Organisation')
+				{
+				    $this->organisation=  "" ;					
+				}
+				else
+				{
+				   $this->organisation= $request['qo']   ;
+				}
+				
+				 
+				
+				if(!empty($request['pc']))
+				{
+				    $this->cntry= $request['pc']   ;					
+				}
+				else
+				{
+				   $this->cntry= ""  ;
+				}				
+				$this->state=""  ;
+				
+
+
+				//$this->Y_NL_O_FONE($request); 
+			 }			 
+			 else if (!empty($request['yr']) &&  empty($request['ql'])  && !empty($request['qo']) && ( isset($request['flag']) &&  $request['flag']==1 ))
+			 {
+			 	$this->scenario=3;
+			 	$this->flag=1;
+ 				if(!empty($request['yr']))
+				{
+			 	 	
+			 		$this->year= $request['yr'];
+			 	}
+			 	else
+			 	{
+			 		$this->year= $_SESSION['year'];
+			 	
+			 	}
+			 	
+				 
+				if($request['qo']=='Organisation')
+				{
+				    $this->organisation=  "" ;					
+				}
+				else
+				{
+				   $this->organisation= $request['qo']   ;
+				}
+				
+				if($request['ql']!='')
+				{
+				   $this->location= $request['ql']   ;
+				}
+				else
+				{
+				   $this->location= '';
+				}
+				
+				if(!empty($request['pc']))
+				{
+				    $this->cntry= $request['pc']   ;					
+				}
+				else
+				{
+				   $this->cntry= ""  ;
+				}				
+				$this->state=""  ;
+				
+
+
+				//$this->Y_NL_O_FONE($request); 
+			  }		 
+			
+			 else if (!empty($request['yr']) && ( !empty($request['ql'] ) && $request['ql']!='undefined' ) && empty($request['qo']) && isset($request['flag']) && ($request['flag']==1) )
+			 {
+			 	$this->scenario=4;
+			 	$this->flag=1;
+ 				if(!empty($request['yr']))
+				{
+			 	 	
+			 		$this->year= $request['yr'];
+			 	}
+			 	else
+			 	{
+			 		$this->year= $_SESSION['year'];
+			 	
+			 	}
+			 	
+
+				if($request['qo']=='Organisation')
+				{
+				    $this->organisation=  "" ;					
+				}
+				else
+				{
+				   $this->organisation= $request['qo']   ;
+				}
+				
+				if($request['ql']=='Place')
+				{
+				    $this->location=  "" ;					
+				}
+				else
+				{
+				   $this->location= $request['ql']   ;
+				}
+
+				if(!empty($request['pc']))
+				{
+				    $this->cntry= $request['pc']   ;					
+				}
+				else
+				{
+				   $this->cntry= ""  ;
+				}				
+				$this->state=""  ;
+
+	 
+
+				//$this->Y_NL_O_FONE($request); 
+			 }		 
+			 else if (!empty($request['yr']) && empty($request['ql'])  && empty($request['qo']) && isset($request['flag']) && ($request['flag']==1) )
+			 {
+			 	$this->scenario=8;
+			 	$this->flag=1;
+ 				if(!empty($request['yr']))
+				{
+			 	 	
+			 		$this->year= $request['yr'];
+			 	}
+			 	else
+			 	{
+			 		$this->year= $_SESSION['year'];
+			 	
+			 	}
+			 	
+
+				if($request['qo']=='Organisation')
+				{
+				    $this->organisation=  "" ;					
+				}
+				else
+				{
+				   $this->organisation= $request['qo']   ;
+				}
+				
+				if($request['ql']=='Place')
+				{
+				    $this->location=  "" ;					
+				}
+				else
+				{
+				   $this->location= $request['ql']   ;
+				}
+
+				if(!empty($request['pc']))
+				{
+				    $this->cntry= $request['pc']   ;					
+				}
+				else
+				{
+				   $this->cntry= ""  ;
+				}				
+				$this->state=""  ;
+ 			
+
+				 
+			 }
+
+			 else if (!empty($request['yr']) && empty($request['ql'])    && isset($request['flag']) && ($request['flag']==0) )
+			 {
+			 	//widget loaging on home.php .take deault location and show 
+			 	
+			 	$this->scenario=4;
+			 	$this->flag=0;
+ 				if(!empty($request['yr']))
+				{
+			 	 	
+			 		$this->year= $request['yr'];
+			 	}
+			 	else
+			 	{
+			 		$this->year= $_SESSION['year'];
+			 	
+			 	}
+			 	
+				
+				if($request['ql']=='Place')
+				{
+				    $this->location=  "" ;					
+				}
+				else
+				{
+				   $this->location= $request['ql']   ;
+				}
+
+				if(!empty($request['pc']))
+				{
+				    $this->cntry= $request['pc']   ;					
+				}
+				else
+				{
+				   $this->cntry= ""  ;
+				}				
+	 
+				$this->state=""  ;
+ 
+				//$this->Y_NL_O_FONE($request); 
+			 }
+			  
+		 	  	 
+ 		 
+		}  
+		
+		
+ 		//return $this->scenario."------".$request['ql'];
+		 
+		$this->widget = $widgetMapper->doWidget($this->cntry,$this->state,$this->location,$this->organisation,$this->year,$this->flag,$this->scenario,$this->user_id,$this->graph_share_token);
+		return $this->widget ; 
+		
+ 	 
+ 		
+ 		
+	}
+	
+	
+	private function Y_L_O_FONE(){	
+	
+
+		$this->organisation=  $request['qo'] ;
+		//$this->organisation="nest";
+		$this->location= $request['ql'];
+		//$this->location="Kochi";
+		$this->cntry = "" ;
+		$this->state=""  ;
+		$this->year= ($request['year']==""?$_SESSION['year']:$request['year']);		
+	
+	}
+	private function Y_NL_O_FONE(){	}
+	private function Y_L_NO_FONE(){	}
+	private function Y_NL_NO_FONE(){	}
+	
+	private function Y_L_O_FZERO($request){	
+		$this->cntry = "" ;
+		$this->state=""  ;
+		$this->organisation=($request['qo']=="Organisation"?"":$request['qo']);
+		$this->location=($request['ql']==""?"":$request['ql']);  
+		$this->year= ($request['year']==""?$_SESSION['year']:$request['year']);		
+	}
+	
+	
+	private function Y_NL_O_FZERO($request){ 
+
+		$this->cntry = "" ;
+		$this->state= "" ;
+		$this->organisation=(($request['qo'])=="Organisation"?"":($request['qo']));
+		$this->location= ($request['ql']); 
+		$this->year= (($request['year'])==""?$_SESSION['year']:($request['year']));		   
+
+	}
+	
+	private function Y_L_O_LNK_FZERO($link){	
+	
+		$this->cntry = strtok($link, '-');
+		$this->state= strtok('-');
+		$this->organisation= strtok('-');
+		$this->location= strtok('-');
+		$this->year= strtok(  '-');	 	
+	
+	}
+	 
+	
+ }
+?>

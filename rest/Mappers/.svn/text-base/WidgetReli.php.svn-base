@@ -1,0 +1,22 @@
+<?php
+
+
+class Mappers_WidgetReli {
+	 
+	private $db;
+	public function __construct() {
+		$this->db = new Database_Db_WidgetReli();	
+	}
+
+ 
+ 
+	public function doWidget( $relilist,$cntrycode,$statecode,$year,$flag,$scenario,$user_id,$graph_share_token) {
+		
+		return $this->db->doWidget($relilist, $cntrycode,$statecode,$year,$flag,$scenario,$user_id,$graph_share_token);
+	}
+
+
+
+
+}
+?>

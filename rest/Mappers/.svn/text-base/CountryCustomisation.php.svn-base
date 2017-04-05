@@ -1,0 +1,42 @@
+<?php
+
+
+class Mappers_CountryCustomisation {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_CountryCustomisation();
+	}
+ 
+	public function createCountryCustomisation($cntrgrp,$cntryids,$year,$userid) {
+	
+		 return $this->db->createCountryCustomisation($cntrgrp,$cntryids ,$year,$userid);
+	}
+
+
+      public function listCountryByUserCustomisation($user,$year) {
+  
+ 		 return $this->db->listCountryByUserCustomisation( $user,$year);	 
+	}
+ 
+	public function listCountrysByUserCustomisationGraph($user,$year) {
+
+		 return $this->db->listCountrysByUserCustomisationGraph( $user,$year);
+	 
+	}
+
+
+ 	public function listCountrysDataByUserCustomisation($user,$year) {
+     
+     	    return $this->db->listCountrysDataByUserCustomisation($user,$year);	
+        }
+   
+        public function listCountrysDataByGraphToken($graph_share_token ) {
+     
+   
+     	    return $this->db->listCountrysDataByGraphToken($graph_share_token );	
+        }
+	 
+	 
+}
+?>

@@ -1,0 +1,40 @@
+<?php
+
+
+class Services_ReligionEvent {
+	private $reliEvent;
+ 
+	public function __construct() {
+		$this->reliEvent = new Mappers_ReligionEvent();
+ 
+	}
+
+
+	public function getCntryStReligionEventDates($request)
+	{
+ 		return $this->reliEvent->getCntryStReligionEventDates ($request['cntrycode'],$request['year'],$request['sc'],$request['rg']);
+
+	}
+	 
+	public function getCntryReligionEventDates($request)
+	{
+ 		return $this->reliEvent->getCntryReligionEventDates ($request['cntrycode'],$request['year'],$request['rg'],$request['sc'],$request['module']);
+
+	}
+
+ 	 
+	public function findEventDetails ($request) {
+	 
+		return $this->reliEvent->findEventDetails ($request['eventdetail'],$request['module'],$request['year'],$request['cntry'],$request['statecode'],$request['reli']);
+	}
+
+ 
+
+	public function findReligionEventDates ($request) {
+		return $this->reliEvent->findReligionEventDates ($request['relig'],$request['statecode'],$request['cntry'],$request['module'],$request['year']);
+	}
+
+ 
+
+}
+?>

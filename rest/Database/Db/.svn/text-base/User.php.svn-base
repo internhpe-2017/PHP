@@ -1,0 +1,429 @@
+<?php
+
+class Database_Db_User extends Database_Db_Abstract {
+	protected $table = Database_DatabaseTables::USER_PROFILE;
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+	public function createUser($jdata) {
+
+
+ 	}
+
+	public function findUser($userid) {
+
+
+	}
+
+	public function updateUserProf($params) {
+
+
+		if($this->db->isError()) {
+			return $status;
+		}
+		
+		
+               try{
+               
+              	 	$rdb = new Database_Db_Religion();
+              	 	
+              	 	$rcode=$rdb->religionNameToCode($params["user_religion"]);
+              	 	
+              	 	//print_r($params["user_religion"]);
+              	 	//return  $params["user_religion"];
+              		 
+               		$sql="UPDATE user_profile SET name=:f_name,lname=:l_name,dob=:dob,religion_code=:rcode where user_id=:userid";
+
+			$rs=$this->db->query($sql);
+			$rs->bindValue(':userid', $params["user_id"]);
+			$rs->bindValue(':f_name', $params["fn"]);
+			$rs->bindValue(':l_name', $params["ln"]);
+			$rs->bindValue(':dob', $params["db"]);
+			$rs->bindValue(':rcode', $rcode);
+			$handlerres=$rs->execute();
+			if($this->db->isError()) {
+				return false;
+			}
+		}
+	        catch (Exception $e) {
+			echo "Error".$e->getMessage();
+		}
+		return $params["fn"];
+
+ 	}
+
+	public function updateUserAccount($params) {
+
+
+		if($this->db->isError()) {
+			return $status;
+		}
+               try{
+               		$sql="UPDATE user_profile SET primary_email_id=:email,passwd_key=:passwd  where user_id=:userid";
+
+			$rs=$this->db->query($sql);
+
+			$rs->bindValue(':passwd', md5($params["passwd"]));
+			$rs->bindValue(':email', $params["pemail"]);
+			$rs->bindValue(':userid', $params["user_id"]);
+			$handlerres=$rs->execute();
+			if($this->db->isError()) {
+				return false;
+			}
+		}
+	        catch (Exception $e) {
+			echo "Error".$e->getMessage();
+		}
+		return $params["user_id"];
+ 	}
+
+
+
+	public function updateUpdateLocation($params) {
+	       if($this->db->isError()) {
+			return $status;
+	       }
+               try{
+               		$sql="UPDATE user_profile SET state_id =:stateid,location_name=:lname ,country_code =:ccode where user_id=:userid";
+			$rs=$this->db->query($sql);
+			
+			$rs->bindValue(':stateid',  $params["ps"]);
+			$rs->bindValue(':lname', $params["pl"]);
+			$rs->bindValue(':userid', $params["user_id"]);
+			$rs->bindValue(':ccode', $params["pc"]);
+			
+ 			$handlerres=$rs->execute();
+			if($this->db->isError()) {
+				return false;
+			}
+		}
+	        catch (Exception $e) {
+			echo "Error".$e->getMessage();
+		}
+		return $params["pc"];
+ 	}
+
+
+	public function findUserProfile($userid,$passwd) {
+
+
+		if($this->db->isError()) {
+			return false;
+		}
+
+		try{
+			//hardcoding
+			$rs1=$this->db->query('select up.user_picture,up.dob,up.state_id,up.location_name,up.lname,up.country_code,up.primary_email_id,up.name,up.user_id,up.location_id,up.active, up.token,up.role_id,gg.graph_share_token ,c.country_name from  user_profile up , graph_group gg  ,country c where up.user_id =:user_id and  gg.user_id=up.user_id and is_deleted=0 and active=0 and c.country_code=up.country_code');// and passwd_key=:passwd');
+			$rs1->bindValue(':user_id', $userid);
+			// $rs1->bindValue(':passwd', $passwd);
+
+			$handlerres=$rs1->execute();
+			$profile = array();
+
+			if(($rs1->numberOfRows() == 0) || $this->db->isError()) {
+				$profile['active'] =3;
+				return $profile;
+
+			}
+
+
+			while($row = mysql_fetch_assoc($handlerres))
+			{
+				 $profile['name'] = $row['name'];
+				 $profile['user_id'] = $row['user_id'];
+				 $profile['location_id'] = $row['location_id'];
+				 $profile['location_name'] = $row['location_name'];
+				 $profile['active'] = $row['active'];
+				 $profile['token'] = $row['token'];
+				 $profile['role_id'] = $row['role_id'];
+				 $profile['graph_share_token'] = $row['graph_share_token'];
+				 $profile['primary_email_id'] = $row['primary_email_id'];
+				 $profile['country_code'] = $row['country_code'];
+ 				 $profile['lname'] = $row['lname'];
+				 $profile['dob'] = $row['dob'];
+ 				 $profile['state_id'] = $row['state_id'];
+ 				 $profile['user_picture'] = $row['user_picture'];
+ 				 $profile['country_name'] = $row['country_name'];
+ 			}
+			return $profile;
+		}
+		catch (Exception $e) {
+			echo "Error".$e->getMessage();
+		}
+ 	}
+
+ 	public function listUser() {
+
+		$sql = "SELECT * FROM user_profile WHERE is_deleted=0";
+		$rs = mysql_query($sql);
+		$clist = array();
+		while($rst = mysql_fetch_assoc($rs)){
+			$clist = array_merge($clist,array($rst['User_code']=>$rst['User_name']));
+		}
+		echo json_encode($clist);
+
+
+	}
+
+	public function deleteUser($userid) {
+ 	}
+
+
+        /*
+        public function login($uname,$pass)
+        {
+                if($this->db->isError()) {
+			return $status;
+		}
+                try{
+                        $sql="SELECT  * FROM user_profile WHERE user_id ='".$uname."' AND passwd_key='".md5($pass)."'";
+                        $check_login=mysql_query($sql);
+                        if(mysql_num_rows($check_login)>0){
+                            return mysql_fetch_row($check_login);
+                        }
+                        else{
+                            return  false;
+                        }
+
+                }
+                catch (Exception $e) {
+			echo "Error".$e->getMessage();
+		}
+
+         }
+         */
+
+
+        public function forgotpass($uname){
+                if($this->db->isError()) {
+		return $status;
+		}
+               try{
+                       // $sql="SELECT  * FROM user_profile WHERE user_id ='".$uname."'";
+                       // $qry=mysql_query($sql);
+                        
+			$sql="SELECT  * FROM user_profile WHERE user_id =:userid" ;
+			$rs2=$this->db->query($sql);
+			$rs2->bindValue(':userid', $uname);
+			$handlerres2=$rs2->execute();
+ 				
+ 				
+                        if(mysql_num_rows($handlerres2)>0){
+
+				$already_req_qry="SELECT user_id,confirmkey,email FROM confirm WHERE user_id =:userid" ;
+				$rs3=$this->db->query($already_req_qry);
+				$rs3->bindValue(':userid', $uname);
+				$handlerres3=$rs3->execute(); 
+				
+				if($rs3->numberOfRows() >0){
+					$data=mysql_fetch_array($handlerres3);
+					
+					$data=array("user_id"=>$uname,"confirmkey"=>$md5key,"email"=>$uname);
+				}
+				else{
+					$key = $uname.date('His');
+					$md5key = md5($key);
+					//$sql = "INSERT INTO confirm (user_id,confirmkey,sender,type) VALUES ('$uname','$md5key','$uname','FPASS')";
+					
+					$linkdeatils='http://'.$_SERVER['HTTP_HOST'].'/'."home.php?id=".$md5key;
+
+  					$sql = "INSERT INTO confirm (user_id,confirmkey,sender,confirm,type,sent_status,subject,message) VALUES ('$uname','$md5key','connectdays@gmail.com','0','FPASS','0','Reset password link!','Hello $uname \n\n Please click below link to rest your passowrd. Please rest your password by clicking the link\n $linkdeatils \n\n Thank you,\n\n Team Connect Days.\n')";
+    				 	$confirm=mysql_query($sql);
+					$data=array("user_id"=>$uname,"confirmkey"=>$md5key,"email"=>$uname);
+				}
+                            return $data;
+                        }
+                        else{
+                            return  false;
+                        }
+		}
+	        catch (Exception $e) {
+			echo "Error".$e->getMessage();
+		}
+        }
+
+        public function idcheck($params){
+
+           
+               try{
+               		$sql="SELECT * FROM user_profile  WHERE user_id =:f_user_id and is_deleted=0";
+			$rs=$this->db->query($sql);
+			$rs->bindValue(':f_user_id', $params["uname"]);
+			$handlerres=$rs->execute();
+			if($this->db->isError()) {
+				return false;
+			} 
+			 if(mysql_num_rows($handlerres)<=0){
+			     return  false;
+			 }
+			$rs->freeResult();
+			return  true;
+                        
+
+		}
+	        catch (Exception $e) {
+			echo "Error".$e->getMessage();
+		}
+        }
+        public function changepass($params){
+
+                if($this->db->isError()) {
+		return $status;
+		}
+               try{
+               		$sql="SELECT * FROM confirm WHERE confirmkey =:f_pass_id";
+			$rs=$this->db->query($sql);
+			$rs->bindValue(':f_pass_id', $params["f_pass_id"]);
+			$handlerres=$rs->execute();
+			if($this->db->isError()) {
+				return false;
+			}
+
+			//$qry=mysql_query("SELECT * FROM confirm WHERE confirmkey ='".$params["f_pass_id"]."'");
+                        if(mysql_num_rows($handlerres)>0){
+				$data=mysql_fetch_object($handlerres);
+				$sq=mysql_query("UPDATE user_profile SET passwd_key='".md5($params["c_pass"])."' WHERE user_id='".$data->user_id."'");
+				$d_qry=mysql_query("DELETE FROM confirm WHERE confirmkey ='".$params["f_pass_id"]."'");
+				 $rs->freeResult();
+			        return true;
+                        }
+                        else{
+                             $rs->freeResult();
+                            return  false;
+                        }
+
+
+		}
+	        catch (Exception $e) {
+			echo "Error".$e->getMessage();
+		}
+        }
+
+	public function register($uname,$pass, $name,$lname ,$year,$cntry) {
+		if($this->db->isError()) {
+			return $status;
+		}
+ 		try {
+
+ 		        $md5token = md5($name . $uname . date('mY').$pass);
+ 		        $encrpass= md5($pass);
+			$sql = "INSERT INTO user_profile(user_id,name,passwd_key,token,type,role_id,lname,primary_email_id,country_code) VALUES ('$uname','$name','$encrpass','$md5token','NORM',2,'$lname','$uname','$cntry')";
+			$add=mysql_query($sql);
+
+ 			 if($add){
+				// the user was added to the database
+				// send a confirmation mail to the user,
+				// the user was added to the database
+				// get the new user id
+
+				// create a random key
+				$key = $name . $uname . date('mY');
+				$md5key = md5($key);
+
+				$linkdeatils='http://'.$_SERVER["HTTP_HOST"]."/rest/activateuser?key=".$md5key;
+
+				$sql = "INSERT INTO confirm (user_id,confirmkey,sender,confirm,type,sent_status,subject,message) VALUES ('$uname','$md5key','connectdays@gmail.com','1','UREG','0','Thanks for signing up in ConnectDays. Please click on the link and activate your account!','Hello $uname \n\n Your account in the ConnectDays site is created. Please activate your account by clicking the link\n $linkdeatils \n\n Thank you,\n\n Team Connect Days.\n')";
+
+				$confirm=mysql_query($sql);
+
+
+				$sqlg="INSERT INTO graph_group (user_id,group_name,group_type,year) VALUES ('$uname','mygroup','ORGCUST','$year')";
+				$groupadd=mysql_query($sqlg);
+
+				//send mail here
+				//$this->registerationmail($uname,$md5key,$uname);
+
+				$action['result'] = 'success';
+				$action['comment'] = 'User registered with the connectdays ';
+				array_push($action,'User registered with the connectdays ' . mysql_error());
+				//return  'success';
+
+			 }
+			 else
+			 {
+ 			    $action['result'] = 'userexist';
+ 			    $action['comment'] = 'User already register , please  activate the account by clicking the activation email link';
+			   // array_push($action,'User already register , please  activate the account by clicking the activation email link ' . mysql_error());
+ 			   // return 'userexist';
+  			 }
+ 		}
+		catch (Exception $e) {
+ 			//return  'userexist';
+
+			    $action['result'] = 'userexist';
+ 			    $action['comment'] = 'User already register , please  activate the account by clicking the activation email link';
+			  //  array_push($action,'User already register , please   activate the account by clicking activation email link ' . mysql_error());
+
+			//echo "Error".$e->getMessage();
+		}
+		return $action;
+
+	}
+
+
+
+
+
+
+
+	public function fblogin($uname,$email,$userloc){
+		if($this->db->isError()) {
+			return $status;
+		}
+
+		try {
+			$profile = array();
+
+		 	$sql="SELECT  * FROM user_profile WHERE user_id =:email and type='FB' and is_deleted=0" ;
+			$rs=$this->db->query($sql);
+			$rs->bindValue(':email', $email);
+			$handlerres=$rs->execute();
+			if($this->db->isError()) {
+				return false;
+			}
+
+                        if(mysql_num_rows($handlerres)>0){
+
+                            	while($row = mysql_fetch_assoc($handlerres))
+				{
+					 $profile['name'] = $row['name'];
+					 $profile['user_id'] = $row['user_id'];
+					 $profile['location_id'] = $row['location_id'];
+					 $profile['token'] = $row['token'];
+					 $profile['active'] = $row['active'];
+					 $profile['fb_login'] = '1';
+				}
+
+
+                        }
+                        else{
+
+                        	$md5token = md5($uname . $email . date('mY'));
+
+                        	//hardcoding  ned to get facebook toekn for each user
+                        	$sql="INSERT INTO user_profile (user_id,name,updated_on,passwd_key,token,type,location_name,role_id) VALUES('$email','$uname', now(),'$md5token','$md5token','FB','$userloc',2)";
+    				$in_qry=mysql_query($sql);
+
+				if($in_qry){
+ 					{
+					$profile['name'] = $uname;
+					$profile['user_id'] = $email;
+					$profile['location_id'] = $userloc;
+					$profile['token'] = $md5token;
+					$profile['active'] = '0';
+					$profile['fb_login'] = '1';
+
+					}
+ 				}
+                         }
+ 			$rs->freeResult();
+			return $profile;
+ 		}
+		catch (Exception $e) {
+			echo "Error".$e->getMessage();
+		}
+	} 
+}
+?>

@@ -1,0 +1,33 @@
+<?php
+
+class Database_Db_UserEvent extends Database_Db_Abstract {
+	protected $table = Database_DatabaseTables::USER_PERSONAL_EVENT;
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+	public function createUserEvent($jdata) {
+
+
+ 	}
+
+    public function findUserEvent($userid) {
+
+
+ 	}
+
+	public function updateUserEvent($userid) {
+
+
+ 	}
+
+	public function deleteUserEvent($userid) {
+
+
+ 	}
+
+
+
+}
+?>

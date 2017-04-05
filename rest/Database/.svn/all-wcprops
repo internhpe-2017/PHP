@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/commondays/!svn/ver/2190/trunk/rest/Database
+END
+DatabaseTables.php
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/commondays/!svn/ver/1768/trunk/rest/Database/DatabaseTables.php
+END
+Database.php
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/commondays/!svn/ver/1317/trunk/rest/Database/Database.php
+END
+Mysql.php
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/commondays/!svn/ver/1340/trunk/rest/Database/Mysql.php
+END

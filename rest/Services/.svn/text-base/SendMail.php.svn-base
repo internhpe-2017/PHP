@@ -1,0 +1,43 @@
+<?php
+
+
+class Services_SendMail {
+	private $sendmail;
+ 
+	public function __construct() {
+		$this->sendmail = new Mappers_SendMail();
+ 
+	} 
+	 
+	public function sendmail($request) { //activate user //UREG
+	
+		if(  (isset($request['type']) && !empty($request['type']) &&  (isset($request['confirmkey']) && !empty($request['confirmkey']))))
+		{
+ 			$type=$request['type']; 
+ 			$confirmkey=$request['confirmkey'];
+			return $this->sendmail->sendmail($type ,$confirmkey); 
+		}
+ 	} 
+	public function sendactivationemail($request) { //send the intial activation mails //ACTIV
+	
+		if(  (isset($request['type']) && !empty($request['type']) ))
+		{
+ 			$type=$request['type']; 
+ 			 
+			return $this->sendmail->sendmail($type ,''); 
+		}
+ 	} 
+	public function confirmationmail($request) {  //UCONF
+	
+		if(  (isset($request['type']) && !empty($request['type']) ))
+		{
+ 			$type=$request['type']; 
+ 			 
+			return $this->sendmail->sendmail($type,'' ); 
+		}
+ 	} 
+
+
+}
+
+?>

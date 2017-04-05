@@ -1,0 +1,101 @@
+<?php
+
+class Database_Db_State extends Database_Db_Abstract {
+	protected $table = Database_DatabaseTables::STATE;
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+	public function createState($jdata) {
+
+
+ 	}
+
+  	public function findState($orgid) {
+
+
+ 	}
+
+	public function updateState($orgid) {
+
+
+ 	}
+
+	public function deleteState($orgid) {
+
+
+ 	}
+
+    public function listState($countid) {
+
+
+		$rs=$this->db->query('SELECT * FROM `state` WHERE country_code=:countryid and is_deleted=0 order by state_name');
+		$rs->bindValue(':countryid', $countid);
+		$handlerres=$rs->execute();
+
+		if($this->db->isError()) {
+		return false;
+		}
+
+		$slist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+		$slist = array_merge($slist,array("".$rst['state_id'].""=>$rst['state_name']));
+		}
+		$rs->freeResult();
+		return $slist;
+
+
+
+ 	}
+
+
+    public function listDefaultState($countid) {
+
+
+		$rs=$this->db->query('SELECT * FROM `state` WHERE country_code=:countryid  and is_deleted=0  and  is_default_state=:defval  ');
+		$rs->bindValue(':countryid', $countid);
+		$rs->bindValue(':defval', 1);
+		$handlerres=$rs->execute();
+
+		if($this->db->isError()) {
+		return false;
+		}
+		
+		
+
+		$slist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+		$slist = array("defstate"=> $rst['state_id'],"dstloc"=> $rst['default_state_loc']  );
+		}
+		$rs->freeResult();
+		return $slist;
+
+
+
+ 	} 	
+ 		  
+    public function listAllStates() {
+
+		$sql = "SELECT * FROM State WHERE is_deleted=:isdisb";
+
+
+		$rs=$this->db->query($sql);
+		$rs->bindValue(':isdisb', 0);
+		$handlerres=$rs->execute();
+		if($this->db->isError()) {
+			return false;
+		}
+
+		 
+		$slist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+			$slist = array_merge($slist,array("".$rst['state_id'].""=>$rst['state_name']));
+		}
+		return  $slist;
+
+
+ 	}
+
+}
+?>

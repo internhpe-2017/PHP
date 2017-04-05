@@ -1,0 +1,98 @@
+<?php
+
+
+
+class Database_Db_Client extends Database_Db_Abstract  {
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+	public function max_col($table,$colname) {
+		return $this->db->db_max_col_num($table,$colname);
+	}
+
+	public function findByIp($ipaddr) {
+		if(empty($ipaddr)) {
+			return false;
+		}
+		include(APPLICATION_PATH.'/../library/geoip.inc');
+		include(APPLICATION_PATH.'/../library/geoipcity.inc');
+		include(APPLICATION_PATH.'/../library/geoipregionvars.php');
+		$gi = geoip_open("./../library/GeoLiteCity.dat",GEOIP_STANDARD);
+  		//$gi = geoip_open("./../library/GeoIP.dat",GEOIP_STANDARD);
+		$location=geoip_country_code_by_addr($gi, $ipaddr);
+		geoip_close($gi);
+		/*
+		  if location
+			return loation
+		  else
+		  	if (country )
+		  		return country
+		    else
+		    	default bangalore
+		*/
+		//$result = json_decode($client->value('auth_object'), true);
+
+		return $location;
+	}
+
+	public function loginByHttpBasic($client_id, $client_password) {
+		$result='';
+
+		if($this->db->isError()) {
+		   return $status;
+		}
+		 try{
+
+ 		// print_r($client_id.md5($client_password));
+
+			$client = $this->db->query('select * from  user_profile where user_id =:client_name and passwd_key =:client_passwd  and is_delete=0 ');
+			// and is_deleted=0 and active=0
+			$client->bindValue(':client_name', $client_id);
+			$client->bindValue(':client_passwd', md5($client_password));
+			$handlerres=$client->execute();
+
+
+			if(mysql_num_rows($handlerres)==0 || $this->db->isError() ){
+				return false;
+			}
+			$result = json_decode($client->value('name'), true);
+			$client->freeResult();
+ 			return true;
+		 }
+		 catch (Exception $e) {
+			echo "Error".$e->getMessage();
+		 }
+	}
+
+	public function loginByKT($key, $token)
+	{
+		$result='';
+
+		if($this->db->isError()) {
+		   return $status;
+		}
+		 try{
+
+
+			$client = $this->db->query('select * from  user_profile where user_id =:client_name and passwd_key =:client_passwd   and is_delete=0  ');
+ 			$client->bindValue(':client_name', $key);
+			$client->bindValue(':client_passwd', token);
+			$handlerres=$client->execute();
+
+
+			if(mysql_num_rows($handlerres)==0 || $this->db->isError() ){
+				return false;
+			}
+			$result = json_decode($client->value('name'), true);
+			$client->freeResult();
+ 			return true;
+		 }
+		 catch (Exception $e) {
+			echo "Error".$e->getMessage();
+		 }
+	}
+
+}
+?>

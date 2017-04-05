@@ -1,0 +1,41 @@
+<?php
+
+class Database_Db_Sourcing extends Database_Db_Abstract {
+	protected $table = Database_DatabaseTables::SOURCING;
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+	public function createSourcing($jdata) {
+
+
+ 	}
+
+
+    public function listSourcing() {
+
+		$sql = "SELECT * FROM Sourcing WHERE is_validate=:isvalid  and type=:type";
+		
+		$rs=$this->db->query($sql);
+		$rs->bindValue(':isvalid', 0);
+		$rs->bindValue(':type', 0);
+		$handlerres=$rs->execute();
+		if($this->db->isError()) {
+			return false;
+		}
+		
+		
+		 
+		$clist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+			$clist = array_merge($clist,array($rst['Sourcing_code']=>$rst['Sourcing_name']));
+		}
+		$rs->freeResult();
+		return json_encode($clist);
+
+
+ 	}
+
+}
+?>

@@ -1,0 +1,50 @@
+<?php
+
+class Database_Db_News extends Database_Db_Abstract {
+ 
+ 	protected $table_news = Database_DatabaseTables::NEWS;
+	public function __construct() {
+		parent::__construct();
+	}
+
+ 
+	public function findNews($news,$year) {
+
+		// return $finaldate;
+		$rs = $this->db->query("SELECT * FROM (  select * from  news  where is_deleted='0'   ORDER BY news_id DESC  LIMIT 0,10) AS `table` ORDER by news_id DESC");
+		//$rs->bindTable(':table_news', $this->table_news);
+		//$rs->bindValue(':year', $year);
+
+
+		$handlerres=$rs->execute();
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		}
+
+
+		$nlist = array();	
+		$clist = array();
+
+
+		 while($row=$this->db->db_fetch($handlerres))
+		{  
+			$nlist['title']=$row->news_title ;
+			$nlist['sub_title']=$row->news_sub_title ;
+			$nlist['image']=$row->news_image ;
+			//$nlist['desc']=$row->news_description;
+			$nlist['date']=date("F j, Y",strtotime($row->published_at));
+			$clist[]=array("newsid"=>$nlist);
+
+		}
+
+
+		$rs->freeResult();
+
+		return $clist	;
+
+ 	}
+
+
+}
+?>

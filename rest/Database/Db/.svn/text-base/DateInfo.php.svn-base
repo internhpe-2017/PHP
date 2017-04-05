@@ -1,0 +1,62 @@
+<?php
+
+class Database_Db_DateInfo extends Database_Db_Abstract {
+	protected $table = Database_DatabaseTables::ORG_PROFILE;
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+	public function createYear($jdata) {
+
+
+ 	}
+
+    public function findYear($orgid) {
+
+
+ 	}
+
+	public function updateYear($orgid) {
+
+
+ 	}
+
+	public function deleteYear($orgid) {
+
+
+ 	}
+
+    public function listYear($countid) {
+ 
+
+
+
+ 	}
+
+    public function listYears() {
+    
+     //$sql= "select  CONCAT(CONCAT('[', GROUP_CONCAT(CONCAT('{\"year\":\"', (SELECT distinct year FROM `org_profile` WHERE is_deleted=0 order by year),''),'','\"}')),']') from org_profile";
+
+
+		$sql = "SELECT distinct year FROM `country_event` WHERE is_deleted=:isdel order by year";
+		$rs=$this->db->query($sql);
+		$rs->bindValue(':isdel', 0);
+		$handlerres=$rs->execute();
+		if($this->db->isError()) {
+			return false;
+		} 
+		 
+		$ylist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+			 $ylist = array_merge($ylist,array('year'.$rst['year']=>$rst['year']));
+			//$ylist = array_merge($ylist,array($rst['year']=>$rst['year']));
+		}
+		$rs->freeResult();
+		return  $ylist;
+
+
+ 	}
+
+}
+?>

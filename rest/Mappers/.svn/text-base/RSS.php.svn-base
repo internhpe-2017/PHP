@@ -1,0 +1,31 @@
+<?php
+
+
+class Mappers_RSS {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_RSS();
+	}
+
+
+	public function findRSS($rsstype,$year) {
+		return $this->db->findRSS($rsstype,$year);
+	}
+
+
+	public function createRSS($jdata) {
+		return $this->db->createRSS($jdata);
+	}
+
+        public function listRSS($countid) {
+		return $this->db->listRSS($countid);
+
+	}
+
+	 public function listAllRSS() {
+	 return $this->db->listAllRSS();
+
+	}
+}
+?>

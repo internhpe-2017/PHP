@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/commondays/!svn/ver/2024/trunk/rest/Auth
+END
+FBAuth.php
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/commondays/!svn/ver/736/trunk/rest/Auth/FBAuth.php
+END
+KTUtils.php
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/commondays/!svn/ver/1562/trunk/rest/Auth/KTUtils.php
+END
+OAUTH.php
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/commondays/!svn/ver/853/trunk/rest/Auth/OAUTH.php
+END
+KTAuth.php
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/commondays/!svn/ver/1562/trunk/rest/Auth/KTAuth.php
+END
+Auth.php
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/commondays/!svn/ver/1562/trunk/rest/Auth/Auth.php
+END
+HttpBasic.php
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/commondays/!svn/ver/2024/trunk/rest/Auth/HttpBasic.php
+END
+OAuth1.php
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/commondays/!svn/ver/616/trunk/rest/Auth/OAuth1.php
+END
+SampleOauth.php
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/commondays/!svn/ver/616/trunk/rest/Auth/SampleOauth.php
+END
+IP.php
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/commondays/!svn/ver/724/trunk/rest/Auth/IP.php
+END

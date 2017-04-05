@@ -1,0 +1,130 @@
+<?php
+
+
+  class Services_WidgetCntry{
+
+
+	private $cntry ='';
+	private $year= '';
+	private $widget= '';
+ 	private  $flag= '';
+ 	private  $scenario=0;
+  	private  $user_id='';
+  	private  $graph_share_token='';
+ 		 
+ 
+	public function __construct() {
+  	}
+ 	
+	public function unsetgraphvalues( ) { 
+	 //  unset($this->widget);
+  	}
+
+ 
+
+	public function doWidget($request) {
+		
+		$widgetMapper = new Mappers_WidgetCntry(); 
+		$this->scenario=9;
+		$this->flag=0;
+		if(!empty($request['yr']))
+		{
+
+			$this->year= $request['yr'];
+		}
+		else
+		{
+			$this->year= $_SESSION['year'];
+
+		}
+		
+
+			 	 
+ 		if( $request['pc'] =='all')
+		{
+		
+		  
+		   $this->scenario=9;
+		   $this->cntry= '';
+		   $this->widget = $widgetMapper->doWidget($this->cntry,$this->year,$this->flag,$this->scenario,$this->user_id,$this->graph_share_token);
+ 		   return $this->widget ; 
+			 
+		}
+		if(!empty( $request['pc'])  && $request['pc'] !='all')  		 
+		{
+
+
+		   $this->scenario=10;
+		   $this->cntry= $request['pc'];
+		   //echo $this->cntry.'---------';
+		   $this->widget = $widgetMapper->doWidget($this->cntry,$this->year,$this->flag,$this->scenario,$this->user_id,$this->graph_share_token);
+		   return $this->widget ; 
+
+		}
+		  
+		if (   !empty($_SESSION['userinfo']['user_id'])  )  //user  logged in
+		{
+		
+		  
+			 
+			$this->scenario=11;
+			$this->cntry= $request['pc'];
+			$this->year= $request['yr'];
+			$this->user_id=$_SESSION['userinfo']['user_id'];
+			$this->flag=0; 
+			$this->widget = $widgetMapper->doWidget($this->cntry,$this->year,$this->flag,$this->scenario,$this->user_id,$this->graph_share_token);
+			return $this->widget ;  
+		} 				
+		
+		
+
+		if( !empty($_SESSION['cntry']) ) 
+		{		
+				$this->scenario=13;
+ 				//set in js
+ 				$this->link =$_SESSION['cntry'];
+				$this->cntry = strtok($this->link, '-');
+ 				$this->year= strtok(  '-');	 
+				//$this->year= $request['yr'];
+				unset($_SESSION['cntry']);
+				  
+				//json_decode($_SESSION['cntry']); 
+				//$this->user_id
+				//$this->graph_share_token	
+				 $this->flag=1;
+				$this->widget = $widgetMapper->doWidget($this->cntry,$this->year,$this->flag,$this->scenario,$this->user_id,$this->graph_share_token);
+				return $this->widget ; 
+
+ 		}  	
+		
+		
+	 
+		if (!empty($_SESSION['grtok']) ) 
+		{
+			$this->scenario=13;
+			$this->cntry= '';
+			$this->graph_share_token=$_SESSION['grtok'];
+			{
+ 
+				$this->flag=0;
+				$utils = new Library_Utilities();
+				$ug=substr($this->graph_share_token,0, $utils->lastIndexOf($this->graph_share_token,'-'));
+				$this->graph_share_token=$ug;
+
+				// var_dump( $ug);exit;
+
+			}	//logged in and
+
+			unset($_SESSION['grtok']);
+			$this->widget = $widgetMapper->doWidget($this->cntry,$this->year,$this->flag,$this->scenario,$this->user_id,$this->graph_share_token);
+			return $this->widget ; 
+
+		} 
+ 		
+	}
+	
+ 
+	 
+	
+ }
+?>

@@ -1,0 +1,167 @@
+<?php
+
+
+  class Services_WidgetReli{
+
+
+	private $cntrycode ='';
+	private $statecode ='';
+	private $relilist ='';
+ 
+	private $year= '';
+	private $widget= '';
+ 	private  $flag= '';
+ 	private  $scenario=0;
+  	private  $user_id='';
+  	private  $graph_share_token='';
+ 		 
+ 	public function __construct() {
+		$this->validation = new Library_Validation();
+ 	}
+ 	
+	public function unsetgraphvalues( ) { 
+	 //  unset($this->widget);
+  	}
+
+ 
+
+	public function doWidget($request) {
+		
+		$widgetMapper = new Mappers_WidgetReli(); 
+		 
+		$this->flag=0;
+		if(!empty($request['yr']))
+		{
+
+			$this->year= $request['yr'];
+		}
+		else
+		{
+			$this->year= $_SESSION['year'];
+
+		}
+
+		 
+		$this->cntrycode= $request['pc']; 
+		$this->relilist= $request['reli']; 
+		$this->statecode= $request['pcst'];  
+
+		// return $this->relilist.$this->statecode.$this->cntrycode.$this->year;	 	 
+		 
+		$this->widget = $widgetMapper->doWidget($this->relilist,$this->cntrycode,$this->statecode,$this->year,$this->flag,$this->scenario,$this->user_id,$this->graph_share_token);
+		
+			 	 
+	
+		if( $this->relilist =='all' )
+		{
+		   $this->scenario=15;
+ 		   $this->widget = $widgetMapper->doWidget($this->relilist,$this->cntrycode,$this->statecode,$this->year,$this->flag,$this->scenario,$this->user_id,$this->graph_share_token);
+ 		   return $this->widget ; 
+		}
+		if( $this->relilist !='all' )
+		{
+		   $this->scenario=18;
+ 		   $this->widget = $widgetMapper->doWidget($this->relilist,$this->cntrycode,$this->statecode,$this->year,$this->flag,$this->scenario,$this->user_id,$this->graph_share_token);
+ 		   return $this->widget ; 
+		}
+
+		/*
+		if( !empty($request['pcst']))
+		{
+		  
+		   $this->scenario=9;
+		   $this->cntrycode= '';
+		   $this->widget = $widgetMapper->doWidget($this->relilist,$this->cntrycode,$this->statecode,$this->year,$this->flag,$this->scenario,$this->user_id,$this->graph_share_token);
+ 		   return $this->widget ; 
+			 
+		}
+
+		if( !empty($request['reli']))
+		{
+		  
+		   $this->scenario=9;
+		   $this->cntrycode= '';
+		   $this->widget = $widgetMapper->doWidget($this->relilist,$this->cntrycode,$this->statecode,$this->year,$this->flag,$this->scenario,$this->user_id,$this->graph_share_token);
+ 		   return $this->widget ; 
+			 
+		}
+			
+		if(  !empty( $request['pc'])  && $request['pc'] !='all')  
+		 
+		{
+			
+		   $this->scenario=10;
+		   $this->cntrycode= $request['pc'];
+		   $this->widget = $widgetMapper->doWidget($this->relilist,$this->cntrycode,$this->year,$this->flag,$this->scenario,$this->user_id,$this->graph_share_token);
+ 		   return $this->widget ; 
+
+		}
+		*/
+		  
+		
+
+		if( !empty($_SESSION['relig']) ) 
+		{		
+				$this->scenario=19;
+ 				//set in js
+ 				$this->link =$_SESSION['relig'];
+				$this->cntrycodecode= strtok($this->link, '-');
+ 				$this->year= strtok(  '-');	 
+				//$this->year= $request['yr'];
+				unset($_SESSION['relig']);
+				  
+				//json_decode($_SESSION['relig']); 
+				//$this->user_id
+				//$this->graph_share_token	
+				 $this->flag=1;
+				$this->widget = $widgetMapper->doWidget($this->relilist,$this->cntrycode,$this->statecode,$this->year,$this->flag,$this->scenario,$this->user_id,$this->graph_share_token);
+				return $this->widget ; 
+
+ 		}  	
+		
+		
+	 
+		if (!empty($_SESSION['grtok']) ) 
+		{
+			$this->scenario=20;
+			$this->cntrycode= '';
+			$this->graph_share_token=$_SESSION['grtok'];
+			{
+ 
+				$this->flag=0;
+				$utils = new Library_Utilities();
+				$ug=substr($this->graph_share_token,0, $utils->lastIndexOf($this->graph_share_token,'-'));
+				$this->graph_share_token=$ug;
+
+				// var_dump( $ug);exit;
+
+			}	//logged in and
+
+			unset($_SESSION['grtok']);
+			$this->widget = $widgetMapper->doWidget($this->relilist,$this->cntrycode,$this->statecode,$this->year,$this->flag,$this->scenario,$this->user_id,$this->graph_share_token);
+			return $this->widget ; 
+
+		}
+		
+		
+		
+		if ( !empty($_SESSION['userinfo']['user_id']) ) 
+		{
+			
+
+			 $this->scenario=11;
+			 $this->cntrycode= $request['pc'];
+ 			 $this->year= $request['yr'];
+			 $this->user_id=$_SESSION['userinfo']['user_id'];
+			 $this->flag=0;
+			 $this->widget = $widgetMapper->doWidget($this->relilist,$this->cntrycode,$this->statecode,$this->year,$this->flag,$this->scenario,$this->user_id,$this->graph_share_token);
+			return $this->widget ; 
+		} 
+ 		
+	}
+	
+ 
+	 
+	
+ }
+?>

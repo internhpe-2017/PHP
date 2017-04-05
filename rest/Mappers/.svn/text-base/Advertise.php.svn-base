@@ -1,0 +1,38 @@
+<?php
+
+
+class Mappers_Advertise {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_Advertise();
+	}
+
+
+	public function findAdvertise($orgid) {
+		return $this->db->findAdvertise($orgid);
+	}
+
+
+	public function createAdvertise($jdata) {
+		return $this->db->createAdvertise($jdata);
+	}
+
+  	public function listAdvertise($countid) {
+		return $this->db->listAdvertise($countid);
+
+	}
+
+	public function listAllAdvertise() {
+	return $this->db->listAllAdvertise();
+
+	}
+	public function showBanner($location,$year) {
+	return $this->db->showBanner($location,$year);
+
+	}
+
+
+
+}
+?>

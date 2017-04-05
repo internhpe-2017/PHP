@@ -1,0 +1,57 @@
+<?php
+
+
+class Mappers_OrganisationCustomisation {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_OrganisationCustomisation();
+	}
+
+	public function deleteOrganisationCustomisation($userid,$jdata) {
+		return $this->db->deleteOrganisationCustomisation($userid,$jdata);
+	}
+
+	public function updateOrganisationCustomisation($userid,$jdata) {
+		return $this->db->updateOrganisationCustomisation($userid,$jdata);
+	}
+
+	public function findOrganisationCustomisation($userid) {
+	return $this->db->findOrganisationCustomisation($userid);
+	}
+
+
+	public function createOrganisationCustomisation($cmpygrp,$orgids,$year,$userid) {
+	
+		 return $this->db->createOrganisationCustomisation($cmpygrp,$orgids ,$year,$userid);
+	}
+	public function listOrganisationsByUserCustomisation($user,$year) {
+
+		 return $this->db->listOrganisationsByUserCustomisation( $user,$year);
+	 
+	}
+	
+	
+   
+
+	public function listOrganisationsByUserCustomisationGraph($user,$year) {
+
+		 return $this->db->listOrganisationsByUserCustomisationGraph( $user,$year);
+	 
+	}
+
+
+ 	public function listOrganisationsDataByUserCustomisation($user,$year) {
+     
+     	    return $this->db->listOrganisationsDataByUserCustomisation($user,$year);	
+        }
+   
+        public function listOrganisationsDataByGraphToken($graph_share_token ) {
+     
+   
+     	    return $this->db->listOrganisationsDataByGraphToken($graph_share_token );	
+        }
+	 
+	 
+}
+?>

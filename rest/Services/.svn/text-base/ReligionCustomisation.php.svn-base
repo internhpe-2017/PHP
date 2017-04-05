@@ -1,0 +1,114 @@
+<?php
+
+
+
+class Services_ReligionCustomisation {
+	private $reliCustMapper;
+ 
+	public function __construct() {
+		$this->reliCustMapper = new Mappers_ReligionCustomisation();
+ 
+ 	}
+
+	public function deleteReligionCustomisation($userid,$jdata) {
+		return $this->reliCustMapper->deleteReligionCustomisation($userid,$jdata);
+	}
+
+	public function updateReligionCustomisation($userid,$jdata) {
+		return $this->reliCustMapper->updateReligionCustomisation($userid,$jdata);
+	}
+
+	public function findReligionCustomisation($userid) {
+ 		return $this->reliCustMapper->findReligionCustomisation($userid);
+	} 
+	public function listReligionByUserCustomisation($request) {
+
+		 
+		
+		$year=$_SESSION['year']; 
+		$cntrycode='';
+		$user='';
+		 
+		if(isset($_SESSION['userinfo']['user_id'])  )
+			$user= $_SESSION['userinfo']['user_id']; 
+		
+		if(isset($request['pc']))
+			$cntrycode=mysql_real_escape_string($request['pc']);
+			
+		return $this->reliCustMapper->listReligionByUserCustomisation($user,$year,$cntrycode);
+	}
+
+
+	public function listReligionsByUserCustomisationGraph($request) {
+
+
+
+		//	 	if($year=='')
+		$year=$_SESSION['year'];
+
+		 
+
+			$user= $_SESSION['userinfo']['user_id'];
+
+		return $this->reliCustMapper->listReligionsByUserCustomisationGraph($user,$year);
+
+	}
+
+
+     public function listReligionsDataByUserCustomisation($user,$year) {
+
+	       //if(isset($request['pd']) && !empty($request['pd']))
+
+		return $this->reliCustMapper->listReligionsDataByUserCustomisation($user,$year);
+     }
+
+     public function listReligionsDataByUserCustomisationByToken( $request) {
+
+
+
+
+		if(isset($request['token']) && !empty($request['token']) && isset($request['year']) && !empty($request['year']))
+		{
+
+			$token=mysql_real_escape_string($request['token']);
+			$year=mysql_real_escape_string($request['year']);
+
+		}
+
+		return $this->reliCustMapper->listReligionsDataByUserCustomisationByToken($token,$year);
+     }
+
+
+	public function createReligionCustomisation($request) {
+
+
+		//if(empty($user))
+
+		 $userid= $_SESSION['userinfo']['user_id'];
+
+		if(isset($request['pd']) && !empty($request['pd']))	
+
+		{
+		
+		return $this->reliCustMapper->createReligionCustomisation($request['reggrp'], $request['pd'],  $request['year'],$userid);
+		}
+	}
+
+
+ 
+   public function listReligionsDataByGraphToken($request) {
+
+
+		if(isset($request['grtok']) && !empty($request['grtok'])  )
+		{
+ 			$grtok=mysql_real_escape_string($request['grtok']);
+
+		}
+
+	    return $this->reliCustMapper->listReligionsDataByGraphToken($grtok );
+   }
+
+
+
+}
+?>

@@ -1,0 +1,321 @@
+<?php
+
+include(APPLICATION_PATH.'/../library/class.phpmailer.php');
+include(APPLICATION_PATH.'/../library/class.pop3.php');
+include(APPLICATION_PATH.'/../library/class.smtp.php');
+
+class Library_Mail 
+{
+
+
+	public function __construct() {
+	 
+	}
+ 
+	public function send() {
+		 
+	}
+	
+	
+
+	private  function construct() { 
+ 		 
+	}
+	
+ 
+	
+	public function sentICS($details) {
+
+
+		$mail = new PHPMailer(); 
+		$mail->IsSMTP();
+		$mail->Host = Config::Host;
+		$mail->SMTPAuth = Config::SMTPAuth;
+		$mail->Username = Config::Username;
+		$mail->Password = Config::Password;
+		$mail->From=Config::From;
+		$mail->FromName=Config::FromName;
+		$mail->Sender=Config::Sender;  
+		$uidfqdn='www.connectdays.com'; 
+
+
+		$messagebody = 'as' . " " . 'ln' . "\n".		"email: " . $details['email'] . "\n". 		"phone: " . '99000' . "\n". 		"special instructions: " . 'spinst' . "\n";
+		$desc =  'as' . " " . 'ln' . " | ".			"email: " . $details['email'] . " | ".			"phone: " . '99000' . " | ".			"special instructions: " . 'spinst' . "";
+		$mail->AddAddress("connectdays@gmail.com");
+
+
+		//$messagebody = $_POST["fname"] . " " . $_POST["lname"] . "\n".		"email: " . $_POST["e-mail"] . "\n". 		"phone: " . $_POST["phone"] . "\n". 		"special instructions: " . $_POST["sinst"] . "\n";
+		//$desc =  $_POST["fname"] . " " . $_POST["lname"] . " | ".			"email: " . $_POST["e-mail"] . " | ".			"phone: " . $_POST["phone"] . " | ".			"special instructions: " . $_POST["sinst"] . "";
+	        //$mail->AddAddress("connectdays@gmail.com");
+		//$mail->AddAddress($uname);
+		
+		/*
+		if($_SERVER["REQUEST_METHOD"] != "POST") 
+		{ 
+			trigger_error("wrong HTTP method", E_USER_ERROR);	
+		}
+		else 
+		{	
+			try { 
+				$dtstart = new DateTime($_POST["dtstart"] . " " . $_POST["stimeHr"].":".$_POST["stimeMin"].$_POST["stimeAMPM"]); 
+			} 
+			catch (Exception $e) {
+				trigger_error("startdate error: " . $e->getMessage(), E_USER_ERROR); 
+			}
+			try { 
+				$dtend = new DateTime($_POST["dtend"] . " " . $_POST["etimeHr"].":".$_POST["etimeMin"].$_POST["etimeAMPM"]); 
+			} 
+			catch (Exception $e) { 
+				trigger_error("enddateerror: " . $e->getMessage(), E_USER_ERROR); 
+			}
+			$datestampnow = date('Ymd').'T'.date('His');
+			$uid = $datestampnow . "-" . rand() . "-" . $uidfqdn;
+			$startdate = $dtstart->format('Ymd') . "T" . $dtstart->format("His");
+			$enddate = $dtend->format('Ymd') . "T" . $dtend->format("His");
+			$location='Bangalore'; //HARDCODING
+		}
+		*/
+		/*
+		 * echo "BEGIN:VCALENDAR\n";
+		 * echo "VERSION:2.0\n";
+		 * echo "PRODID:-//Foobar Corporation//NONSGML Foobar//EN\n";
+		 * echo "METHOD:REQUEST\n"; // requied by Outlook
+		 * echo "BEGIN:VEVENT\n";
+		 * echo "UID:".date('Ymd').'T'.date('His')."-".rand()."-example.com\n"; // required by Outlok
+		 * echo "DTSTAMP:".date('Ymd').'T'.date('His')."\n"; // required by Outlook
+		 * echo "DTSTART:20080413T000000\n"; 
+		 * echo "SUMMARY:TEST\n";
+		 * echo "DESCRIPTION: this is just a test\n";
+		 * echo "END:VEVENT\n";
+		 * echo "END:VCALENDAR\n";
+		 */
+		
+		/*$icscard = sprintf("BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//ConnectDays//NONSGML{$name}//EN\nMETHOD:REQUEST\nBEGIN:VEVENT\nUID:%s\nDTSTAMP:%s\nDTSTART:%s\nDTEND:%s\nLOCATION:%s\nSUMMARY:%s\nDESCRIPTION:%s\nEND:VEVENT\nEND:VCALENDAR\n",
+			$uid, 
+			$datestampnow, 
+			$startdate, 
+			$enddate, 
+			$location,
+			$_POST["fname"]. " " . $_POST["lname"], 
+			$desc
+		);
+		str_replace("\t", "", $icscard);
+		*/
+		/*if($_SERVER["REQUEST_METHOD"] != "POST") { 
+			trigger_error("wrong HTTP method", E_USER_ERROR);	
+		}
+		else {	*/
+			try { 
+				$dtstart = new DateTime('02/18/2013' . " " . '10'.":".'00'.'AM'); 
+			} 
+			catch (Exception $e) {
+				trigger_error("startdate error: " . $e->getMessage(), E_USER_ERROR); 
+			}
+			try { 
+				$dtend = new DateTime('02/18/2013' . " " . '10'.":".'30'.'AM'); 
+			} 
+			catch (Exception $e) { 
+				trigger_error("enddateerror: " . $e->getMessage(), E_USER_ERROR); 
+			}
+			$datestampnow = date('Ymd').'T'.date('His');
+			$uid = $datestampnow . "-" . rand() . "-" . $uidfqdn;
+			$startdate = $dtstart->format('Ymd') . "T" . $dtstart->format("His");
+			$enddate = $dtend->format('Ymd') . "T" . $dtend->format("His");
+			$location='Bangalore'; //HARDCODING
+		/*
+		}
+		*/
+
+		$icscard = sprintf("BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//ConnectDays//NONSGML{$name}//EN\nMETHOD:PUBLISH\nBEGIN:VEVENT\nUID:%s\nDTSTAMP:%s\nDTSTART:%s\nDTEND:%s\nLOCATION:%s\nSUMMARY:%s\nDESCRIPTION:%s\nEND:VEVENT\nEND:VCALENDAR\n",
+			$uid, 
+			$datestampnow, 
+			$startdate, 
+			$enddate, 
+			$location,
+			'as'. " " . 'ln', 
+			$desc
+		);
+		
+		str_replace("\t", "", $icscard);		
+		//$mail->Subject = html_entity_decode($subject, ENT_QUOTES, 'UTF-8');
+		$mail->Subject =html_entity_decode($desc, ENT_QUOTES, 'UTF-8');
+		$mail->Body = $messagebody ;
+		$mail->AddStringAttachment($icscard,'reservation.ics','base64','text/Calendar'); 
+
+		if(!$mail->Send())
+		{
+		   return 1;
+		}
+		else
+		{
+		   return 0;
+		} 	
+	
+	}
+
+	
+	public function sentInviteMail($uname ,$message,$subject) {
+
+
+		$mail = new PHPMailer(); 
+		$mail->IsSMTP();
+
+		$mail->Host = Config::Host;
+		$mail->SMTPAuth = Config::SMTPAuth;
+		$mail->Username = Config::Username;
+		$mail->Password = Config::Password;
+		$mail->From=Config::From;
+		$mail->FromName=Config::FromName;
+		$mail->Sender=Config::Sender;  
+
+
+		//$mail->AddAddress("connectdays@gmail.com");
+		$mail->AddAddress($uname);
+		 
+		
+		$mail->Subject = $subject;
+		$mail->Body = "Hi $uname"."\n\n".$message."\n"."\n\n"."Regards \n".$uname;
+
+		if(!$mail->Send())
+		{
+		   return 1;
+		}
+		else
+		{
+		   return 0;
+		}  
+	}
+		
+
+
+
+	public function feedbackmail($uname ,$message,$subject) {
+
+
+		$mail = new PHPMailer(); 
+		$mail->IsSMTP();
+
+		$mail->Host = Config::Host;
+		$mail->SMTPAuth = Config::SMTPAuth;
+		$mail->Username = Config::Username;
+		$mail->Password = Config::Password;
+		$mail->From=Config::From;
+		$mail->FromName=Config::FromName;
+		$mail->Sender=Config::Sender;  
+
+
+		$mail->AddAddress("connectdays@gmail.com");
+		//$mail->AddAddress($email);
+		
+		$mail->Subject = $subject;
+		$mail->Body = "Hi"."\n\n".$message."\n"."\n\n"."Regards \n".$uname;
+
+		if(!$mail->Send())
+		{
+		   return 1;
+		}
+		else
+		{
+		   return 0;
+		}  
+	}
+
+ 
+	public function confirmationmail($user_id  ) {  
+ 
+		$mail = new PHPMailer();$mail = new PHPMailer();
+		$mail->IsSMTP();
+ 		
+		$mail->Host = Config::Host;
+		$mail->SMTPAuth = Config::SMTPAuth;
+		$mail->Username = Config::Username;
+		$mail->Password = Config::Password;
+		$mail->From=Config::From;
+		$mail->FromName=Config::FromName;
+		$mail->Sender=Config::Sender;  
+
+
+	 
+		//$mail->AddAddress("connectdays@gmail.com");
+		$mail->AddAddress($user_id);
+		$mail->Subject = "Thanks for registering with ConnectDays.";
+		$mail->Body = "\n\n Your ConnectDays account is active. You can use the email id ".$user_id."to log into your account.\n\n Thank you,\n\n Team Connect Days.\n";
+
+		if(!$mail->Send())
+		{
+		   return 1;
+		}
+		else
+		{
+		   return 0;
+		} 
+
+	}
+
+
+	public function sendactivationemail($user_id,$key) {  //sendactivationemail and reactivation
+
+
+		$mail = new PHPMailer(); 
+		$mail->IsSMTP();
+
+		$mail->Host = Config::Host;
+		$mail->SMTPAuth = Config::SMTPAuth;
+		$mail->Username = Config::Username;
+		$mail->Password = Config::Password;
+		$mail->From=Config::From;
+		$mail->FromName=Config::FromName;
+		$mail->Sender=Config::Sender;  
+
+		//$mail->AddAddress("connectdays@gmail.com");
+		$mail->AddAddress($user_id);
+		$mail->Subject = "Thanks for signing up in ConnectDays. Please click on the link and activate your account!";
+		$mail->Body = "Hello ".$user_id."\n\nYour account in the ConnectDays site is created. Please activate your account by clicking the link.\n" .'http://'.$_SERVER['HTTP_HOST'].'/'."rest/ActivationMail?type=UREG&confirmkey=".$key."\n\n Thank you,\n\n Team Connect Days.\n";
+
+		if(!$mail->Send())
+		{
+		   return 1;
+		}
+		else
+		{
+		   return 0;
+		}  
+	}
+
+	
+	public function forgotpasswordmail($user_id,$key ,$message,$subject ) {
+		
+
+		$mail = new PHPMailer();
+		$mail->IsSMTP();
+
+		$mail->Host = Config::Host;
+		$mail->SMTPAuth = Config::SMTPAuth;
+		$mail->Username = Config::Username;
+		$mail->Password = Config::Password;
+		$mail->From=Config::From;
+		$mail->FromName=Config::FromName;
+		$mail->Sender=Config::Sender;  
+
+
+		//$mail->AddAddress("connectdays@gmail.com");
+		$mail->AddAddress($user_id);
+		$mail->Subject = $subject;
+		$mail->Body = $message;
+
+
+		if(!$mail->Send())
+		{
+		   return 1;
+		}
+		else
+		{
+		   return 0;
+		}  
+	}
+
+	 
+}
+
+
+?>

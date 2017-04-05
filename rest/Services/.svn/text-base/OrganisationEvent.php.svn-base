@@ -1,0 +1,62 @@
+<?php
+
+
+class Services_OrganisationEvent {
+	private $orgEvent;
+ 	public function __construct() {
+		$this->orgEvent = new Mappers_OrganisationEvent();
+ 
+	}
+
+
+	public function deleteOrganisationEvent($orgid) {
+		return $this->orgEvent->deleteOrganisationEvent($orgid);
+	}
+
+
+	public function updateOrganisationEvent ($orgid) {
+	return $this->orgEvent->updateOrganisationEvent ($orgid);
+	}
+
+	public function findOrganisationEvent ($orgid) {
+	return $this->orgEvent->findOrganisationEvent ($orgid);
+	}
+
+	public function findOrganisationEventList ($request) {
+	
+	
+			$year=substr($request['year'],4);
+			
+			//return $request['orgdetail'].$year;
+	
+
+	return $this->orgEvent->findOrganisationEventList ($request['orgdetail'],$year);
+	}
+
+
+
+	public function createOrganisationEvent($jdata) {
+		return $this->orgEvent->createOrganisationEvent ($jdata);
+	}
+
+ 
+
+
+	public function findOrganisationEventDates($request) {
+		$uid=''; 
+	 	if(empty($uid)) 
+			 $uid=$_SESSION['userinfo']['user_id'];
+	 	else 
+	 		 $uid='';
+	 	
+		return  $this->orgEvent->findOrganisationEventDates(mysql_real_escape_string($request['orgid']),mysql_real_escape_string($request['year']),$uid);
+	}
+
+	public function listOrganisationEvent($orgid) {
+		return $this->orgEvent->listOrganisationEvent ($jdata);
+
+
+ 	}
+
+}
+?>

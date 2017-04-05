@@ -1,0 +1,103 @@
+<?php
+
+
+class Services_Religion {
+
+
+ 
+	public function __construct() {
+  	}
+ 	
+	public function get($request) { 
+	  	$reli = $this->getReligion($request); 
+  		return $reli; 
+ 	}
+
+ 	public function findReligion($request) {
+		$relimapper = new Mappers_Religion();
+		
+		if(isset($request['cntrycode']) && !empty($request['cntrycode']))
+		{  			
+		  $reli = $relimapper->findReligion(mysql_real_escape_string($request['cntrycode']));
+  		}
+ 		return $reli ;
+ 	}
+ 	 
+ 	public function religionLookup($request) {
+			$relimapper = new Mappers_Religion();
+			
+			if(isset($request['pc']) && !empty($request['pc'])  && (isset($request['term']) && !empty($request['term']) ))
+			{  			
+				$cntry=trim(mysql_real_escape_string($request['pc']));
+				$term=trim(mysql_real_escape_string($request['term']));
+				$reli = $relimapper->religionLookup($cntry,$term);
+	  		}
+	 		return $reli ;
+ 	}
+ 	
+ 	
+	public  function listReligionByUserCustomisation($request){
+		$relimapper = new Mappers_Religion();
+
+		if($year=='')
+		 	 $year=$_SESSION['year'];
+
+		if(empty($user))
+
+			    $user= $_SESSION['userinfo']['user_id'];
+
+ 		$cust = $relimapper->listReligionByUserCustomisation(mysql_real_escape_string( $user),mysql_real_escape_string($year));
+   		return $cust ; 
+	}
+
+	public  function createReligion($request){
+ 		$relimapper = new Mappers_Religion();		
+ 		$dates = json_decode("[".$request['pd_reli']."]",true);
+ 		$datedesc = explode(",",trim(mysql_real_escape_string($request['pdd_reli'])));
+ 		
+ 		
+
+		$userid= trim(mysql_real_escape_string($request['uid_reli'])); 
+		$jdata = array('lock'=>trim(mysql_real_escape_string($request['plk_reli']),"'"), 'year'=> $request['py_reli'] , 'reli_loc'=> $request['pl_reli'] ,"user_id"=> $userid,"pr_reli"=>trim(mysql_real_escape_string($request['pr_reli'])),"reli_cntry"=>trim(mysql_real_escape_string($request['pc_reli'])),"dates"=>$dates);
+     		 
+     		return $relimapper->createReligion($jdata,$userid);
+ 	}
+
+
+	public function createReligionCustomisation($request) {
+		$relimapper = new Mappers_Religion();
+		
+		
+		if(empty($user))
+ 			$userid= $_SESSION['userinfo']['user_id'];
+	
+		if(isset($request['pd']) && !empty($request['pd']))
+ 		{ 
+			return $relimapper->createReligionCustomisation( mysql_real_escape_string($request['pd']), mysql_real_escape_string($request['year']),$userid);
+		}	 
+	}
+
+
+     public function listReligion($request) {
+		$relimapper = new Mappers_Religion();
+		return  $relimapper->listReligion( );
+
+	}
+
+        public function listReligionList($request) {
+		$relimapper = new Mappers_Religion();
+		return  $relimapper->listReligionList( );
+
+	}
+	
+        public function listReligionByCountry($request) {
+		$relimapper = new Mappers_Religion(); 
+		return   $relimapper->listReligionByCountry(mysql_real_escape_string($request['pc']),$request['yr']); 
+	} 
+
+	 
+	
+	
+
+}
+?>

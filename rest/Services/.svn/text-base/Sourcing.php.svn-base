@@ -1,0 +1,60 @@
+<?php
+
+
+class Services_Sourcing{
+
+ 
+	public function __construct() {
+  	}
+ 	
+	public function get($request) {
+
+
+	    $org = $this->listSourcing($request);
+
+  		return $org;
+
+ 	}
+
+	public function listSourcing($request) {
+		$orgMapper = new Mappers_Sourcing();
+
+
+      if( (isset($request['orgid']) && !empty($request['orgid'])) &&
+			(isset($request['year']) && !empty($request['year'])))  {
+
+
+		  $org = $orgMapper->listSourcing(mysql_real_escape_string($request['orgid']),mysql_real_escape_string($request['year']));
+		  return $org;
+		}
+
+
+
+
+
+
+		return $org ;
+
+
+
+	}
+
+
+	public  function createSourcing($request){
+
+		//[{"user_id":"saju@gmail.com","year":"2011", "Sourcingname":"kerala" ,"Sourcing": "bangalore" ,"country":"india","Sourcing":"cisco","date":[{"4/Jan":{"advert":"bumblebee adv","description":"diwali day"}},{"7/Mar":{"advert":"","description":""}},{"6/Jun":{"advert":"","description":""}}]}]
+		//format
+	    $orgMapper = new Mappers_Sourcing();
+
+		$dates = explode(",",trim(mysql_real_escape_string($request['pd'])));
+		$datedesc = explode(",",trim(mysql_real_escape_string($request['pdd'])));
+
+ 		$jdata = json_encode(array('Sourcing'=>trim(mysql_real_escape_string($request['ps']),"'"), "country"=>trim(mysql_real_escape_string($request['pc'])),"Sourcing"=>trim(mysql_real_escape_string($request['pl'])),"org"=>trim(mysql_real_escape_string($request['po'])),"org_type"=>trim(mysql_real_escape_string($request['pot'])),"dates"=>$dates));
+ 	    $org = $orgMapper->createSourcing($jdata);
+
+	}
+
+
+
+}
+?>

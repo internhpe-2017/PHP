@@ -1,0 +1,46 @@
+<?php
+
+
+class Controllers_CDVersion extends Controllers_Abstract {
+	const IS_PUBLIC = 1;
+
+ 	public function validate(  )
+	{
+  		$this->validation = new Library_Validation();	 
+		//$this->validation->add_fields($this->request['params']['term'], 'req', 'Please Enter term',0);
+  		return $this->validation->validate();
+ 	}
+
+	public function isPublic() {
+		return self::IS_PUBLIC;
+	}
+
+	public function get() {
+		$cd = new Services_CDVersion();
+ 		$this->error=$this->validate();
+ 		
+		if($this->error['value'])
+		{ 
+			$this->response=$this->error['error'] ;
+		}
+		else
+		{
+		$this->response = array('CDVersionResponse' => $cd->get());
+		}
+		$this->responseStatus = 200;
+	}
+	// @codeCoverageIgnoreStart
+	public function post() {
+		return null;
+	}
+
+	public function put() {
+		return null;
+	}
+
+	public function delete() {
+		return null;
+	}
+	// @codeCoverageIgnoreEnd
+}
+?>

@@ -1,0 +1,37 @@
+<?php
+
+
+class Services_CountryEvent {
+	private $cntryEvent;
+ 
+	public function __construct() {
+		$this->cntryEvent = new Mappers_CountryEvent();
+ 
+	}
+
+
+	public function getCountryEventDates($request)
+	{
+ 		return $this->cntryEvent->getCountryEventDates ($request['cntrycode'],$request['module'],$request['year']);
+
+	}
+
+ 
+	public function findEventDetails ($request) {
+	 
+	 $year=substr($request['year'],4);
+	return $this->cntryEvent->findEventDetails ($request['eventdetail'],$request['module'],$year);
+	}
+
+ 
+
+	public function findCountryEventDates ($request) {
+	$year=substr($request['year'],4);
+	 
+	return $this->cntryEvent->findCountryEventDates ($request['cntry'],$request['module'],$year);
+	}
+
+ 
+
+}
+?>

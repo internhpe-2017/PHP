@@ -1,0 +1,39 @@
+<?php
+
+
+class Services_UserEvent {
+	private $userEvent;
+	private $error;
+ 
+	public function __construct() {
+		$this->userEvent = new Mappers_UserEvent();
+ 
+	}
+
+
+
+    public function createUserEvent($jdata) {
+
+
+ 	}
+
+    public function findUserEvent($userid) {
+   		return $this->userEvent->findUserEvent($userid);
+
+
+ 	}
+
+	public function updateUserEvent($userid) {
+
+
+ 	}
+
+	public function deleteUserEvent($userid) {
+
+
+ 	}
+
+    public function listUserEvent() {
+
+
+?>

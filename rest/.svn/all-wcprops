@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/commondays/!svn/ver/2190/trunk/rest
+END
+Validation.php
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/commondays/!svn/ver/1762/trunk/rest/Validation.php
+END
+Rest.php
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/commondays/!svn/ver/2168/trunk/rest/Rest.php
+END
+Log.php
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/commondays/!svn/ver/249/trunk/rest/Log.php
+END
+.htaccess
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/commondays/!svn/ver/2150/trunk/rest/.htaccess
+END
+Config.php
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/commondays/!svn/ver/1965/trunk/rest/Config.php
+END
+Version.php
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/commondays/!svn/ver/249/trunk/rest/Version.php
+END
+timeout.php
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/commondays/!svn/ver/1962/trunk/rest/timeout.php
+END
+index.php
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/commondays/!svn/ver/1985/trunk/rest/index.php
+END
+RestBase.php
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/commondays/!svn/ver/2023/trunk/rest/RestBase.php
+END

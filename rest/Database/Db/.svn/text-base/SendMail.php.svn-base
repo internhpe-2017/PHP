@@ -1,0 +1,247 @@
+<?php
+ 
+
+class Database_Db_SendMail extends Database_Db_Abstract {
+	protected $table = Database_DatabaseTables::CONFIRM;
+
+	public function __construct() {
+		parent::__construct();
+	}
+ 	 
+	public function feedbackmail( $key ) {
+	
+	}
+	public function reactivationmail( $email) {
+	
+	}
+
+ 	public function confirmationmail(   ) {
+
+	        // send the inital confirmationmail mail 	        
+ 		try { 
+ 		
+			$rs=$this->db->query("select `user_id`,`confirmkey` from confirm where type=:types and `confirm`=:confirm  and sent_status=0");
+			$rs->bindValue(':types', 'UCONF');
+			$rs->bindValue(':confirm', 2);
+			$handlerres=$rs->execute();	 
+			if($this->db->isError()) {
+				return false;
+			} 
+			
+			//if($rst = mysql_fetch_assoc($handlerres))
+			//{
+				while($rst = mysql_fetch_assoc($handlerres))
+				{  
+
+					$user_id=$rst['user_id'];
+					$key=$rst['confirmkey'];
+					$this->libmail = new Library_Mail(); 
+					  $mail_return=$this->libmail->confirmationmail($user_id); 
+
+					// instead of sending mail update the database with confimration mail info
+
+					if($mail_return==0)
+					{
+						try{ 
+
+							$rs1=$this->db->query("update confirm set `confirm`=3 ,`sent_status` =1 where  confirmkey=:key and `confirm`=2  and type=:types");
+							$rs1->bindValue(':key', $key);
+							$rs1->bindValue(':types', 'UCONF');
+							$rs1->bindValue(':confirm', 2);
+							$handlerres=$rs1->execute();  
+
+
+ 
+
+							$rs2=$this->db->query("update   user_profile set `is_deleted`=:del1,active=:actv1 where  `is_deleted`=:del2 and user_id=:userid and active=:actv");
+							$rs2->bindValue(':userid', $user_id); 
+							$rs2->bindValue(':del1', 0);
+							$rs2->bindValue(':actv1', 0);
+							$rs2->bindValue(':del2', 1);
+							$rs2->bindValue(':actv', 0);					
+							$handlerres=$rs2->execute();  
+							
+						
+							
+
+						}
+						catch (Exception $e1) {    
+							echo "Error".$e1->getMessage();
+						} 
+						//$rs1->freeResult(); 
+						$rs1->freeResult(); 
+						$rs2->freeResult(); 
+					} 		
+
+					$action['result'] = 'success';   
+					array_push($action,'User activated' . mysql_error()); 	 
+				} 
+			/*}
+			else
+			{
+					$action['result'] = 'success';   
+					array_push($action,'User already activated' . mysql_error()); 	 
+			
+			}*/
+			$rs->freeResult();
+
+
+		}
+		catch (Exception $e) {    
+		  echo "Error".$e->getMessage();
+		}  
+ 		
+ 		
+ 		return $action;
+
+	}
+	public function sendactivationemail(   ) {
+
+ 		try {  		
+ 		
+			$rs=$this->db->query("select `user_id`,`confirmkey` from confirm where type=:types and `confirm`=:confirm  and sent_status=:status");
+ 			$rs->bindValue(':types', 'UREG');
+			$rs->bindValue(':confirm', 1);
+			$rs->bindValue(':status', 0);
+			$handlerres=$rs->execute();	 
+ 		
+			if($this->db->isError()) {
+				return false;
+			} 
+ 		 	//if($rst = mysql_fetch_assoc($handlerres))
+ 		 	//{
+				while($rst = mysql_fetch_assoc($handlerres))
+				{  
+
+					$user_id=$rst['user_id'];
+					$key=$rst['confirmkey'];
+					$this->libmail = new Library_Mail(); 
+					// send the activation  mail 	
+					$mail_return=$this->libmail->sendactivationemail($user_id,$key); 
+
+
+
+					$action['result'] = 'success';   
+					array_push($action,'User activation mail sent' . mysql_error()); 	 
+				}
+			/*}
+			else
+			{
+					$action['result'] = 'success';   
+					array_push($action,'User already activated ' . mysql_error()); 	 
+			
+				
+			}*/
+			 
+			$rs->freeResult();
+ 	 
+ 		
+ 		}
+ 		catch (Exception $e) {    
+ 			echo "Error".$e->getMessage();
+ 		}  
+ 		
+ 		
+ 		return $action;
+  
+ 	}
+
+	public function activatemail( $key ) {
+
+	        // send the inital activatemail mail 
+	        
+ 		try {  		
+ 		
+			$rs=$this->db->query("select `user_id`,`confirmkey` from confirm where type=:types and `confirm`=:confirm and  confirmkey=:key and sent_status=0  ");
+			$rs->bindValue(':key', $key);
+			$rs->bindValue(':types', 'UREG');
+			$rs->bindValue(':confirm', 1);
+			$handlerres=$rs->execute();	 
+ 		
+			if($this->db->isError()) {
+				return false;
+			} 
+ 		 
+			if($rst = mysql_fetch_assoc($handlerres))
+			{  
+
+					$user_id=$rst['user_id']; 
+					try{ 
+
+						 $rs1=$this->db->query("delete from confirm where     confirmkey=:key and `confirm`=:confirm and type=:types");
+						$rs1->bindValue(':key', $key);
+						$rs1->bindValue(':types', 'UREG');
+						$rs1->bindValue(':confirm', 1);
+						$handlerres=$rs1->execute();   
+
+						$rs2=$this->db->query("update   user_profile set `is_deleted`=:del1,active=:actv1 where  `is_deleted`=:del2 and user_id=:userid and active=:actv");
+						$rs2->bindValue(':userid', $user_id); 
+						$rs2->bindValue(':del1', 0);
+						$rs2->bindValue(':actv1', 0);
+						$rs2->bindValue(':del2', 1);
+						$rs2->bindValue(':actv', 0);					
+						$handlerres=$rs2->execute();  
+
+						$sql = "INSERT INTO confirm (user_id,confirmkey,sender,confirm,type,sent_status,subject,message) VALUES ('$user_id','$key','connectdays@gmail.com','2','UCONF','0','Thanks for connecting with ConnectDays.','Hello $user_id \n\n Your ConnectDays account is active.\n\n Thank you,\n\n Team Connect Days.\n')"; 					
+						$confirm=mysql_query($sql);
+						
+
+
+						$rs3=$this->db->query("select user_id,country_code,state_id from user_profile where is_deleted=:del1 and active=:actv1 and user_id=:userid");
+						$rs3->bindValue(':del1', '0');
+						$rs3->bindValue(':actv1', '0');
+						$rs3->bindValue(':userid',  $user_id);
+						$handlerres3=$rs3->execute();	 
+						if($this->db->isError()) {
+							return false;
+						} 							
+						if($rst = mysql_fetch_assoc($handlerres3))
+						{  
+
+							$cntry_code=$rst['country_code'];
+						}
+					
+						//put the default location info in to the customisation table with all the years
+						// need to do this explisitly every new year 
+						
+ 
+						$sql = "INSERT INTO country_customisation (user_id,country_code,year) select '$user_id','$cntry_code',year from year_country_prof where country_code='$cntry_code' and user_id='system' and is_deleted=0"; 				
+						$insert_ypc=mysql_query($sql); 
+						
+						$sql = "INSERT INTO year_country_prof (user_id,country_code,cntry_hols_json,year) select '$user_id','$cntry_code',cntry_hols_json,year from year_country_prof where country_code='$cntry_code' and user_id='system' and is_deleted=0"; 				
+						$insert_ypc=mysql_query($sql); 
+
+
+					}
+					catch (Exception $e1) {    
+						echo "Error".$e1->getMessage();
+					} 
+					 $rs1->freeResult(); 
+					$rs2->freeResult();  
+					$action['result'] = 'success';   
+					array_push($action,'User registered and activated successfuly  ' . mysql_error()); 	 
+			}
+			else 
+			{
+			    $action['result'] = 'error';   
+			    array_push($action,'User already registered ' . mysql_error()); 		       
+
+			} 
+			//$rs->freeResult();
+ 	 
+ 		
+ 		}
+ 		catch (Exception $e) {    
+ 			echo "Error".$e->getMessage();
+ 		}  
+ 		
+ 		
+ 		return $action;
+  
+ 	}
+ 	
+ 	
+ 	 
+ 
+}
+?>

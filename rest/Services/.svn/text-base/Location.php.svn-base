@@ -1,0 +1,109 @@
+<?php
+
+
+class Services_Location{
+
+ 
+	public function __construct() {
+  	}
+	public function get($request) {
+
+
+	    	$org = $this->getLocation($request); 
+   		return $org;
+
+ 	}
+
+ 	public function searchLocation($request) {
+		$locMapper = new Mappers_Location();
+		
+  		// on passing the values from form
+		if( (isset($request['pc']) && !empty($request['pc'])) && (isset($request['term']) && !empty($request['term'])) && (isset($request['ps']) && !empty($request['ps'])))  {
+			$locMapper = new Mappers_Location();
+
+			$cntry=trim(mysql_real_escape_string($request['pc']));
+			$term=trim(mysql_real_escape_string($request['term']));
+			$state=trim(mysql_real_escape_string($request['ps']));
+			$org= $locMapper->searchLocation($cntry,$term,$state);
+		}
+	
+		return $org ; 
+	}
+
+ 	public function locationLookup($request) {
+		$locMapper = new Mappers_Location();
+		
+  		// on passing the values from form
+		if( (isset($request['pc']) && !empty($request['pc'])) && (isset($request['term']) && !empty($request['term']))  )  {
+			$locMapper = new Mappers_Location();
+			
+			$cntry=trim(mysql_real_escape_string($request['pc']));
+			$term=trim(mysql_real_escape_string($request['term']));
+			$state=trim(mysql_real_escape_string($request['ps']));
+			
+			$org= $locMapper->locationLookup($cntry,$term,$state);
+		}
+	
+		return $org ; 
+	}
+
+	public  function createLocation($request){
+
+		//[{"user_id":"saju@gmail.com","year":"2011", "Locationname":"kerala" ,"location": "bangalore" ,"country":"india","Location":"cisco","date":[{"4/Jan":{"advert":"bumblebee adv","description":"diwali day"}},{"7/Mar":{"advert":"","description":""}},{"6/Jun":{"advert":"","description":""}}]}]
+		//format
+		$locMapper = new Mappers_Location();
+
+		$dates = explode(",",trim(mysql_real_escape_string($request['pd'])));
+		$datedesc = explode(",",trim(mysql_real_escape_string($request['pdd'])));
+
+		$jdata = json_encode(array('Location'=>trim(mysql_real_escape_string($request['ps']),"'"), "country"=>trim(mysql_real_escape_string($request['pc'])),"location"=>trim(mysql_real_escape_string($request['pl'])),"org"=>trim(mysql_real_escape_string($request['po'])),"org_type"=>trim(mysql_real_escape_string($request['pot'])),"dates"=>$dates));
+		$org = $locMapper->addLocation($jdata);
+
+	}
+
+
+	public function listLocation($request) {
+	
+	/*
+	
+	[{"value":"Abad, West Bengal, India","label":"Abad, West Bengal, India","city":"Abad","state":"West Bengal","country":"India"},
+	 {"value":"Abadgarh, Uttar Pradesh, India","label":"Abadgarh, Uttar Pradesh, India","city":"Abadgarh","state":"Uttar Pradesh","country":"India"},
+	 {"value":"Abadpura, Punjab, India","label":"Abadpura, Punjab, India","city":"Abadpura","state":"Punjab","country":"India"}]
+
+
+	*/
+	$locMapper = new Mappers_Location();
+		return $locMapper->listLocation();
+
+	}
+	
+	public function getLocationFromName($request) {
+		$locMapper = new Mappers_Location(); 
+		 
+		if( (isset($request['location']) && !empty($request['location'])) &&  (isset($request['cntry']) && !empty($request['cntry'])))    
+		{
+			$locid = $locMapper->getLocationFromName( ($request['location']), ($request['cntry']));
+		}
+		
+		return $locid;
+		
+		
+
+	}
+	
+	//retun states in country
+	public function listLocationByCountry($request) {
+	
+	$locMapper = new Mappers_Location();
+ 
+		if( (isset($request['cntrycode']) && !empty($request['cntrycode'])))    
+		{
+			$loclist =$locMapper->listLocationByCountry($request['cntrycode']);
+		}
+		return $loclist;
+		
+
+	}
+
+}
+?>

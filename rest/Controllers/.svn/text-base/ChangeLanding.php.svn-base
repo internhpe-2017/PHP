@@ -1,0 +1,61 @@
+<?php
+
+class Controllers_ChangeLanding extends Controllers_Abstract {
+	const IS_PUBLIC = 1;
+ 	public function validate(  )
+	{
+  		$this->validation = new Library_Validation();	 
+		//$this->validation->add_fields($this->request['params']['term'], 'req', 'Please Enter term',0);
+		//$request['modname']
+  		return $this->validation->validate();
+ 	}
+
+	public function isPublic() {
+		return self::IS_PUBLIC;
+	}
+
+	public function get() {
+		$landing = new Services_Landing();
+ 		$this->error=$this->validate();
+ 		
+		if($this->error['value'])
+		{ 
+			$this->response=$this->error['error'] ;
+		}
+		else
+		{
+ 		$clist= $landing->changelanding($this->request['params']);
+ 		$this->response =$clist;
+ 		}
+ 		
+ 		$this->responseStatus = 200;
+	}
+
+
+	public function post() {
+		$landing = new Services_Landing();
+ 		$this->error=$this->validate();
+ 		
+		if($this->error['value'])
+		{ 
+			$this->response=$this->error['error'] ;
+		}
+		else
+		{
+ 		$clist= $landing->changelanding($this->request['params']);
+ 		$this->response =$clist;
+ 		}
+ 		 
+ 		$this->responseStatus = 200;
+ 	}
+	// @codeCoverageIgnoreStart
+	public function put() {
+		return null;
+	}
+
+	public function delete() {
+		return null;
+	}
+	// @codeCoverageIgnoreEnd
+}
+?>

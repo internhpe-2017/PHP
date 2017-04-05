@@ -1,0 +1,557 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/commondays/!svn/ver/2183/trunk/rest/Controllers
+END
+CntryPersonalTab.php
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/commondays/!svn/ver/2167/trunk/rest/Controllers/CntryPersonalTab.php
+END
+CDVersion.php
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/CDVersion.php
+END
+CustOrganisation.php
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/commondays/!svn/ver/1828/trunk/rest/Controllers/CustOrganisation.php
+END
+OrgCorporateTab.php
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/commondays/!svn/ver/2167/trunk/rest/Controllers/OrgCorporateTab.php
+END
+ListCustCountry.php
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/ListCustCountry.php
+END
+GetCountryEventDateList.php
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/GetCountryEventDateList.php
+END
+ListCountry.php
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/commondays/!svn/ver/1966/trunk/rest/Controllers/ListCountry.php
+END
+GetOrganisationType.php
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/commondays/!svn/ver/2008/trunk/rest/Controllers/GetOrganisationType.php
+END
+CountryEventDateList.php
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/commondays/!svn/ver/1828/trunk/rest/Controllers/CountryEventDateList.php
+END
+Abstract.php
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/Abstract.php
+END
+ReligionEventDateList.php
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/ReligionEventDateList.php
+END
+CustReligion.php
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/commondays/!svn/ver/1996/trunk/rest/Controllers/CustReligion.php
+END
+SearchOrganisationByLocation.php
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/SearchOrganisationByLocation.php
+END
+RSS.php
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/RSS.php
+END
+LocOrganisationEventDates.php
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/LocOrganisationEventDates.php
+END
+OrganisationEventDates.php
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/commondays/!svn/ver/1884/trunk/rest/Controllers/OrganisationEventDates.php
+END
+GetOrganisationByLocation.php
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/GetOrganisationByLocation.php
+END
+OrgPersonalTab.php
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/commondays/!svn/ver/2167/trunk/rest/Controllers/OrgPersonalTab.php
+END
+SearchOrganisation.php
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/SearchOrganisation.php
+END
+Register.php
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/Register.php
+END
+MyContacts.php
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/MyContacts.php
+END
+GetAdvertise.php
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/GetAdvertise.php
+END
+ListGroup.php
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/commondays/!svn/ver/2183/trunk/rest/Controllers/ListGroup.php
+END
+OrganisationEventDateList.php
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/OrganisationEventDateList.php
+END
+ConfirmationMail.php
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/commondays/!svn/ver/1828/trunk/rest/Controllers/ConfirmationMail.php
+END
+SendMail.php
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/SendMail.php
+END
+GetOrganisation.php
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/GetOrganisation.php
+END
+SearchLocation.php
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/SearchLocation.php
+END
+DoSync.php
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/DoSync.php
+END
+UpdateAccount.php
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/UpdateAccount.php
+END
+UpdateProfile.php
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/UpdateProfile.php
+END
+FTags.php
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/commondays/!svn/ver/2053/trunk/rest/Controllers/FTags.php
+END
+LocCntStReligionEventDates.php
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/commondays/!svn/ver/2104/trunk/rest/Controllers/LocCntStReligionEventDates.php
+END
+Login.php
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/commondays/!svn/ver/1991/trunk/rest/Controllers/Login.php
+END
+ChangePassword.php
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/commondays/!svn/ver/1828/trunk/rest/Controllers/ChangePassword.php
+END
+UserAvailability.php
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/UserAvailability.php
+END
+Logout.php
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/commondays/!svn/ver/1965/trunk/rest/Controllers/Logout.php
+END
+ListAllCountryFest.php
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/commondays/!svn/ver/2123/trunk/rest/Controllers/ListAllCountryFest.php
+END
+ListState.php
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/commondays/!svn/ver/1966/trunk/rest/Controllers/ListState.php
+END
+News.php
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/News.php
+END
+ReliEventDates.php
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/commondays/!svn/ver/1828/trunk/rest/Controllers/ReliEventDates.php
+END
+SentFeedbackMail.php
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/SentFeedbackMail.php
+END
+ChangeLanding.php
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/commondays/!svn/ver/1899/trunk/rest/Controllers/ChangeLanding.php
+END
+CntryEventDates.php
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/commondays/!svn/ver/1828/trunk/rest/Controllers/CntryEventDates.php
+END
+ListReligionByCountry.php
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/ListReligionByCountry.php
+END
+EventDateDetails.php
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/EventDateDetails.php
+END
+DoCntryWidget.php
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/commondays/!svn/ver/2148/trunk/rest/Controllers/DoCntryWidget.php
+END
+TellFriend.php
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/TellFriend.php
+END
+ListCustOrganisation.php
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/ListCustOrganisation.php
+END
+DisplayFaq.php
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/DisplayFaq.php
+END
+FTagsByCntryYear.php
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/commondays/!svn/ver/2057/trunk/rest/Controllers/FTagsByCntryYear.php
+END
+SendForgotPasswordMail.php
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/SendForgotPasswordMail.php
+END
+SentFInviteMail.php
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/SentFInviteMail.php
+END
+FacebookLogin.php
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/FacebookLogin.php
+END
+CustCountry.php
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/commondays/!svn/ver/1828/trunk/rest/Controllers/CustCountry.php
+END
+Country.php
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/commondays/!svn/ver/1828/trunk/rest/Controllers/Country.php
+END
+ListCustReligion.php
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/commondays/!svn/ver/1960/trunk/rest/Controllers/ListCustReligion.php
+END
+ActivationMail.php
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/commondays/!svn/ver/1824/trunk/rest/Controllers/ActivationMail.php
+END
+Updates.php
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/Updates.php
+END
+DoWidget.php
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/DoWidget.php
+END
+OrganisationProfileByName.php
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/commondays/!svn/ver/1824/trunk/rest/Controllers/OrganisationProfileByName.php
+END
+BannerAdvertise.php
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/commondays/!svn/ver/1969/trunk/rest/Controllers/BannerAdvertise.php
+END
+ListDefaultState.php
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/commondays/!svn/ver/1949/trunk/rest/Controllers/ListDefaultState.php
+END
+CntryPreferanceTab.php
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/commondays/!svn/ver/2167/trunk/rest/Controllers/CntryPreferanceTab.php
+END
+DoReliWidget.php
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/DoReliWidget.php
+END
+ForgotPassword.php
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/ForgotPassword.php
+END
+CntryGeneralTab.php
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/commondays/!svn/ver/2169/trunk/rest/Controllers/CntryGeneralTab.php
+END
+GetLocationFromIP.php
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/GetLocationFromIP.php
+END
+ResentActivationMail.php
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/ResentActivationMail.php
+END
+LocReligionEventDates.php
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/commondays/!svn/ver/2018/trunk/rest/Controllers/LocReligionEventDates.php
+END
+ChangeModule.php
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/commondays/!svn/ver/1828/trunk/rest/Controllers/ChangeModule.php
+END
+ActivateUser.php
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/ActivateUser.php
+END
+LocationLookup.php
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/LocationLookup.php
+END
+ReligionLookup.php
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/commondays/!svn/ver/1960/trunk/rest/Controllers/ReligionLookup.php
+END
+ListReligion.php
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/commondays/!svn/ver/2176/trunk/rest/Controllers/ListReligion.php
+END
+ListDefaultCountry.php
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/commondays/!svn/ver/1949/trunk/rest/Controllers/ListDefaultCountry.php
+END
+CntryCorporateTab.php
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/commondays/!svn/ver/2167/trunk/rest/Controllers/CntryCorporateTab.php
+END
+AddOrganisation.php
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/commondays/!svn/ver/1824/trunk/rest/Controllers/AddOrganisation.php
+END
+Tester.php
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/commondays/!svn/ver/2181/trunk/rest/Controllers/Tester.php
+END
+OrgPreferanceTab.php
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/commondays/!svn/ver/2167/trunk/rest/Controllers/OrgPreferanceTab.php
+END
+GetDateInfoYear.php
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/GetDateInfoYear.php
+END
+UpdateLocation.php
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/UpdateLocation.php
+END
+SentICSMail.php
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/SentICSMail.php
+END
+AddCountry.php
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/commondays/!svn/ver/1828/trunk/rest/Controllers/AddCountry.php
+END
+OrgGeneralTab.php
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/commondays/!svn/ver/2166/trunk/rest/Controllers/OrgGeneralTab.php
+END
+OrganisationProfile.php
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/OrganisationProfile.php
+END
+SendActivationMail.php
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/SendActivationMail.php
+END
+FTagsByCntry.php
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/commondays/!svn/ver/2053/trunk/rest/Controllers/FTagsByCntry.php
+END
+AddReligion.php
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/AddReligion.php
+END
+LocationLookupByCountry.php
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/LocationLookupByCountry.php
+END
+ListCountryFest.php
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/commondays/!svn/ver/2123/trunk/rest/Controllers/ListCountryFest.php
+END
+FeedbackMail.php
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/commondays/!svn/ver/1823/trunk/rest/Controllers/FeedbackMail.php
+END

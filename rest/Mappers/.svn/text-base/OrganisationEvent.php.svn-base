@@ -1,0 +1,45 @@
+<?php
+
+
+class Mappers_OrganisationEvent {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_OrganisationEvent();
+	}
+
+
+	public function deleteOrganisationEvent($orgid) {
+		return $this->db->deleteOrganisationEvent($orgid);
+	}
+
+
+	public function updateOrganisationEvent ($orgid) {
+	return $this->db->updateOrganisationEvent ($orgid);
+	}
+
+	public function findOrganisationEvent ($orgid) {
+	return $this->db->findOrganisationEvent ($orgid);
+	}
+
+	public function findOrganisationEventDates($orgid,$year,$uid) {
+		return $this->db->findOrganisationEventDates($orgid,$year,$uid);
+	}
+
+	public function createOrganisationEvent($jdata) {
+		return $this->db->createOrganisationEvent ($jdata);
+	}
+
+
+	public function findOrganisationEventList($orgdetail,$year) {
+		return $this->db->findOrganisationEventList($orgdetail,$year);
+	}
+ 
+	public function listOrganisationEvent($orgid) {
+		return $this->db->listOrganisationEvent ($jdata);
+
+
+ 	}
+
+}
+?>

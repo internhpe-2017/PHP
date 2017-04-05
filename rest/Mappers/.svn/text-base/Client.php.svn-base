@@ -1,0 +1,66 @@
+<?php
+
+
+
+class Mappers_Client   {
+	private $db;
+
+	public function __construct() {
+
+		$this->db = new Database_Db_Client();
+	}
+
+	public function findByIp($ip) {
+		//$client = $this->findInCache($ip);
+		//if(false === $client) {
+			return $this->db->findByIp($ip);
+			//if(false !== $client) {
+			//	$this->addInCache($ip, $client);
+			//}
+		//}
+
+	}
+
+	public function loginByHttpBasic($client_id, $client_password ) {
+		//$client = $this->findInCache($client_name . '^' . $client_password);
+		//$client = $this->findInCache($client_name );
+		//if(false === $client) {
+			return  $this->db->loginByHttpBasic($client_id, $client_password );
+			//if(false !== $client) {
+			//	$this->addInCache($client_name );
+			//}
+		//}
+
+	}
+
+	public function loginByKT($client_id, $client_password ) {
+		//$client = $this->findInCache($client_name . '^' . $client_password);
+		//$client = $this->findInCache($client_name );
+		//if(false === $client) {
+			return  $this->db->loginByKT($client_id, $client_password );
+			//if(false !== $client) {
+			//	$this->addInCache($client_name );
+			//}
+		//}
+
+	}
+
+	public function findInCache($key) {
+		try {
+			$result = Mappers_Cache::getCache()->find($key);
+		} catch(Exception $e) {
+			$result = false;
+		}
+		return $result;
+	}
+
+	public function addInCache($key, $value) {
+		try {
+			$result = Mappers_Cache::getCache()->add($key, $value);
+		} catch(Exception $e) {
+			$result = false;
+		}
+		return $result;
+	}
+}
+?>

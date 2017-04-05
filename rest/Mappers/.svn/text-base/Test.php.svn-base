@@ -1,0 +1,86 @@
+<?php
+ class Mappers_Test {
+	private $db;
+
+	public function __construct() {
+		 //$this->db = new Database_Db_Widget();
+		  $this->db = new Database_Db_User();
+		
+		//$this->db = new Database_Db_Country();
+		//$this->orgcustMapper = new Mappers_OrganisationCustomisation();
+		   
+	}
+
+	 
+	public function test() {
+	
+	
+	  $km=new  Library_KM_AuthUtility();
+	   
+	  return "";
+		return  $km->hash('CONNECTDA','4564');
+	 
+	 
+		 
+ 		 //$cmpylist=$this->orgcustMapper->listOrganisationsDataByGraphToken('M9Qxii93KNFLzs-NNzIwNAIA');
+ 		// return $cmpylist ;
+ 		 
+
+ 
+ 		 
+		//$cmpylist=$this->orgcustMapper->listOrganisationsByUserCustomisation('w@t.com',2012);
+		 //$cmpylist=$this->db->doWidget('IND','','Bangalore','1','2012','0','4','','');
+		   //   $cmpylist=$this->db->getLabelData( "1,3");
+		    
+		   // $cmpylist=$this->db->getXaxisData( "1,3");
+		    // $cmpylist=$this->db->findUserProfile( "w@t.com","12345");
+		  //$cmpylist=$this->db->getLabelData( "1,3");
+		// $cmpylist=$this->db->listCountry( );
+		//  $cmpylist=$this->db->listCountryDetails( );
+		 
+		
+		 
+		 
+		/*$i=1;
+		if (is_object($cmpylist)) {
+			foreach (get_object_vars($cmpylist) as $key => $val) 		
+			{
+
+			  if($key=='sel')
+			  {
+
+			    $loop = count((array)$val); 
+
+			
+
+			    foreach (get_object_vars($val) as $key => $val) 
+			    {
+
+
+				if($i==$loop)
+				{
+					$org_list1=$org_list1.''.$key.'';
+				}
+				else
+				{
+					$org_list1=$org_list1.''.$key.''.',';
+				}
+
+				$i=$i+1; 
+			    }
+
+			  }
+
+			}			 
+		    }
+		   return $org_list1;
+		   */
+		 //return $this->db->getLabelData("1,2");
+		 //return $this->db->scenario1('w@t.com',2012);
+		 
+		 
+	}
+
+
+}
+?>

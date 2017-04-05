@@ -1,0 +1,72 @@
+<?php
+
+
+class Services_OrgTabs{
+
+ 
+	public function __construct() {
+  	}
+ 	
+	public function get($request) 
+	{
+
+ 		$tabinfo='';
+		return $tab;
+ 	}
+
+	public function getOrgGenTab($request) {
+		$tabMapper = new Mappers_OrgTabs();
+		if(  (isset($request['yr']) && !empty($request['yr']) )&&  (isset($request['cc']) && !empty($request['cc']) )) 
+		{
+			$tab = $tabMapper->getOrgGenTab(mysql_real_escape_string($request['yr']),mysql_real_escape_string($request['cc']));
+		}
+		return $tab ;
+	}
+
+
+	public function getOrgPersTab($request) {
+		$tabMapper = new Mappers_OrgTabs();
+      //if( (isset($request['orgid']) && !empty($request['orgid'])) &&			(isset($request['year']) && !empty($request['year'])))
+      {
+
+		   $tab = $tabMapper->getOrgPersTab();
+		   return $tab;
+	  }
+	 
+
+	  return $tab ;
+	}
+
+
+	public function getOrgCorpTab($request) {
+		$tabMapper = new Mappers_OrgTabs();
+      //if( (isset($request['orgid']) && !empty($request['orgid'])) &&			(isset($request['year']) && !empty($request['year'])))
+      {
+
+		   $tab = $tabMapper->getOrgCorpTab();
+		   return $tab;
+	  }
+
+	  return $tab ;
+	}
+
+
+
+	public function getOrgPreferanceTab($request) {
+		$tabMapper = new Mappers_OrgTabs();
+      //if( (isset($request['orgid']) && !empty($request['orgid'])) &&			(isset($request['year']) && !empty($request['year'])))
+      {
+
+		   $tab = $tabMapper->getOrgPreferanceTab();
+		   return $tab;
+	  }
+
+	  return $tab ;
+	}
+
+
+
+
+
+}
+?>

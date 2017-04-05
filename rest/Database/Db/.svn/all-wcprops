@@ -1,0 +1,209 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/commondays/!svn/ver/2190/trunk/rest/Database/Db
+END
+ReligionCustomisation.php
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/commondays/!svn/ver/2195/trunk/rest/Database/Db/ReligionCustomisation.php
+END
+CDVersion.php
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/commondays/!svn/ver/1007/trunk/rest/Database/Db/CDVersion.php
+END
+Country.php
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/commondays/!svn/ver/2195/trunk/rest/Database/Db/Country.php
+END
+Abstract.php
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/commondays/!svn/ver/249/trunk/rest/Database/Db/Abstract.php
+END
+Updates.php
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/commondays/!svn/ver/1736/trunk/rest/Database/Db/Updates.php
+END
+CountryEvent.php
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/commondays/!svn/ver/2195/trunk/rest/Database/Db/CountryEvent.php
+END
+RSS.php
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/commondays/!svn/ver/2195/trunk/rest/Database/Db/RSS.php
+END
+CntryTabs.php
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/commondays/!svn/ver/2169/trunk/rest/Database/Db/CntryTabs.php
+END
+ReligionEvent.php
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/commondays/!svn/ver/2106/trunk/rest/Database/Db/ReligionEvent.php
+END
+User.php
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/commondays/!svn/ver/2195/trunk/rest/Database/Db/User.php
+END
+Client.php
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/commondays/!svn/ver/2195/trunk/rest/Database/Db/Client.php
+END
+OrganisationCustomisation.php
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/commondays/!svn/ver/2195/trunk/rest/Database/Db/OrganisationCustomisation.php
+END
+Widget.php
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/commondays/!svn/ver/2195/trunk/rest/Database/Db/Widget.php
+END
+Advertise.php
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/commondays/!svn/ver/2195/trunk/rest/Database/Db/Advertise.php
+END
+Sourcing.php
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/commondays/!svn/ver/1007/trunk/rest/Database/Db/Sourcing.php
+END
+DateInfo.php
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/commondays/!svn/ver/1606/trunk/rest/Database/Db/DateInfo.php
+END
+Group.php
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/commondays/!svn/ver/2183/trunk/rest/Database/Db/Group.php
+END
+SendMail.php
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/commondays/!svn/ver/2195/trunk/rest/Database/Db/SendMail.php
+END
+Organisation.php
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/commondays/!svn/ver/1884/trunk/rest/Database/Db/Organisation.php
+END
+OrganisationEvent.php
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/commondays/!svn/ver/1970/trunk/rest/Database/Db/OrganisationEvent.php
+END
+WidgetReli.php
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/commondays/!svn/ver/2195/trunk/rest/Database/Db/WidgetReli.php
+END
+UserCustomisation.php
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/commondays/!svn/ver/2071/trunk/rest/Database/Db/UserCustomisation.php
+END
+OrgTabs.php
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/commondays/!svn/ver/2167/trunk/rest/Database/Db/OrgTabs.php
+END
+WidgetCntry.php
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/commondays/!svn/ver/2195/trunk/rest/Database/Db/WidgetCntry.php
+END
+FTags.php
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/commondays/!svn/ver/2057/trunk/rest/Database/Db/FTags.php
+END
+AbstractReadOnlyDB.php
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/commondays/!svn/ver/2190/trunk/rest/Database/Db/AbstractReadOnlyDB.php
+END
+Religion.php
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/commondays/!svn/ver/2195/trunk/rest/Database/Db/Religion.php
+END
+Location.php
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/commondays/!svn/ver/2200/trunk/rest/Database/Db/Location.php
+END
+News.php
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/commondays/!svn/ver/1736/trunk/rest/Database/Db/News.php
+END
+State.php
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/commondays/!svn/ver/2195/trunk/rest/Database/Db/State.php
+END
+UserEvent.php
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/commondays/!svn/ver/345/trunk/rest/Database/Db/UserEvent.php
+END
+Mail.php
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/commondays/!svn/ver/1783/trunk/rest/Database/Db/Mail.php
+END
+CountryCustomisation.php
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/commondays/!svn/ver/2195/trunk/rest/Database/Db/CountryCustomisation.php
+END
+EventDetails.php
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/commondays/!svn/ver/1730/trunk/rest/Database/Db/EventDetails.php
+END

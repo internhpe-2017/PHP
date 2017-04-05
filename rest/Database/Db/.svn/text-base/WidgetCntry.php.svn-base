@@ -1,0 +1,696 @@
+<?php
+
+class Database_Db_WidgetCntry extends Database_Db_Abstract {
+
+ 	
+	private $cntry_list='';
+	public function __construct() {
+		parent::__construct();
+		 
+	}
+	
+
+
+	public function doWidget($cntry,$year,$flag,$scenario,$user_id,$graph_share_token) {
+	
+ 
+			 if(!empty($year)) 
+			     $year=$year;
+			 else
+			     $year=$_SESSION['year'];	
+
+			 if($year=='Year' || $year=='') 		    
+				$year=$_SESSION['year'];		
+
+ 
+ 
+			
+			 switch ($scenario) {
+			     case 9:
+				 $cntry_list=$this->scenario9($year) ;		          
+				 break;
+			     case 10:
+				 $cntry_list=$this->scenario10($year,$cntry) ;
+				 break;
+			     case 11:
+				 $cntry_list=$this->scenario11($year,$user_id) ;
+				 break;
+			     case 12:
+				 $cntry_list=$this->scenario12($year,$cntry,$user_id) ;
+				 break;
+			     case 13:
+				 $cntry_list=$this->scenario13($graph_share_token) ;
+				 break;
+			 
+
+			 }
+			 
+				//  echo   $scenario.'----'.$user_id.$year.$cntry_list; 
+ 
+					$tok =preg_split('","',$cntry_list); 
+					//print_r($cntry_list );
+					$tokcount=count($tok); 
+					$ploting['plt'][0][0]['data'][0]= $this->getLabelData($cntry_list,$year,$user_id);	
+					$yaxis[0]=$this->getYaxisData($cntry_list,$year,$user_id); 
+
+
+
+
+					//this should be calulated 
+					$ymax=array("data"=>array($tokcount*6));
+					$yearg=array($year);
+					//hardcoding
+					$yzoomRange=array("1", "5");
+					$yautoscaleMargin=array("yautoscaleMargin"=>'0.001');
+					$xautoscaleMargin=array("xautoscaleMargin"=>'0.001');
+
+					//x axis//hardcoding
+					$xmax=array("data"=>array("25"));
+					$xzoomRange= array("1", "0.1");
+
+					//echo $cntry_list;
+					$xaxis[0]=$this->getXaxisData($cntry_list,$year,$user_id);
+
+					$xdatacount=$this->getXDataCount($cntry_list,$year,$user_id);
+
+					//echo $xdatacount.'------';
+
+					//   echo  $xaxis[0]; print_r($xdatacount);
+					//series
+					$seriesdata['series']['lines']=array('show'=>'true');
+					$seriesdata['series']['points']=array('show'=>'true');
+					$seriesdata['series']=array('shadowSize'=>0);
+
+					$griddata['grid']=array('hoverable'=>'true');
+					$griddata['grid']=array('clickable'=>'true');
+					$griddata['grid']=array('backgroundColor'=>'#ffffff');
+
+					$linedata=array('show'=>'true');
+					$pointdata=array('show'=>'true');
+					$selectiondata=array('mode'=>'xy');
+					$zoomdata=array('interactive'=>'true');
+					$pandata=array('interactive'=>'true');
+					$colorsdata=$this->getColorData();
+					$legenddata=$this->getLegend();
+
+					$loc='';
+			 
+			
+			return array("gd"=>$griddata,"yearg"=>$yearg,"loc"=>$loc,"sd"=>$seriesdata,"xd"=>$xaxis, "xm"=>$xmax, "xz"=>$xzoomRange,"xcount"=>$xdatacount,  "ycount"=>$tokcount,"yd"=>$yaxis, "ym"=>$ymax, "yz"=>$yzoomRange,"xs"=>$xautoscaleMargin, "ys"=>$yautoscaleMargin,"ds"=>$ploting );
+
+			 
+	
+	}
+	
+	
+	 
+
+
+	public function getLabelData($cntry,$year,$user_id)
+	{  
+  		 
+  		
+  		 
+  		 
+		 if(trim($user_id)!="" && trim($cntry)!="")
+		 {
+		 
+		 // echo '11'.$cntry;
+		
+	 		$rs=$this->db->query('select ifnull(concat("[",group_concat(cntry_hols_json),"]"),"") as data from  country c,year_country_prof yc	 where yc.year=:year and c.country_code in (:cntryid)  and c.country_code=yc.country_code and yc.user_id=:userid and is_disabled=0 and is_deleted=0 order by country_name');
+	 		$rs->bindValue(':userid', $user_id);
+	 		$rs->bindRaw(':cntryid', $cntry);
+		 
+		 }
+
+		 
+		 if( trim($user_id)=="" ) 
+		 {
+ 			 
+ 			 
+			$sql= 'select ifnull(concat("[",group_concat(cntry_hols_json),"]"),"") as data from  country c,year_country_prof yc	 where yc.year=:year  and c.country_code=yc.country_code and c.country_code in (:cntryid)  and yc.user_id=:userid and is_disabled=0 and is_deleted=0   order by country_name';	
+			$rs = $this->db->query($sql);
+			$rs->bindRaw(':cntryid', $cntry);			
+			$rs->bindValue(':userid', 'system');
+		 }
+		 
+		 
+  		$rs->bindValue(':year', $year);
+ 		
+		$handlerres=$rs->execute(); 
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		} 
+
+		$otlist=$rs->value('data');
+
+		$rs->freeResult();
+		$decoded= json_decode($otlist,true); 
+		
+		
+
+
+		$j=0;
+
+		if($decoded=='')
+		{
+		   $array3 = array("No Data Found");
+		}
+		else
+		{
+			$j=0;
+			$i=1;
+			$data=array();
+			foreach($decoded   as $key=>$item)
+			{  
+				foreach($decoded[$j]['dates']  as $key=>$item)	
+				{
+					$key = strtotime(str_replace('/','-',$key));
+					if (!array_key_exists($key, $data))
+					{
+						array_push($data,$key);	
+						$i=$i+1;
+					}
+				}
+				$j=$j+1; 
+			} 
+			
+			sort($data);
+			$data2=array_values(array_unique($data));  //all dates 
+			$len=sizeof($data2);
+			// return $data2;
+			$j=0; 	
+			$array3 = array(); 
+			foreach($decoded   as $key=>$item)
+			{ 
+
+				$cntryid= $decoded[$j]['countryid'] ;
+				$orgevcnt= $decoded[$j]['cntryevcnt'] ;
+
+				$partialdate=array();
+				foreach($decoded[$j]['dates']  as $key=>$item) //15 partial dates
+				{ 
+					array_push( $partialdate,  strtotime(str_replace('/','-',$key)))	; 
+				}
+				// return $a;
+				$keys = array_keys($decoded[$j]['dates']); // 01/jan/2012
+
+				for($p=0,$loop=1; $p<$len;$p++,$loop++)  // all dates loop
+				{
+					  $foundval=array_search(  $data2[$p] ,$partialdate);
+
+					  if(strlen($foundval)==0 )
+					  {
+						$value=$decoded[$j]['dates'][$keys[$foundval]];  // label and advs
+						$data1= array("data"=> array(array($loop,null)), "cntryevcnt"=>$orgevcnt,"datedesc"=>$value['description'],"advdesc"=>$value['advert'],"label"=>'<div id="wadsid" class="wads"><div style="float:left;margin:1px;"><a id="'.$p.'"  href="'.$value['advert_href'].'"><img src="'.Config::SITE_HTTP_USER_PATH.$value['advert_img'].'" height="70" width="100" border=0 alt="'.$value['advert'].'"></a></div><div style="float:right">'.$value['description'].'</div></div>');
+					  }
+					  else
+					  {
+					  	$tempval=($j+1);
+
+						$value=$decoded[$j]['dates'][$keys[$foundval]];  // label and advs
+						$data1= array("data"=> array(array($loop,$tempval)), "cntryevcnt"=>$orgevcnt,"datedesc"=>$value['description'],"advdesc"=>$value['advert'],"label"=>'<div  id="wadsid" class="wads"><div style="float:left;margin:1px;"><a id="'.$p.'"  href="'.$value['advert_href'].'"><img src="'.Config::SITE_HTTP_USER_PATH.$value['advert_img'].'" height="70" width="100" border=0 alt="'.$value['advert'].'"></a></div><div style="float:right">'.$value['description'].'</div></div>');
+					  }
+					  array_push($array3,$data1);   
+					 
+
+				} 				 
+				$j=$j+1;
+			} 
+		}
+		
+		
+		 return $array3;
+
+	 } 
+
+ 	 
+
+
+	public function getXDataCount($cntry,$year,$user_id)
+	{ 
+ 			$rs='';
+			 if(trim($cntry)!="")
+			 {
+				if(empty($user_id))
+			       {
+				$rs=$this->db->query('select count(distinct event_date) as cnt  from user_cust_country_event where country_code in (:cntryid) and   year=:year and user_id=:userid and is_deleted=0 order by country_code');
+				 
+
+				$rs->bindRaw(':cntryid', $cntry);
+				$rs->bindValue(':userid', 'system');
+				$rs->bindValue(':year', $year);
+				}
+				else
+				{
+				$rs=$this->db->query('select count(distinct event_date) as cnt  from user_cust_country_event where country_code in (:cntryid) and   year=:year and user_id=:userid  and is_deleted=0  order by country_code');
+				 
+
+				$rs->bindRaw(':cntryid', $cntry);
+				$rs->bindValue(':userid', $user_id);
+				$rs->bindValue(':year', $year);
+				
+				}
+				//echo '77'.$user_id.$cntry;
+
+			 }
+
+		 
+		 	if(!$rs)
+		 	{
+				$otlist= "Table does not exists"; 
+
+				// die(mysql_error()); 
+			}
+			else
+			{
+
+				$handlerres=$rs->execute();
+
+				if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+				return false;
+				} 
+
+				$otlist=$rs->value('cnt'); 
+				$rs->freeResult();			
+			}
+			
+						   
+		return $otlist;
+	}
+
+
+	//[[3,"arm_Bangalore"],[1,"nokia_bangalore"]]  here 1,3 are organization id 
+ 	//[companyid,companyname] 
+ 
+
+
+
+
+	public function getYaxisData($cntry,$year,$user_id)
+	{ 
+	
+	  
+	
+	
+		 if(trim($user_id)!="" && trim($cntry)!="")
+		 {
+	 		$rs=$this->db->query('select ifnull(concat("[",group_concat(cntry_hols_json),"]"),"") as data from  country c,year_country_prof yc	 where yc.year=:year and c.country_code in (:cntryid)  and c.country_code=yc.country_code and yc.user_id=:userid  and is_deleted=0 and is_disabled=0 order by country_name');
+	 		$rs->bindValue(':userid', $user_id);
+	 		$rs->bindRaw(':cntryid', $cntry);
+		 
+		 }
+
+		 
+		 if( trim($user_id)=="" ) 
+		 {
+ 			
+ 			//echo '66'.$user_id.$cntry;
+			$sql= 'select ifnull(concat("[",group_concat(cntry_hols_json),"]"),"") as data from  country c,year_country_prof yc	 where yc.year=:year  and c.country_code=yc.country_code and c.country_code in (:cntryid) and yc.user_id=:userid  and is_deleted=0 and is_disabled=0 order by country_name';	
+			$rs = $this->db->query($sql);
+			$rs->bindValue(':userid', 'system');
+			$rs->bindRaw(':cntryid', $cntry);		 
+		 }
+            
+                $rs->bindValue(':year', $year);
+     
+		$handlerres=$rs->execute(); 
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		} 
+
+		$otlist=$rs->value('data'); 
+		// echo ( $otlist);
+		
+  
+		$rs->freeResult();
+		$decoded= json_decode($otlist,true); 
+		 // echo '888'.$otlist;
+		//print_r( $decoded);
+		$json_o='[';
+		$j=0;
+		$i=1;
+		$loop= count($decoded); 
+		if($decoded=='')
+		{
+		   $json_o=$json_o.'"No Data Found"'; 
+		}
+		else
+		{
+			//return $loop;
+			foreach($decoded   as $key=>$item)
+			{ 
+			   $cntryid= $decoded[$j]['countryid'] ;
+			   $orgname= $decoded[$j]['country'] ;
+			   if($i==$loop)
+			   	$json_o=$json_o.'['.$i.',"'.$orgname.'"]';
+			   else
+			   	$json_o=$json_o.'['.$i.',"'.$orgname.'"],';
+
+			   $j=$j+1;
+			    $i=$i+1;
+			}
+		}
+		$json_o=$json_o.']';
+
+
+
+		$arr1=json_decode($json_o);
+
+
+		 $len=sizeof($arr1);
+
+ 
+
+		return $arr1;
+
+
+
+	 } 
+
+ 	//[dayofyear,"2date"]
+	// output :[[1,"11Jan"],[2,"12Jan"],[3,"16Jan"],[4,"14Feb"],[5,"16Feb"],[6,"21Feb"],[7,"22Feb"],[8,"23Feb"],[9,"10Jul"],[10,"21Dec"],[11,"10Jan"],[2,"12Jan"],[3,"16Jan"],[12,"25Jan"],[13,"15Feb"],[14,"7Mar"],[15,"16May"],[16,"18May"],[17,"3Dec"]]
+ 
+ 
+	public function getXaxisData($cntry,$year,$user_id)
+	{ 
+  	
+	
+	  
+	 
+		 if(trim($user_id)!="" && trim($cntry)!="")
+		 {
+	 		$rs=$this->db->query('select ifnull(concat("[",group_concat(cntry_hols_json),"]"),"") as data from  country c,year_country_prof yc	 where yc.year=:year and c.country_code in (:cntryid)  and c.country_code=yc.country_code and yc.user_id=:userid  and is_deleted=0 and is_disabled=0 order by country_name');
+	 		$rs->bindValue(':userid', $user_id);
+	 		$rs->bindRaw(':cntryid', $cntry);
+		 
+		 }
+
+		 
+		 if( trim($user_id)=="" ) 
+		 {
+		// echo '555'.$user_id.$cntry;
+ 			 
+			$sql= 'select ifnull(concat("[",group_concat(cntry_hols_json),"]"),"") as data from  country c,year_country_prof yc	 where yc.year=:year  and c.country_code=yc.country_code and c.country_code in (:cntryid)  and is_deleted=0 and is_disabled=0  order by country_name';	
+			$rs = $this->db->query($sql);
+			$rs->bindValue(':userid', 'system');
+			$rs->bindRaw(':cntryid', $cntry);		 
+		 }
+		 
+ 		$rs->bindValue(':year', $year);
+		$handlerres=$rs->execute(); 
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+		return false;
+		} 
+
+		$otlist=$rs->value('data');
+		
+ 
+
+		$rs->freeResult();
+		$decoded= json_decode($otlist,true); 
+		
+		
+		$monthnames = array('01'=>'Jan','02'=>'Feb','03'=>'Mar','04'=>'Apr','05'=>'May','06'=>'Jun','07'=>'Jul','08'=>'Aug','09'=>'Sep','10'=>'Oct','11'=>'Nov','12'=>'Dec');
+		$monthnum = array('Jan'=>'01','Feb'=>'02','Mar'=>'03','Apr'=>'04','May'=>'05','Jun'=>'06','Jul'=>'07','Aug'=>'08','Sep'=>'09','Oct'=>'10','Nov'=>'11','Dec'=>'12');
+
+ 		 // return $decoded;
+		   
+	 	if($decoded=='')
+		{
+		
+		   $array3 = array("No Data Found");
+	 	}
+		else
+		{
+		
+ 
+			$j=0;
+			$i=1;
+		 
+			$data=array();
+			foreach($decoded   as $key=>$item)
+			{  
+				foreach($decoded[$j]['dates']  as $key=>$item)	
+				{
+					$key = strtotime(str_replace('/','-',$key));
+					if (!array_key_exists($key, $data))
+					{
+						array_push($data,$key);	
+						$i=$i+1;
+					}
+				}
+				$j=$j+1; 
+			} 
+			sort($data);
+			$data2=array_values(array_unique($data));  //all dates 
+ 			$len=sizeof($data2);
+ 			$j=0;  
+ 			$array3 = array();
+ 			foreach($decoded   as $key=>$item)
+			{ 
+
+				$cntryid= $decoded[$j]['country'] ;
+ 				$partialdate=array();
+				foreach($decoded[$j]['dates']  as $key=>$item) //15 partial dates
+				{ 
+					array_push( $partialdate,  strtotime(str_replace('/','-',$key)))	; 
+				}
+ 				$keys = array_keys($decoded[$j]['dates']); // 01/jan/2012
+ 				for($p=0,$loop=1; $p<$len;$p++,$loop++)  // all dates loop
+				{
+  					  $foundval=array_search(  $data2[$p] ,$partialdate);
+    					  if(strlen($foundval)!=0 )
+					  {
+						$value= $keys[$foundval];  // label and advs   
+						$value = explode('/',  $value); 
+						$d = $value[0]; //02
+						$M = $value[1]; //Jan
+						$Y = $value[2]; //2012						 
+						$value =  $d.$M ; 
+ 						$data1=array($loop,''.$value.''); 
+					  }
+					  else
+					  {
+						 
+						$data1=array($loop,'');
+					  }
+					  array_push($array3,$data1);   
+ 					  
+				} 
+				 
+				$j=$j+1;
+			}			 
+ 		 }
+ 		//echo $cntry.$year.$user_id;
+ 		  //return json_decode('[[1,"02Jan"],[2,"05Jan"],[3,""],[4,"11Jan"],[5,"12Jan"],[6,"16Jan"],[7,""],[8,"02Feb"],[9,"14Feb"],[10,""],[11,"16Feb"],[12,"21Feb"],[13,"22Feb"],[14,"23Feb"],[15,""],[16,"08May"],[17,"10May"],[18,""],[19,""],[20,"10Jul"],[21,""],[22,"21Dec"],[1,""],[2,""],[3,"10Jan"],[4,""],[5,"12Jan"],[6,"16Jan"],[7,"25Jan"],[8,""],[9,""],[10,"15Feb"],[11,""],[12,""],[13,""],[14,""],[15,"07Mar"],[16,""],[17,""],[18,"16May"],[19,"18May"],[20,""],[21,"03Dec"],[22,""]]',true);
+ 		return $array3;
+ 		
+ 		
+		 
+	} 
+ 
+	public function cmpcmpny($a, $b)
+	{ 
+
+	     if ($a[1]   == $b[1]  ) {
+
+		 return 0;
+	     }
+	     return ($a[1]   < $b[1] ) ? -1 : 1;
+	} 
+
+	public function cmpdateid($a, $b)
+	{ 
+
+	     if ($a[0]   == $b[0]  ) {
+
+		 return 0;
+	     }
+	     return ($a[0]   < $b[0] ) ? -1 : 1;
+	}
+ 
+
+
+	public function getColorData()
+	{ 
+	  return array("#a0f0f0","#4444","#4534","#6000");
+	} 
+	
+	public function getLegend()
+	{ 	
+	  return array('show'=>'false');
+	}
+	
+	
+	 
+
+	public function scenario9( $year)
+	{  
+ 		$cntry_list1="";
+ 		$sql='select distinct country.country_code as cntry_code from country INNER JOIN  country_event where country_event.year =:year and country.country_code=country_event.country_code  and is_deleted=0 and is_disabled=0 ';
+ 		$rs = $this->db->query($sql);
+ 		$rs->bindValue(':year',$year);
+ 		$handlerres=$rs->execute(); 
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+		   return false;
+		}
+		$i=1;
+		$loop=$rs->numberOfRows();
+		while($rst = mysql_fetch_assoc($handlerres)){
+ 			if($i==$loop)
+			   $cntry_list1=$cntry_list1."'".$rst['cntry_code']."'"; 
+			else
+			   $cntry_list1=$cntry_list1."'".$rst['cntry_code']."'".','; 
+ 			$i=$i+1;   
+ 		}
+		$rs->freeResult(); 
+ 		return  $cntry_list1;       
+	}
+	public function scenario10( $year,$cntry)
+	{  
+ 		$cntry_list1="";
+ 		$sql='select distinct country.country_code as cntry_code from country INNER JOIN  country_event where country_event.year =:year and   country.country_code=:cntry and country.country_code=country_event.country_code  and is_deleted=0 and is_disabled=0 ';
+ 		
+ 		//echo $cntry;
+ 		$rs = $this->db->query($sql);
+ 		$rs->bindValue(':year',$year);
+		$rs->bindValue(':cntry',$cntry); 
+		$handlerres=$rs->execute(); 
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+		   return false;
+		}
+		$i=1;
+		$loop=$rs->numberOfRows();
+		while($rst = mysql_fetch_assoc($handlerres)){
+ 			if($i==$loop)
+			   $cntry_list1=$cntry_list1."'".$rst['cntry_code']."'"; 
+			else
+			   $cntry_list1=$cntry_list1."'".$rst['cntry_code']."'".','; 
+ 			$i=$i+1;   
+ 		}
+		$rs->freeResult(); 
+ 		return  $cntry_list1;       
+	}
+
+	public function scenario11($year,$user_id)
+	{
+
+		$this->cntryMapper = new Mappers_Country();
+		$cntrylist=$this->cntryMapper->listCountryByUserCustomisation($user_id,$year);
+
+ 		$i=1;
+		$cntry_list1='';
+		$loop=0;
+ 		if (is_object($cntrylist)) {
+			foreach (get_object_vars($cntrylist) as $key => $val)
+			{
+
+			  if($key=='sel')
+			  {
+
+			    $loop = count((array)$val);
+
+
+
+
+			    foreach (get_object_vars($val) as $key => $val)
+			    {
+
+				if($i==$loop)
+				{
+					$cntry_list1=$cntry_list1."'".$key."'";
+				}
+				else
+				{
+					$cntry_list1=$cntry_list1."'".$key."'".',';
+				}
+
+				$i=$i+1;
+			    }
+
+			  }
+
+			}
+
+		}
+		 return   $cntry_list1;
+
+	}
+	public function scenario12( $year,$cntry,$user_id)
+	{  
+ 		$cntry_list1="";
+ 		$sql='select distinct country.country_code as cntry_code from country INNER JOIN  country_event where country_event.year =:year and   country.country_code=:cntry and country.country_code=country_event.country_code  and is_deleted=0 and is_disabled=0 ';
+ 		$rs = $this->db->query($sql);
+ 		$rs->bindValue(':year',$year);
+		$rs->bindValue(':cntry',$cntry); 
+		$handlerres=$rs->execute(); 
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+		   return false;
+		}
+		$i=1;
+		$loop=$rs->numberOfRows();
+		while($rst = mysql_fetch_assoc($handlerres)){
+ 			if($i==$loop)
+			   $cntry_list1=$cntry_list1."'".$rst['cntry_code']."'"; 
+			else
+			   $cntry_list1=$cntry_list1."'".$rst['cntry_code']."'".','; 
+ 			$i=$i+1;   
+ 		}
+		$rs->freeResult(); 
+ 		return  $cntry_list1;       
+	}
+
+	public function scenario13($graph_share_token)
+	{
+
+
+		$this->cntryMapper = new Mappers_Country();
+		$cntrylist=$this->cntryMapper->listCountryDataByGraphToken($graph_share_token);
+ 		$i=1;
+		$cntry_list1='';
+		$loop=0;
+
+		if (is_object($cntrylist)) {
+			foreach (get_object_vars($cntrylist) as $key => $val)
+			{
+			  if($key=='sel')
+			  {
+
+			    $loop = count((array)$val);
+
+			    foreach (get_object_vars($val) as $key => $val)
+			    {
+				if($i==$loop)
+					$cntry_list1=$cntry_list1."'".$key."'";
+				else
+					$cntry_list1=$cntry_list1."'".$key."'".',';
+				$i=$i+1;
+			    }
+
+			  }
+
+			}
+		} elseif (is_array($cntrylist)) {
+
+			$loop = count($cntrylist);
+
+			for ($j=0;$i<$loop ; $j++)
+			{
+
+			 if($j==$loop-1)
+				$cntry_list1=$cntry_list1.''.$cntrylist[$j][orgid].'';
+			 else
+				$cntry_list1=$cntry_list1.''.$cntrylist[$j][orgid].''.',';
+			}
+
+		} else {
+			    print_r('check there');
+		}
+
+		return  $cntry_list1;
+
+	}
+
+}
+?>

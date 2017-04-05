@@ -1,0 +1,68 @@
+<?php
+
+
+class Services_Module {
+
+ 	public function __construct() {
+  	}
+ 	
+ 	public function changeModule($request) {
+ 	
+ 		$mod='';
+   
+		if(isset($request['modname']) && !empty($request['modname']))
+		{  
+		
+		  if($request['modname']=='Country')
+		  {
+		  	$mod =  "Country";
+		  }
+		  else if($request['modname']=='Religion')
+		  {
+		  	$mod =  "Religion";
+		  }
+		  else if($request['modname']=='Organisation')
+		  {
+		  	$mod =  "Organisation";
+		  }
+		  else if($request['modname']=='Mobile')
+		  {
+		  	$mod =  "Mobile";
+		  }
+		 /*
+		 
+		  else if($request['modname']=='Personal')
+		  {
+		 	 $mod =  "Personal";
+		  }
+		  else if($request['modname']=='API')
+		  {
+		  	$mod =  "API";
+		  }
+		  else if($request['modname']=='Event')
+		  {
+		  	$mod =  "Event";
+		  }
+		  else if($request['modname']=='Calender')
+		  {
+		 	 $mod =  "Calender";
+		  }
+		  */
+		  else  
+		  {
+		 	 $mod =  "Organisation";
+		  }
+		  
+  		}
+  		$_SESSION['module'] = $mod;
+  		$_SESSION['show'] = 'landing';
+  		
+  		
+ 		return $mod ;
+ 	}
+ 	 
+ 	
+  
+
+}
+?>

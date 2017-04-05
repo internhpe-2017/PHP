@@ -1,0 +1,17 @@
+<?php
+
+
+class Mappers_News {
+	private $db;
+
+	public function __construct() {
+		$this->db = new Database_Db_News();
+	}
+ 
+
+	public function findNews ($news,$year) {
+	       return $this->db->findNews ($news,$year);
+	} 
+	 
+}
+?>

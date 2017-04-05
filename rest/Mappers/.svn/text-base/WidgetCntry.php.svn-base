@@ -1,0 +1,22 @@
+<?php
+
+
+class Mappers_WidgetCntry {
+	 
+	private $db;
+	public function __construct() {
+		$this->db = new Database_Db_WidgetCntry();	
+	}
+
+ 
+ 
+	public function doWidget( $cntry,$year,$flag,$scenario,$user_id,$graph_share_token) {
+		
+		return $this->db->doWidget( $cntry,$year,$flag,$scenario,$user_id,$graph_share_token);
+	}
+
+
+
+
+}
+?>

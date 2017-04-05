@@ -1,0 +1,92 @@
+<?php
+
+class Database_Db_Group extends Database_Db_Abstract {
+	//protected $table = Database_DatabaseTables::Group;
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+       
+ 	
+       public function listGroup() {
+
+ 		$sql = "SELECT * FROM graph_group WHERE  order  by group_name";
+		$rs=$this->db->query($sql);
+	 
+		$handlerres=$rs->execute();
+		if($this->db->isError()) {
+			return false;
+		}
+ 		$llist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+ 			$clist =  array("Group"=>array( 'group_id'=>trim($rst['group_id'] ),'group_name'=>trim($rst['group_name'] ) ));
+ 			$llist[] =  $clist;
+		}
+		$rs->freeResult();
+		return  $llist;
+ 	}
+
+
+	 
+        public function listGroupByUserCustomisation($user,$year) {
+    
+ 
+		$sql="SELECT  group_id,group_name FROM graph_group WHERE user_id =:userid3 and year=:year3 and  group_type='CNTCUSTGRP'  " ;
+		$rs2=$this->db->query($sql);
+		$rs2->bindValue(':userid3', $user);
+		$rs2->bindValue(':year3', $year);
+		//$rs2->bindValue(':gname', $cntrgrp);
+		$handlerres2=$rs2->execute();  
+
+		$llist = array();
+		while($rs2 = mysql_fetch_assoc($handlerres2)){
+		$llist[] = array("id"=>$rs2['group_id'], "value"=>$rs2['group_name']);
+		}
+
+		$llist=array ("mygrp"=>$llist);
+  				
+		return $llist; 
+ 	}
+        public function locateGroupByUserCustomisation($user,$year,$grpname) 
+        {
+    
+    
+  		 if( !is_null($grpname))
+    		{
+    			//$sql = "SELECT location_id, location_name FROM location l ,state s WHERE l.location_name  like '".$term."%' and (s.country_code='{$cntry}' or s.country_code is null ) and l.state_id=s.state_id and s.country_code = l.country_code ";
+    			
+    			$sql = "SELECT group_id,group_name FROM graph_group WHERE group_name  like '".$grpname."%'  and  user_id =:userid3 and year=:year3 and  group_type='CNTCUSTGRP'  group by group_name";
+    		}
+    			
+    			
+    		//echo $sql;
+    			   
+		$rs2=$this->db->query($sql);
+		$rs2->bindValue(':userid3', $user);
+		$rs2->bindValue(':year3', $year);
+ 
+		$handlerres2=$rs2->execute();  
+
+		$llist = array();
+		 //  echo $user.$year;
+		
+		while($rst = mysql_fetch_assoc($handlerres2)){
+		  
+		     $llist[] = array("id"=>$rst['group_id'], "value"=>$rst['group_name']);
+		  
+		}
+		
+		//echo json_encode($llist,false);
+
+		//$llist=array ("mygrp"=>$llist);
+		$rs2->freeResult();
+		
+		
+  				
+		return $llist; 
+ 	}
+
+    
+}
+?>

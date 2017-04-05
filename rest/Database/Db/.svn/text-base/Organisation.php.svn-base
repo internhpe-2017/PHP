@@ -1,0 +1,464 @@
+<?php
+class Database_Db_Organisation extends Database_Db_Abstract {
+	protected $table_org_profile = Database_DatabaseTables::ORG_PROFILE;
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+	public function findOrganisation($orgid) {
+
+		$org = array();
+	   	$rs = $this->db->query('select event_date  from :table_org_profile where org_id = :orgid and is_deleted=0 ' );
+		$rs->bindTable(':table_org_profile', $this->table_org_profile);
+		$rs->bindValue(':orgid', $orgid);
+		$rs->execute();
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		}
+
+		$org['organisation'] = $rs->value('event_date');
+		$rs->freeResult();
+		 return $org;
+
+ 	} 
+
+
+        public function findlock($country,$state,$orgname,$location,$year) {
+
+		$lockdata = array();
+	   	$rs = $this->db->query('select lockedit  from  org_profile where  country=:country and   state=:state and location=:location and organisation=:orgname and year=:year and is_deleted=0 ');
+	   	                  	  
+ 		 
+		//$rs->bindTable(':table_org_profile', $this->table_org_profile);
+		$rs->bindValue(':country', $country);
+		$rs->bindValue(':state', $state);
+		$rs->bindValue(':location', $location);
+		$rs->bindValue(':orgname', $orgname);	
+		$rs->bindValue(':year', $year);
+		
+		
+		$rs->execute();
+		
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		}
+
+ 
+		$lockdata  = $rs->value('lockedit');
+		$rs->freeResult();
+		return $lockdata;
+
+ 	} 
+	public function createOrganisation($jdata,$userid) {
+
+
+		if($this->db->isError()) {
+			return false;
+		}
+
+ 		$json_a=json_decode($jdata,true);
+ 		
+		 $link=$json_a['country'].'-'.$json_a['state'].'-'.$json_a['org'].'-'.$json_a['location'].'-'.$json_a['year'].'-'.'organisation';
+		
+		 $link_no_year=$json_a['country'].'-'.$json_a['state'].'-'.$json_a['org'].'-'.$json_a['location'].'-'.'organisation';
+		 $lockdata=$this->findlock($json_a['country'],$json_a['state'],$json_a['org'],$json_a['location'],$json_a['year']);
+		 
+		 $jdata_excaped=mysql_real_escape_string($jdata) ;
+
+		
+		if( $lockdata=='on')
+
+		$sql = "INSERT INTO sourcing (json_add,is_validate,type,email) VALUES ('$jdata', '1','3','$userid')";
+		
+		else
+		 
+		
+		$sql = "INSERT INTO sourcing (json_add,is_validate,type,email) VALUES ('$jdata', '0','0','$userid')";
+		
+		$rs=$this->db->query($sql);
+ 		$handlerres=$rs->execute(); 
+		$orgUtils = new Library_Utilities(); 
+		$orgUtils->addtoyahoo($link,'/');
+		$orgUtils->addtogoogle($link,'/');
+		$orgUtils->addtobookmark($link,'/');
+		$orgUtils->addtoror($link,'','','/');
+		
+	
+		$orgUtils->addtoyahoo($link_no_year,'/');
+		$orgUtils->addtogoogle($link_no_year,'/');
+		$orgUtils->addtobookmark($link_no_year,'/');
+		$orgUtils->addtoror($link_no_year,'','','/');
+			
+		
+		 
+		
+		
+		//array("success"=>"added");
+		//unset($jdata)
+		//unset($jdata);
+		return true;
+
+ 	}
+
+
+	public function updateOrganisation($orgid) {
+
+
+ 	}
+
+	public function deleteOrganisation($orgid) {
+
+
+ 	}
+
+        public function listAllOrganisations($country,$state,$loc,$year,$org) {
+
+		$rs=$this->db->query('SELECT org_id,organisation FROM `org_profile` WHERE country=:countryid and is_deleted=0 order by organisation');
+		$rs->bindValue(':countryid', $country);
+ 		$handlerres=$rs->execute();
+
+		if($this->db->isError()) {
+			return false;
+		}
+		$otlist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+			$otlist = array_merge($otlist,array($rst['organisation']=>$rst['organisation']));
+		}
+ 		$rs->freeResult();
+		return $otlist;
+
+ 	}
+
+	public function listOrganisationsByLocation($country,$state,$loc,$year,$org) {
+
+		$rs=$this->db->query('SELECT org_id,organisation FROM `org_profile` WHERE country=:countryid and is_deleted=0 order by organisation');
+		$rs->bindValue(':countryid', $country);
+		$handlerres=$rs->execute();
+
+		if($this->db->isError()) {
+			return false;
+		}
+		$otlist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+			$otlist = array_merge($otlist,array($rst['organisation']=>$rst['organisation']));
+		}
+		$rs->freeResult();
+		return $otlist;
+
+
+
+
+	}
+
+ 
+	public function findLocationOrganisationEventDates($orgid,$year,$locid,$uid)
+	{
+
+		//return  $orgid.$year.$locid.$uid;
+		$org = array();
+		$json_lock='';
+		//hardcoding
+
+		$rs1 = $this->db->query('select count(*)  from year_org_prof where org_id = :orgid and year =:year1 and is_deleted=0 and user_id=:userid');
+		$rs1->bindValue(':orgid', $orgid);
+		$rs1->bindValue(':year1', $year);
+		$rs1->bindValue(':userid',  $uid);	
+		$handlerres1=$rs1->execute();
+		if(($rs1->numberOfRows() == 0) || $this->db->isError()) {
+			$uid='';		 
+		}
+		 
+		$rs1->freeResult();
+ 
+ 		if(empty($uid))
+		 {
+		 
+		$rs = $this->db->query('select org_hols_json,lockedit  from year_org_prof where org_id = :orgid and year =:year and is_deleted=0 and user_id=:userid ');
+		//$rs->bindTable(':table_org_profile', $this->table_org_profile);
+		$rs->bindValue(':orgid', $orgid);
+		$rs->bindValue(':year', $year);
+		$rs->bindValue(':userid', 'system');
+		
+		//$rs->bindValue(':locid', $locid);
+		}
+		else
+		{
+		$rs = $this->db->query('select org_hols_json,lockedit  from year_org_prof where org_id = :orgid and year =:year and is_deleted=0 and user_id=:userid ');
+		//$rs->bindTable(':table_org_profile', $this->table_org_profile);
+		$rs->bindValue(':orgid', $orgid);
+		$rs->bindValue(':year', $year);
+		$rs->bindValue(':userid', $uid);
+		//$rs->bindValue(':locid', $locid);		
+		}
+		$handlerres=$rs->execute();
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		}
+
+		 
+				   
+		while($row = mysql_fetch_assoc($handlerres))
+		{        
+			$org['organisation'] = $row['org_hols_json'];
+			$org['lockedit'] = $row['lockedit'];
+		}
+ 		$json_lock=$org['lockedit']; 
+		 
+		
+		 
+		
+		
+
+		$rs->freeResult();
+
+
+
+		$decoded= json_decode($org['organisation'],true); 
+		 //return  $decoded['dates'];
+
+		$loop= sizeof($decoded['dates'] );
+		$i=1;
+		$starttag='[';
+		$endtag=']'; 
+		  
+		  
+		  
+		  
+		  $json_o='';
+		  $json_d='';
+		  $msg='';
+		
+		foreach($decoded['dates']  as $key=>$item)
+		{
+	
+
+			if($i==$loop)
+			{
+
+				$json_o=$json_o.'"'.$key.'"';
+				$json_d=$json_d.'"'.$decoded['dates'][$key]['description'].'"';
+
+
+
+			}
+
+			else
+			{
+				$json_o=$json_o.'"'.$key.'"'.',';
+				$json_d=$json_d.'"'.$decoded['dates'][$key]['description'].'"'.',';
+
+			}
+
+			$i=$i+1;
+		  
+		  
+
+		} 
+
+		if($json_o=='')
+		  $msg='"No Data Found"';
+
+		$json_o=$starttag.$json_o.$msg.$endtag;
+		$json_d=$starttag.$json_d.$msg.$endtag;
+		//$json_lock=$starttag.$json_lock.$msg.$endtag;
+		
+		
+		 
+		return  array('evtdata' => json_decode($json_o,true), 'evtdesc' => json_decode($json_d,true),'lockedit' => $json_lock) ;
+
+ 
+ 	}
+ 	
+	 
+
+
+	public function findOrganisationProfile($orgid,$year,$uid) {
+
+		$org = array();
+		
+		if(empty($uid)) 
+		{
+		$rs = $this->db->query('select org_hols_json  from year_org_prof where org_id = :orgid and year =:year and user_id =:userid and is_deleted=0 ');
+		//$rs->bindTable(':table_org_profile', $this->table_org_profile);
+		$rs->bindValue(':orgid', $orgid);
+		$rs->bindValue(':year', $year);
+		$rs->bindValue(':userid', 'system');
+		}
+		else
+		{
+		$rs = $this->db->query('select org_hols_json  from year_org_prof where org_id = :orgid  and user_id =:userid  and year =:year and is_deleted=0 ');
+		//$rs->bindTable(':table_org_profile', $this->table_org_profile);
+		$rs->bindValue(':orgid', $orgid);
+		$rs->bindValue(':year', $year);
+		$rs->bindValue(':userid', $uid);
+		}
+		
+
+		$handlerres=$rs->execute();
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		}
+
+		$org['organisation'] = $rs->value('org_hols_json');
+		 $rs->freeResult();
+
+
+
+		 $decoded= json_decode($org['organisation'],true); 
+		 //return  $decoded['dates'];
+
+		  
+
+		 
+		if($decoded=='')
+		  $msg='"No Data Found"';
+ 
+		return  $decoded;
+
+	}
+   
+	public function searchOrganisationByLoc($locid,$term,$year) {
+	
+ 		$sql = "SELECT org_id, organisation FROM org_profile WHERE location_id=:locid AND organisation LIKE '".$term."%' and year=:year and is_deleted=0 ";
+
+ 		$rs=$this->db->query($sql);
+		$rs->bindValue(':locid', $locid);
+		$rs->bindValue(':year', $year);
+
+		$handlerres=$rs->execute();
+ 
+		if($this->db->isError()) {
+			return false;
+		}
+
+		$slist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+			$slist[] = array("id"=>$rst['org_id'], "value"=>$rst['organisation']);
+		}
+		$rs->freeResult();
+		return  $slist;
+	
+	}
+	public function searchOrganisation( $term,$year) {
+
+
+
+ 		$sql = "SELECT org_id, organisation FROM org_profile WHERE   organisation LIKE '".$term."%' and year=:year and is_deleted=0  group by organisation";
+
+ 		$rs=$this->db->query($sql);
+		//$rs->bindValue(':locid', $locid);
+		$rs->bindValue(':year', $year);
+
+		$handlerres=$rs->execute();
+
+
+		if($this->db->isError()) {
+			return false;
+		}
+
+		$slist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+			$slist[] = array("id"=>$rst['org_id'], "value"=>$rst['organisation']);
+		}
+		$rs->freeResult();
+		return  $slist;
+	}
+
+
+	public function findOrganisationProfileByName($orgname,$year,$uid) {
+	
+
+		$org = array();
+		if(empty($uid))
+		{
+		
+			$rs = $this->db->query('select org_hols_json  from year_org_prof where organisation = :orgname and year =:year and is_deleted=0 ');
+			//$rs->bindTable(':table_org_profile', $this->table_org_profile);
+			$rs->bindValue(':orgname', $orgname);
+			$rs->bindValue(':year', $year);
+			$rs->bindValue(':userid', 'system');
+		}
+		else
+		{
+			$rs = $this->db->query('select org_hols_json  from year_org_prof where organisation = :orgname and year =:year and is_deleted=0 ');
+			//$rs->bindTable(':table_org_profile', $this->table_org_profile);
+			$rs->bindValue(':orgname', $orgname);
+			$rs->bindValue(':year', $year);		
+			$rs->bindValue(':userid', $uid);
+		}
+		
+		$handlerres=$rs->execute();
+
+		if(($rs->numberOfRows() == 0) || $this->db->isError()) {
+			return false;
+		}
+
+		$org['organisation'] = $rs->value('org_hols_json');
+		$rs->freeResult();
+
+
+
+		$decoded= json_decode($org['organisation'],true); 
+		//return  $decoded['dates'];
+
+		$loop= sizeof($decoded['dates'] );
+		$i=1;
+		$json_o='[';
+
+		foreach($decoded['dates']  as $key=>$item)
+		{
+
+
+			if($i==$loop)
+
+			$json_o=$json_o.'"'.$key.'"';
+
+			  else
+			$json_o=$json_o.'"'.$key.'"'.',';
+
+			  $i=$i+1;
+
+		}
+
+		$json_o=$json_o.']';
+
+		 //return $json_o;
+
+
+		return  json_decode($json_o);
+
+	
+ 	}
+
+	public function addOrganisationProfile($jdata) {
+ 	}
+
+
+		 
+	public function findOrganisationType() {
+
+
+		$rs=$this->db->query('SELECT * FROM `org_type`  ');
+ 		$handlerres=$rs->execute();
+ 		if($this->db->isError()) {
+			return false;
+		}
+
+		$otlist = array();
+		while($rst = mysql_fetch_assoc($handlerres)){
+			$otlist = array_merge($otlist,array($rst['org_type_name']=>$rst['org_type_name']));
+		}
+		$rs->freeResult();
+		return $otlist;
+
+
+ 	}
+
+
+}
+?>
